@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:postgres/postgres.dart';
 import 'package:sql_query_builder/sql_query_builder.dart';
-import 'package:sql_query_builder/src/utils/json_key.dart';
+import 'package:sql_query_builder/src/schema.dart';
+import 'package:sql_query_builder/src/schema/table.dart';
 import 'package:test/test.dart';
 
 void main() async {
@@ -22,48 +23,27 @@ void main() async {
     setUp(() {});
 
     test('insert', () async {
-      builder.table('admin').truncate();
+      Schema schema = Schema(db).debug(false);
 
-      await builder.table('admin').insert({
-        'name': 'John Doe',
-        'age': '28',
+      schema.drop('blog');
+      schema.create('blog', (Table table) {
+        table.id();
+        table.string('title').nullable().unique();
+        table.char('status').withDefault('active');
+        table.text('body');
+        table.money('amount').nullable();
+        table.softDeletes();
+        table.timestamps();
       });
-
-      await builder.table('admin').insert({
-        'name': 'John Wrick',
-        'age': '32',
+      builder.table('blog').truncate();
+      await builder.table('blog').insert({
+        'title': 'Awesome blog',
+        'body': 'Awesome blog body',
       });
-
-      List<Admin> admins = await builder.table('admin').all<Admin>();
-
-      for (Admin admin in admins) {
-        print(admin.id);
-        print(admin.name);
-        print(admin.yearOld);
-      }
+      var blog = await builder.table('blog').find(1);
+      expect(blog['id'], 1);
+      expect(blog['title'], 'Awesome blog');
+      expect(blog['body'], 'Awesome blog body');
     });
   });
-}
-
-String ageFilter(val) {
-  return "$val years old";
-}
-
-List idFilter(id) {
-  return ["ID : $id"];
-}
-
-class Admin {
-  @JsonKey(name: 'id', filter: idFilter)
-  dynamic id;
-
-  String? name;
-
-  @JsonKey(
-    name: 'age',
-    filter: ageFilter,
-  )
-  String? yearOld;
-
-  Admin(this.id, this.name, this.yearOld);
 }

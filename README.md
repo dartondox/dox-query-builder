@@ -20,11 +20,23 @@ void main() async {
 `insert()`, `get()`, `all()`, `find()` functions support type to return.
 
 ```dart
+import 'package:sql_query_builder/sql_query_builder.dart';
+import 'package:sql_query_builder/src/utils/json_key.dart';
+
 class Admin {
   int? id;
-  String? name;
+  
+  @JsonKey(name: 'name')
+  String? adminName;
+
+  @JsonKey(name: 'age', filter : parseAge)
   int? age;
+
   Admin({this.id, this.name, this.age});
+}
+
+String parseAge(val) {
+  return int.parse(val);
 }
 
 Admin admin = await builder.table('admin').insert<Admin>(
@@ -32,7 +44,7 @@ Admin admin = await builder.table('admin').insert<Admin>(
 );
 
 print(admin.id)
-print(admin.name)
+print(admin.adminName)
 print(admin.age)
 
 List<Admin> admins = await builder.table('admin').get<Admin>();
@@ -40,7 +52,7 @@ List<Admin> admins = await builder.table('admin').all<Admin>();
 Admin admin = await builder.table('admin').find<Admin>('name', 'John Wick');
 
 ```
-
+`@JsonKey` is used to map database column name and class model;
 
 ### debug (this option will print query and query params in the console)
 

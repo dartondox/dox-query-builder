@@ -1,17 +1,20 @@
 import 'dart:convert';
 
 class Logger {
-  int logLength = 100;
+  int logLength = 120;
 
-  log(query, params) {
+  log(query, [dynamic params]) {
     _topLine('QUERY ');
     _newEmptyLine();
     _wrapLine(query);
     _newEmptyLine();
-    _centerLine('PARAMS');
-    List<String> param = _getPrettyJSONString(params).toString().split("\n");
-    for (var i in param) {
-      _wrapLine(i);
+
+    if (params != null && (params as Map).isNotEmpty) {
+      _centerLine('PARAMS');
+      List<String> param = _getPrettyJSONString(params).toString().split("\n");
+      for (var i in param) {
+        _wrapLine(i);
+      }
     }
     _bottomLine();
   }
@@ -66,7 +69,7 @@ class Logger {
   }
 
   String _getPrettyJSONString(jsonObject) {
-    var encoder = JsonEncoder.withIndent("     ");
+    var encoder = JsonEncoder.withIndent("  ");
     return encoder.convert(jsonObject);
   }
 }

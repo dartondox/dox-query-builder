@@ -33,7 +33,7 @@ mixin Insert implements SharedMixin {
     }
 
     String query =
-        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')} RETURNING id;";
+        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')} RETURNING id";
     return await helper.runQuery(query);
   }
 }

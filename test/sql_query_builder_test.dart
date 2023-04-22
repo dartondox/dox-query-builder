@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   PostgreSQLConnection db = PostgreSQLConnection(
-    "localhost",
+    "postgres",
     5432,
     "postgres",
     username: "admin",

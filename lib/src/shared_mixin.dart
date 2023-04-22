@@ -16,4 +16,5 @@ abstract class SharedMixin {
   String get selectQueryString;
 
   addSubstitutionValues(String key, dynamic value) {}
+  resetSubstitutionValues() {}
 }

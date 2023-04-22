@@ -2,6 +2,7 @@ import 'package:postgres/postgres.dart';
 
 import 'all.dart';
 import 'count.dart';
+import 'delete.dart';
 import 'find.dart';
 import 'get.dart';
 import 'group_by.dart';
@@ -11,10 +12,27 @@ import 'limit.dart';
 import 'order_by.dart';
 import 'raw.dart';
 import 'select.dart';
+import 'truncate.dart';
 import 'update.dart';
 import 'utils/helper.dart';
 import 'utils/logger.dart';
 import 'where.dart';
+
+class Builder {
+  final PostgreSQLConnection db;
+  bool _debug = false;
+
+  Builder(this.db);
+
+  Builder debug(bool debug) {
+    _debug = debug;
+    return this;
+  }
+
+  QueryBuilder table(tableName) {
+    return QueryBuilder(db).setDebug(_debug).setTable(tableName);
+  }
+}
 
 class QueryBuilder
     with
@@ -30,13 +48,15 @@ class QueryBuilder
         Select,
         All,
         Find,
+        Truncate,
+        Delete,
         Count {
   late QueryBuilderHelper _helper;
   late Logger _logger;
   late PostgreSQLConnection _db;
   bool _debug = false;
   String _table = '';
-  final Map<String, dynamic> _substitutionValues = {};
+  Map<String, dynamic> _substitutionValues = {};
 
   @override
   QueryBuilder get queryBuilder => this;
@@ -70,21 +90,23 @@ class QueryBuilder
     return _substitutionValues[key] = value;
   }
 
+  @override
+  resetSubstitutionValues() {
+    return _substitutionValues = {};
+  }
+
   QueryBuilder(PostgreSQLConnection db) {
-    if (db.isClosed) {
-      db.open();
-    }
     _db = db;
     _logger = Logger();
     _helper = QueryBuilderHelper(this);
   }
 
-  QueryBuilder debug(bool debug) {
+  QueryBuilder setDebug(bool debug) {
     _debug = debug;
     return this;
   }
 
-  QueryBuilder table(tableName) {
+  QueryBuilder setTable(tableName) {
     _table = tableName;
     return this;
   }

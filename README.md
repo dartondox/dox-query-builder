@@ -9,16 +9,44 @@ void main() async {
     username: 'admin',
     password: 'password',
   );
-  var builder = QueryBuilder(db);
-  var admin = await builder.debug(true).table('admin').find(1);
+  await db.open();
+  Builder builder = Builder(db).debug(true);
+  var admin = await builder.table('admin').find(1);
   print(admin);
 }
 ```
 
+## Type support
+`insert()`, `get()`, `all()`, `find()` functions support type to return.
+
+```dart
+class Admin {
+  int? id;
+  String? name;
+  int? age;
+  Admin({this.id, this.name, this.age});
+}
+
+Admin admin = await builder.table('admin').insert<Admin>(
+  {'name': 'John Wick', 'age': 60}
+);
+
+print(admin.id)
+print(admin.name)
+print(admin.age)
+
+List<Admin> admins = await builder.table('admin').get<Admin>();
+List<Admin> admins = await builder.table('admin').all<Admin>();
+Admin admin = await builder.table('admin').find<Admin>('name', 'John Wick');
+
+```
+
+
 ### debug (this option will print query and query params in the console)
 
 ```dart
-await builder.debug(true).table('admin').find(1);
+Builder builder = Builder(db).debug(true);
+await builder.table('admin').find(1);
 ```
 
 ### insert

@@ -1,7 +1,7 @@
 import 'shared_mixin.dart';
 
 mixin Find implements SharedMixin {
-  Future<Map<String, dynamic>?> find(dynamic arg1, [dynamic arg2]) async {
+  find(dynamic arg1, [dynamic arg2]) async {
     String column = arg2 == null ? 'id' : arg1;
     String key = 'find_$column';
     dynamic value = arg2 ?? arg1;

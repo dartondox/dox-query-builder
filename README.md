@@ -24,7 +24,13 @@ await builder.debug(true).table('admin').find(1);
 ### insert
 
 ```dart
-await builder.table('admin').insert([
+// single entry
+await builder.table('admin').insert(
+  {'name': 'John Wick', 'age': 60}
+);
+
+// multiple
+await builder.table('admin').insertMultiple([
   {'name': 'John Wick', 'age': 60},
   {'name': 'John Doe', 'age': 25},
 ]);

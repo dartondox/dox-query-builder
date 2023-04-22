@@ -1,7 +1,17 @@
 import 'shared_mixin.dart';
 
 mixin Insert implements SharedMixin {
-  insert(List<Map<String, dynamic>> list) {
+  insert(Map<String, dynamic> data) async {
+    List result = await insertMultiple([data]);
+    if (result.isNotEmpty) {
+      Map insertedData = result.first;
+      int id = insertedData[tableName]['id'] ?? 0;
+      return await queryBuilder.find(id);
+    }
+    return null;
+  }
+
+  Future insertMultiple(List<Map<String, dynamic>> list) async {
     List columns = [];
     List<String> values = [];
     Map<String, dynamic> substitutionValues = {};
@@ -23,12 +33,13 @@ mixin Insert implements SharedMixin {
     }
 
     String query =
-        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')}";
+        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')} RETURNING id;";
 
     if (shouldDebug) {
       logger.log(query, substitutionValues);
     }
 
-    return db.query(query, substitutionValues: substitutionValues);
+    return await db.mappedResultsQuery(query,
+        substitutionValues: substitutionValues);
   }
 }

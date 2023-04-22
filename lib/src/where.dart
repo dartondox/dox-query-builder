@@ -35,7 +35,7 @@ mixin Where implements SharedMixin {
       condition = arg2;
       value = arg3.toString();
     }
-    String columnKey = helper.parseColumnKey('$column$value');
+    String columnKey = helper.parseColumnKey(column);
     if (_wheres.isEmpty) {
       _wheres.add("$column $condition @$columnKey");
     } else {

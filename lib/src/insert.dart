@@ -1,7 +1,7 @@
 import 'shared_mixin.dart';
 
 mixin Insert implements SharedMixin {
-  insert(Map<String, dynamic> data) async {
+  Future insert(Map<String, dynamic> data) async {
     List result = await insertMultiple([data]);
     if (result.isNotEmpty) {
       Map insertedData = result.first;
@@ -25,7 +25,7 @@ mixin Insert implements SharedMixin {
     for (var data in list) {
       List ret = [];
       data.forEach((key, value) {
-        String columnKey = helper.parseColumnKey('$key$value');
+        String columnKey = helper.parseColumnKey(key);
         ret.add("@$columnKey");
         substitutionValues[columnKey] = value;
       });

@@ -39,7 +39,13 @@ await builder.table('admin').insertMultiple([
 ### Update
 
 ```dart
-// TODO
+await builder.table('admin')
+  .where('id', 3)
+  .where('status', 'active')
+  .update({
+    "name": "Updated AJ",
+    "age": 120,
+  });
 ```
 
 ### all

@@ -11,6 +11,7 @@ import 'limit.dart';
 import 'order_by.dart';
 import 'raw.dart';
 import 'select.dart';
+import 'update.dart';
 import 'utils/helper.dart';
 import 'utils/logger.dart';
 import 'where.dart';
@@ -25,6 +26,7 @@ class QueryBuilder
         Join,
         Raw,
         Get,
+        Update,
         Select,
         All,
         Find,

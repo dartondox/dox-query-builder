@@ -1,10 +1,10 @@
 import 'package:postgres/postgres.dart';
 
 import '../utils/logger.dart';
-import 'column.dart';
+import 'table.column.dart';
 
 class Table {
-  final List<Column> columns = [];
+  final List<TableColumn> columns = [];
   String tableName = '';
   bool isDebug = false;
 
@@ -29,118 +29,119 @@ class Table {
   }
 
   void id([dynamic column]) {
-    columns.add(Column(name: column ?? 'id', type: "SERIAL PRIMARY KEY"));
+    columns.add(TableColumn(name: column ?? 'id', type: "SERIAL PRIMARY KEY"));
   }
 
-  Column uuid([dynamic column]) {
-    Column col = Column(name: column ?? 'uuid', type: 'UUID');
+  TableColumn uuid([dynamic column]) {
+    TableColumn col = TableColumn(name: column ?? 'uuid', type: 'UUID');
     columns.add(col);
     return col;
   }
 
-  Column integer(String name) {
-    Column col = Column(name: name, type: 'INTEGER');
+  TableColumn integer(String name) {
+    TableColumn col = TableColumn(name: name, type: 'INTEGER');
     columns.add(col);
     return col;
   }
 
-  Column bigInteger(String name) {
-    Column col = Column(name: name, type: 'BIGINT');
+  TableColumn bigInteger(String name) {
+    TableColumn col = TableColumn(name: name, type: 'BIGINT');
     columns.add(col);
     return col;
   }
 
-  Column string(String name, [dynamic length]) {
-    Column col = Column(name: name, type: "VARCHAR(${length ?? '100'})");
+  TableColumn string(String name, [dynamic length]) {
+    TableColumn col =
+        TableColumn(name: name, type: "VARCHAR(${length ?? '100'})");
     columns.add(col);
     return col;
   }
 
-  Column char(String name, [dynamic length]) {
-    Column col = Column(name: name, type: "CHAR(${length ?? '8'})");
+  TableColumn char(String name, [dynamic length]) {
+    TableColumn col = TableColumn(name: name, type: "CHAR(${length ?? '8'})");
     columns.add(col);
     return col;
   }
 
-  Column money(String name) {
-    Column col = Column(name: name, type: "MONEY");
+  TableColumn money(String name) {
+    TableColumn col = TableColumn(name: name, type: "MONEY");
     columns.add(col);
     return col;
   }
 
-  Column json(String name) {
-    Column col = Column(name: name, type: "JSON");
+  TableColumn json(String name) {
+    TableColumn col = TableColumn(name: name, type: "JSON");
     columns.add(col);
     return col;
   }
 
-  Column jsonb(String name) {
-    Column col = Column(name: name, type: "JSONB");
+  TableColumn jsonb(String name) {
+    TableColumn col = TableColumn(name: name, type: "JSONB");
     columns.add(col);
     return col;
   }
 
-  Column decimal(String name, [dynamic length, dynamic decimalPoint]) {
-    Column col = Column(
+  TableColumn decimal(String name, [dynamic length, dynamic decimalPoint]) {
+    TableColumn col = TableColumn(
         name: name, type: "DECIMAL(${length ?? '8'}, ${decimalPoint ?? '2'})");
     columns.add(col);
     return col;
   }
 
-  Column float4(String name) {
-    Column col = Column(name: name, type: "float4");
+  TableColumn float4(String name) {
+    TableColumn col = TableColumn(name: name, type: "float4");
     columns.add(col);
     return col;
   }
 
-  Column float8(String name) {
-    Column col = Column(name: name, type: "float8");
+  TableColumn float8(String name) {
+    TableColumn col = TableColumn(name: name, type: "float8");
     columns.add(col);
     return col;
   }
 
-  Column text(String name) {
-    Column col = Column(name: name, type: 'TEXT');
+  TableColumn text(String name) {
+    TableColumn col = TableColumn(name: name, type: 'TEXT');
     columns.add(col);
     return col;
   }
 
-  Column timestamp(String name) {
-    Column col = Column(name: name, type: 'TIMESTAMP');
+  TableColumn timestamp(String name) {
+    TableColumn col = TableColumn(name: name, type: 'TIMESTAMP');
     columns.add(col);
     return col;
   }
 
-  Column date(String name) {
-    Column col = Column(name: name, type: 'DATE');
+  TableColumn date(String name) {
+    TableColumn col = TableColumn(name: name, type: 'DATE');
     columns.add(col);
     return col;
   }
 
-  Column time(String name) {
-    Column col = Column(name: name, type: 'TIME');
+  TableColumn time(String name) {
+    TableColumn col = TableColumn(name: name, type: 'TIME');
     columns.add(col);
     return col;
   }
 
-  Column timestampTz(String name) {
-    Column col = Column(name: name, type: 'TIMESTAMPTZ');
+  TableColumn timestampTz(String name) {
+    TableColumn col = TableColumn(name: name, type: 'TIMESTAMPTZ');
     columns.add(col);
     return col;
   }
 
-  Column softDeletes([dynamic name]) {
-    Column col =
-        Column(name: name ?? 'deleted_at', type: 'TIMESTAMPTZ').nullable();
+  TableColumn softDeletes([dynamic name]) {
+    TableColumn col =
+        TableColumn(name: name ?? 'deleted_at', type: 'TIMESTAMPTZ').nullable();
     columns.add(col);
     return col;
   }
 
   void timestamps() {
-    Column createdAt =
-        Column(name: 'created_at', type: 'TIMESTAMPTZ').nullable();
-    Column updatedAt =
-        Column(name: 'updated_at', type: 'TIMESTAMPTZ').nullable();
+    TableColumn createdAt =
+        TableColumn(name: 'created_at', type: 'TIMESTAMPTZ').nullable();
+    TableColumn updatedAt =
+        TableColumn(name: 'updated_at', type: 'TIMESTAMPTZ').nullable();
     columns.add(createdAt);
     columns.add(updatedAt);
   }
@@ -149,7 +150,7 @@ class Table {
     String query = "CREATE TABLE IF NOT EXISTS $tableName (";
 
     List ret = [];
-    for (Column col in columns) {
+    for (TableColumn col in columns) {
       String defaultQuery = '';
       if (col.defaultValue != null) {
         defaultQuery = " DEFAULT '${col.defaultValue}'";

@@ -1,4 +1,4 @@
-class Column {
+class TableColumn {
   final String name;
   final String? type;
 
@@ -6,22 +6,22 @@ class Column {
   dynamic defaultValue;
   bool isUnique = false;
 
-  Column({
+  TableColumn({
     required this.name,
     this.type,
   });
 
-  Column nullable([dynamic nullable]) {
+  TableColumn nullable([dynamic nullable]) {
     isNullable = (nullable is bool) ? nullable : true;
     return this;
   }
 
-  Column withDefault(dynamic val) {
+  TableColumn withDefault(dynamic val) {
     defaultValue = val;
     return this;
   }
 
-  Column unique() {
+  TableColumn unique() {
     isUnique = true;
     return this;
   }

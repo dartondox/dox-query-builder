@@ -1,8 +1,8 @@
 import 'shared_mixin.dart';
 
 mixin All implements SharedMixin {
-  Future all<T>() async {
+  Future all() async {
     String query = "SELECT $selectQueryString FROM $tableName";
-    return helper.formatResult<T>(await helper.runQuery(query));
+    return helper.formatResult(await helper.runQuery(query));
   }
 }

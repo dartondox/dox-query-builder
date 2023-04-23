@@ -1,7 +1,7 @@
 import 'shared_mixin.dart';
 
 mixin Get implements SharedMixin {
-  Future get<T>() async {
+  Future get() async {
     String q;
     if (rawQueryString.isNotEmpty) {
       q = rawQueryString;
@@ -9,6 +9,6 @@ mixin Get implements SharedMixin {
       q = "SELECT $selectQueryString FROM $tableName";
       q += helper.getCommonQuery();
     }
-    return helper.formatResult<T>(await helper.runQuery(q));
+    return helper.formatResult(await helper.runQuery(q));
   }
 }

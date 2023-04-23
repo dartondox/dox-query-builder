@@ -1,7 +1,27 @@
-# Dart SQL Query Builder
+#### Dart SQL Query Builder
+
+##### Usage Example
 
 ```dart
+import 'package:sql_query_builder/sql_query_builder.dart';
+
+// create a model 
+class Actor extends Model {
+  @override
+  String get primaryKey => 'id';
+
+  @Column()
+  int? id;
+
+  @Column(name: 'name')
+  String? actorName;
+
+  @Column()
+  int? age;
+}
+
 void main() async {
+  // create database connection and open
   PostgreSQLConnection db = PostgreSQLConnection(
     'localhost',
     5432,
@@ -10,76 +30,98 @@ void main() async {
     password: 'password',
   );
   await db.open();
-  Builder builder = Builder(db).debug(true);
-  var admin = await builder.table('admin').find(1);
-  print(admin);
+
+  // initial SqlQueryBuilder, only once at main function
+  SqlQueryBuilder.initialize(database: db, debug: true);
+
+  // and finally use model from anywhere in the project.
+  Actor actor = Actor();
+  actor.name = 'John Wick';
+  actor.age = 60;
+  await actor.save();
+
+  actor.name = "Tom Cruise";
+  await actor.save(); // save again
+
+  print(actor.id)
+
+  Actor result = Actor().where('name', 'Tom Cruise').get();
+  print(result.status)
 }
 ```
 
-## Type support
-`insert()`, `get()`, `all()`, `find()` functions support type to return.
+#### Schema (to create database table)
+
+###### create table
 
 ```dart
-import 'package:sql_query_builder/sql_query_builder.dart';
-import 'package:sql_query_builder/src/utils/json_key.dart';
+Schema.create('blog', (Table table) {
+  table.id();
+  table.string('slug').unique();
+  table.string('title').nullable();
+  table.char('status').withDefault('active');
+  table.text('body');
+  table.money('amount').nullable();
+  table.softDeletes();
+  table.timestamps();
+});
+```
 
-class Admin {
+###### drop/delete table
+
+```dart
+Schema.drop('blog');
+```
+
+#### Model
+
+```dart
+class Blog extends Model {
+  @override
+  String get primaryKey => 'id';
+
+  @Column()
   int? id;
-  
-  @JsonKey(name: 'name')
-  String? adminName;
 
-  @JsonKey(name: 'age', filter : parseAge)
-  int? age;
+  @Column()
+  String? title;
 
-  Admin({this.id, this.name, this.age});
+  @Column()
+  String? status;
+
+  @Column(name: 'body')
+  String? description;
 }
-
-String parseAge(val) {
-  return int.parse(val);
-}
-
-Admin admin = await builder.table('admin').insert<Admin>(
-  {'name': 'John Wick', 'age': 60}
-);
-
-print(admin.id)
-print(admin.adminName)
-print(admin.age)
-
-List<Admin> admins = await builder.table('admin').get<Admin>();
-List<Admin> admins = await builder.table('admin').all<Admin>();
-Admin admin = await builder.table('admin').find<Admin>('name', 'John Wick');
-
 ```
-`@JsonKey` is used to map database column name and class model;
+- `String get primaryKey` is optional default is `id`
+- use `@Column` annotation to declare an attribute as a database column;
+- `@Column` support `name` (database key)
 
-### debug (this option will print query and query params in the console)
+#### Query
 
-```dart
-Builder builder = Builder(db).debug(true);
-await builder.table('admin').find(1);
-```
-
-### insert
+###### insert or create
 
 ```dart
 // single entry
-await builder.table('admin').insert(
+await Actor().create(
+  {'name': 'John Wick', 'age': 60}
+);
+
+await Actor().insert(
   {'name': 'John Wick', 'age': 60}
 );
 
 // multiple
-await builder.table('admin').insertMultiple([
+await Actor().insertMultiple([
   {'name': 'John Wick', 'age': 60},
   {'name': 'John Doe', 'age': 25},
 ]);
 ```
 
-### Update
+###### update
 
 ```dart
-await builder.table('admin')
+await Actor()
   .where('id', 3)
   .where('status', 'active')
   .update({
@@ -88,186 +130,197 @@ await builder.table('admin')
   });
 ```
 
-### all
+###### count
 
 ```dart
-await builder.table('admin').all();
+await Actor().count();
+
+await Actor().where('age', '>=' , 23).count();
 ```
 
-### count
+###### find
 
 ```dart
-await builder.table('admin').count();
+await Actor().find(id); // find by id
 
-await builder.table('admin').where('age', '>=' , 23).count();
+await Actor().find('name', 'John Wick');
 ```
 
-### find
+###### all
 
 ```dart
-await builder.table('admin').find(id); // find by id
-
-await builder.table('admin').find('name', 'John Wick');
+List actors = await Actor().all();
+for(Actor actor in actors) {
+  print(actor.id)
+}
 ```
 
-### get
+###### get
 
 ```dart
-await builder.table('admin').where('name', 'John Wick').get();
+List actors = await Actor().where('name', 'John Wick').get();
+for(Actor actor in actors) {
+  print(actor.id)
+}
 ```
 
-### select
+_NOTE:: currently there is an ongoing issue with List type_
+```dart
+List<Actor> actors = await Actor().where('name', 'John Wick').get(); // will throw error
+```
+
+###### select
 
 ```dart
-await builder.table('admin')
+await Actor()
   .select('id')
   .select('name')
   .where('name', 'John Wick').get();
 
-await builder.table('admin')
+await Actor()
   .select(['id', 'name', 'age']).where('name', 'John Wick').get();
 
-await builder.table('admin')
+await Actor()
   .select('id, name, age').where('name', 'John Wick').get();
 ```
 
-### where
+###### where
 
 ```dart
 // equal condition between column and value
-await builder.table('admin').where('name', 'John Wick').get();
+await Actor().where('name', 'John Wick').get();
 
 // custom condition between column and value
-await builder.table('admin').where('name', '=', 'John Wick').get();
-await builder.table('admin').where('age', '>=', 23).get();
+await Actor().where('name', '=', 'John Wick').get();
+await Actor().where('age', '>=', 23).get();
 ```
 
-### orWhere
+###### orWhere
 
 ```dart
 // equal condition between column and value
-await builder.table('admin').orWhere('name', 'John Wick').get();
+await Actor().orWhere('name', 'John Wick').get();
 
 // custom condition between column and value
-await builder.table('admin').orWhere('name', '=', 'John Wick').get();
-await builder.table('admin').orWhere('age', '>=', 23).get();
+await Actor().orWhere('name', '=', 'John Wick').get();
+await Actor().orWhere('age', '>=', 23).get();
 ```
 
-### whereRaw
+###### whereRaw
 
 ```dart
-await builder.table('admin').whereRaw('name = @name', {'name', 'John Wick'}).get();
+await Actor().whereRaw('name = @name', {'name', 'John Wick'}).get();
 ```
 
-### orWhereRaw
+###### orWhereRaw
 
 ```dart
-await builder.table('admin').orWhereRaw('name = @name', {'name', 'John Wick'}).get();
+await Actor().orWhereRaw('name = @name', {'name', 'John Wick'}).get();
 ```
 
-### Chain where and orWhere
+###### chain where and orWhere
 
 ```dart
-await builder.table('admin')
+await Actor()
   .where('name', 'John Doe').orWhere('name', 'John Wick').get();
 ```
 
-### Chain where and orWhere
+###### chain where and orWhere
 
 ```dart
-await builder.table('admin')
+await Actor()
   .where('name', 'John Doe').orWhere('name', 'John Wick').get();
 ```
 
-### limit or take
+###### limit or take
 
 ```dart
-await builder.table('admin').limit(10).get();
+await Actor().limit(10).get();
 // or
-await builder.table('admin').take(10).get();
+await Actor().take(10).get();
 ```
 
-### offset
+###### offset
 
 ```dart
-await builder.table('admin').limit(10).offset(10).get();
+await Actor().limit(10).offset(10).get();
 ```
 
-### groupBy
+###### groupBy
 
 ```dart
-await builder.table('admin')
+await Actor()
   .select('count(*) as total, name').groupBy('name').get();
 ```
 
-### orderBy
+###### orderBy
 
 ```dart
 
 // default order by with name column
-await builder.table('admin').orderBy('name').get();
+await Actor().orderBy('name').get();
 
 // order by column and type desc
-await builder.table('admin').orderBy('name', 'desc').get();
+await Actor().orderBy('name', 'desc').get();
 
 // order by column and type asc
-await builder.table('admin').orderBy('name', 'asc').get();
+await Actor().orderBy('name', 'asc').get();
 
 // multiple order by
-await builder.table('admin')
+await Actor()
   .orderBy('name', 'asc')
   .orderBy('id', 'desc')
   .get();
 ```
 
-## Join
+##### Join Query
 
-### join
+###### join
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .join('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
 
-### leftJoin
+###### leftJoin
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .leftJoin('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
 
-### rightJoin
+###### rightJoin
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .rightJoin('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
 
 
-### joinRaw
+###### joinRaw
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .joinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
 
 
-### leftJoinRaw
+###### leftJoinRaw
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .leftJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
 
-### rightJoinRaw
+###### rightJoinRaw
 
 ```dart
-var admin = await builder.table('admin')
+await Actor()
     .rightJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```

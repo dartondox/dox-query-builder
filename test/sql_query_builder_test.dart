@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:postgres/postgres.dart';
 import 'package:sql_query_builder/sql_query_builder.dart';
-import 'package:sql_query_builder/src/schema.dart';
-import 'package:sql_query_builder/src/schema/table.dart';
 import 'package:test/test.dart';
 
 void main() async {
@@ -17,33 +15,64 @@ void main() async {
     password: "password",
   );
   await db.open();
-  Builder builder = Builder(db).debug(false);
+  SqlQueryBuilder.initialize(database: db, debug: false);
 
   group('Query Builder', () {
     setUp(() {});
 
     test('insert', () async {
-      Schema schema = Schema(db).debug(false);
-
-      schema.drop('blog');
-      schema.create('blog', (Table table) {
+      Schema.drop('blog');
+      Schema.create('blog', (Table table) {
         table.id();
-        table.string('title').nullable().unique();
+        table.string('title').nullable();
         table.char('status').withDefault('active');
         table.text('body');
         table.money('amount').nullable();
         table.softDeletes();
         table.timestamps();
       });
-      builder.table('blog').truncate();
-      await builder.table('blog').insert({
-        'title': 'Awesome blog',
-        'body': 'Awesome blog body',
-      });
-      var blog = await builder.table('blog').find(1);
-      expect(blog['id'], 1);
-      expect(blog['title'], 'Awesome blog');
-      expect(blog['body'], 'Awesome blog body');
+
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      blog.status = 'deleted';
+      await blog.save();
+      blog.title = "Updated title";
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'Amazing blog';
+      blog2.description = 'Amazing blog body';
+      blog2.status = 'active';
+      await blog2.save();
+
+      Blog result = await Blog().find(1);
+      Blog result2 = await Blog().find(2);
+
+      expect(result.id, 1);
+      expect(result.title, 'Updated title');
+      expect(result.description, 'Awesome blog body');
+
+      expect(result2.id, 2);
+      expect(result2.title, 'Amazing blog');
+      expect(result2.description, 'Amazing blog body');
     });
   });
+}
+
+class Blog extends Model {
+  @override
+  String get primaryKey => 'id';
+
+  @Column(name: 'id')
+  int? id;
+
+  @Column()
+  String? title;
+
+  @Column()
+  String? status;
+
+  @Column(name: 'body')
+  String? description;
 }

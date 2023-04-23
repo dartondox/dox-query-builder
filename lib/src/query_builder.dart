@@ -18,19 +18,22 @@ import 'utils/helper.dart';
 import 'utils/logger.dart';
 import 'where.dart';
 
-class Builder {
-  final PostgreSQLConnection db;
-  bool _debug = false;
+class SqlQueryBuilder {
+  static final SqlQueryBuilder _singleton = SqlQueryBuilder._internal();
 
-  Builder(this.db);
-
-  Builder debug(bool debug) {
-    _debug = debug;
-    return this;
+  factory SqlQueryBuilder() {
+    return _singleton;
   }
 
-  QueryBuilder table(tableName) {
-    return QueryBuilder(db).setDebug(_debug).setTable(tableName);
+  SqlQueryBuilder._internal();
+
+  late PostgreSQLConnection db;
+  late bool debug;
+
+  static initialize({required PostgreSQLConnection database, bool? debug}) {
+    SqlQueryBuilder sql = SqlQueryBuilder();
+    sql.db = database;
+    sql.debug = debug ?? false;
   }
 }
 
@@ -56,6 +59,7 @@ class QueryBuilder
   late PostgreSQLConnection _db;
   bool _debug = false;
   String _table = '';
+
   Map<String, dynamic> _substitutionValues = {};
 
   @override
@@ -86,6 +90,9 @@ class QueryBuilder
   String get selectQueryString => getSelectQuery();
 
   @override
+  dynamic get modelType => null;
+
+  @override
   addSubstitutionValues(String key, dynamic value) {
     return _substitutionValues[key] = value;
   }
@@ -95,10 +102,16 @@ class QueryBuilder
     return _substitutionValues = {};
   }
 
-  QueryBuilder(PostgreSQLConnection db) {
-    _db = db;
+  QueryBuilder() {
+    SqlQueryBuilder instance = SqlQueryBuilder();
+    _db = instance.db;
     _logger = Logger();
     _helper = QueryBuilderHelper(this);
+    setDebug(instance.debug);
+  }
+
+  static QueryBuilder table(tableName) {
+    return QueryBuilder().setTable(tableName);
   }
 
   QueryBuilder setDebug(bool debug) {

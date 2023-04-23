@@ -1,13 +1,17 @@
 import 'shared_mixin.dart';
 
 mixin Insert implements SharedMixin {
-  Future insert<T>(Map<String, dynamic> data) async {
+  Future create(Map<String, dynamic> data) async {
+    await insert(data);
+  }
+
+  Future insert(Map<String, dynamic> data) async {
     List result = await insertMultiple([data]);
     if (result.isNotEmpty) {
       Map insertedData = result.first;
       int id = insertedData[tableName]['id'] ?? 0;
       resetSubstitutionValues();
-      return await queryBuilder.find<T>(id);
+      return await queryBuilder.find(id);
     }
     return null;
   }

@@ -1,27 +1,15 @@
-import 'package:postgres/postgres.dart';
-
-import 'schema/table.dart';
+import '/sql_query_builder.dart';
 
 class Schema {
-  late PostgreSQLConnection _db;
-  late bool _isDebug = false;
-
-  Schema(PostgreSQLConnection db) {
-    _db = db;
-  }
-
-  debug(debug) {
-    _isDebug = debug;
-    return this;
-  }
-
-  Future create(tableName, callback) async {
-    Table table = Table(_db).table(tableName).debug(_isDebug);
+  static Future create(tableName, callback) async {
+    SqlQueryBuilder instance = SqlQueryBuilder();
+    Table table = Table(instance.db).table(tableName).debug(instance.debug);
     callback(table);
     await table.create();
   }
 
-  Future<void> drop(tableName) async {
-    _db.query("DROP TABLE IF EXISTS $tableName RESTRICT");
+  static Future<void> drop(tableName) async {
+    SqlQueryBuilder instance = SqlQueryBuilder();
+    instance.db.query("DROP TABLE IF EXISTS $tableName RESTRICT");
   }
 }

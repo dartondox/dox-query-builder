@@ -34,6 +34,7 @@
   - [Left Join raw](#leftjoinraw)
   - [Right Join](#rightjoin)
   - [Right Join raw](#rightjoinraw)
+- [Custom Query Builder Without Model](#custom-query-builder-without-model)
 - [Development](#development)
 
 ##### Example Usage
@@ -393,6 +394,12 @@ await Actor()
 await Actor()
     .rightJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
+```
+
+##### Custom Query Builder Without Model
+
+```dart
+await QueryBuilder.table('actor').get();
 ```
 
 #### Development

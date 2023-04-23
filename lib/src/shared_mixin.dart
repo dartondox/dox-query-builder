@@ -14,7 +14,7 @@ abstract class SharedMixin {
   String get tableName;
   String get rawQueryString;
   String get selectQueryString;
-  dynamic get modelType;
+  dynamic modelType;
   bool isSoftDeletes = false;
 
   addSubstitutionValues(String key, dynamic value) {}

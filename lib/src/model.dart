@@ -19,13 +19,13 @@ class Model extends QueryBuilder {
       values.removeWhere((key, value) => value == null);
       values['created_at'] = now();
       values['updated_at'] = now();
-      await setTable(tableName).insert(values);
+      await QueryBuilder.table(tableName, this).insert(values);
     } else {
       var id = values[primaryKey];
       values.remove(primaryKey);
       values.remove('created_at');
       values['updated_at'] = now();
-      await setTable(tableName).where('id', id).update(values);
+      await QueryBuilder.table(tableName, this).where('id', id).update(values);
     }
   }
 }

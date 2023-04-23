@@ -90,7 +90,7 @@ class QueryBuilder
   String get selectQueryString => getSelectQuery();
 
   @override
-  dynamic get modelType => null;
+  dynamic modelType;
 
   @override
   bool isSoftDeletes = false;
@@ -113,8 +113,8 @@ class QueryBuilder
     setDebug(instance.debug);
   }
 
-  static QueryBuilder table(tableName) {
-    return QueryBuilder().setTable(tableName);
+  static QueryBuilder table(tableName, [dynamic type]) {
+    return QueryBuilder().setTable(tableName, type);
   }
 
   QueryBuilder setDebug(bool debug) {
@@ -122,7 +122,8 @@ class QueryBuilder
     return this;
   }
 
-  QueryBuilder setTable(tableName) {
+  QueryBuilder setTable(tableName, [dynamic type]) {
+    modelType = type;
     _table = tableName;
     return this;
   }

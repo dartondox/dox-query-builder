@@ -1,3 +1,8 @@
+## 1.0.0-alpha.5
+
+- Bug fixed on model save
+- Add Docs for custom query builder without using model
+
 ## 1.0.0-alpha.4
 
 - Update readme with links to query

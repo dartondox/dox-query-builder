@@ -1,6 +1,6 @@
 name: sql_query_builder
 description: SQL query builder for Postgres.
-version: 1.0.0-alpha.4
+version: 1.0.0-alpha.5
 repository: https://github.com/necessarylion/dart-sql-query-builder
 homepage: https://github.com/necessarylion/dart-sql-query-builder
 

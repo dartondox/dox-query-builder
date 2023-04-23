@@ -365,3 +365,6 @@ await Actor()
     .rightJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
+
+#### Development
+Want to contribute? Great! Fork the repo and create PR to us.

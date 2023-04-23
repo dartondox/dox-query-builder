@@ -73,7 +73,7 @@ void main() async {
   );
   await db.open();
 
-  // initial SqlQueryBuilder, only once at main function
+  // initialize SqlQueryBuilder, only once at main function
   SqlQueryBuilder.initialize(database: db, debug: true);
 
   // and finally use model from anywhere in the project.

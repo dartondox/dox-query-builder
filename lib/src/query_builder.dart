@@ -93,6 +93,9 @@ class QueryBuilder
   dynamic get modelType => null;
 
   @override
+  bool isSoftDeletes = false;
+
+  @override
   addSubstitutionValues(String key, dynamic value) {
     return _substitutionValues[key] = value;
   }

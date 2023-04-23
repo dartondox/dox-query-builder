@@ -13,7 +13,7 @@ class Logger {
       _centerLine('PARAMS');
       List<String> param = _getPrettyJSONString(params).toString().split("\n");
       for (var i in param) {
-        _wrapLine(i);
+        _wrapLine(i.toString());
       }
     }
     _bottomLine();

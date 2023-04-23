@@ -5,7 +5,7 @@
 ```dart
 import 'package:sql_query_builder/sql_query_builder.dart';
 
-// create a model 
+// create a model
 class Actor extends Model {
   @override
   String get primaryKey => 'id';
@@ -18,6 +18,12 @@ class Actor extends Model {
 
   @Column()
   int? age;
+
+  @Column(name: 'created_at')
+  DateTime? createdAt;
+
+  @Column(name: 'updated_at')
+  DateTime? updatedAt;
 }
 
 void main() async {
@@ -91,11 +97,26 @@ class Blog extends Model {
 
   @Column(name: 'body')
   String? description;
+
+  @Column(name: 'created_at')
+  DateTime? createdAt;
+
+  @Column(name: 'updated_at')
+  DateTime? updatedAt;
 }
 ```
+
 - `String get primaryKey` is optional default is `id`
-- use `@Column` annotation to declare an attribute as a database column;
+- use `@Column` annotation to declare an attribute as a database column
 - `@Column` support `name` (database key)
+
+###### Soft Deletes
+
+```dart
+class Blog extends Model with SoftDeletes {
+ // columns here
+}
+```
 
 #### Query
 
@@ -165,8 +186,30 @@ for(Actor actor in actors) {
 ```
 
 _NOTE:: currently there is an ongoing issue with List type_
+
 ```dart
 List<Actor> actors = await Actor().where('name', 'John Wick').get(); // will throw error
+```
+
+###### delete
+
+```dart
+await Actor().where('name', 'John Wick').delete();
+```
+
+###### forceDelete (only with SoftDeletes)
+
+```dart
+await Actor().where('name', 'John Wick').forceDelete();
+```
+
+###### withTrash (only with SoftDeletes)
+
+```dart
+List actors = await Actor().where('name', 'John Wick').withTrash().get();
+for(Actor actor in actors) {
+  print(actor.id)
+}
 ```
 
 ###### select
@@ -299,7 +342,6 @@ await Actor()
     .get();
 ```
 
-
 ###### joinRaw
 
 ```dart
@@ -307,7 +349,6 @@ await Actor()
     .joinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
 ```
-
 
 ###### leftJoinRaw
 

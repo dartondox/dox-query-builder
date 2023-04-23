@@ -8,6 +8,9 @@ mixin Find implements SharedMixin {
 
     String query =
         "SELECT $selectQueryString FROM $tableName where $column =  @$key";
+    if (isSoftDeletes) {
+      query += ' AND deleted_at IS NULL';
+    }
     addSubstitutionValues(key, value);
 
     List result = helper.formatResult(await helper.runQuery(query));

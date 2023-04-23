@@ -14,6 +14,9 @@ class QueryBuilderHelper {
   }
 
   getCommonQuery() {
+    if (queryBuilder.isSoftDeletes) {
+      queryBuilder.whereRaw('deleted_at IS NULL');
+    }
     String query = "";
     query += queryBuilder.getJoinQuery();
     query += queryBuilder.getWhereQuery();

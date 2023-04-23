@@ -56,11 +56,20 @@ void main() async {
       expect(result2.id, 2);
       expect(result2.title, 'Amazing blog');
       expect(result2.description, 'Amazing blog body');
+
+      await Blog().where('id', 1).delete();
+      await Blog().where('id', 2).delete();
+
+      List blogs = await Blog().withTrash().all();
+      expect(blogs.length, 2);
+
+      List blogs2 = await Blog().all();
+      expect(blogs2.length, 0);
     });
   });
 }
 
-class Blog extends Model {
+class Blog extends Model with SoftDeletes {
   @override
   String get primaryKey => 'id';
 
@@ -75,4 +84,10 @@ class Blog extends Model {
 
   @Column(name: 'body')
   String? description;
+
+  @Column(name: 'created_at')
+  DateTime? createdAt;
+
+  @Column(name: 'updated_at')
+  DateTime? updatedAt;
 }

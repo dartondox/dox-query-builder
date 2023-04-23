@@ -1,6 +1,42 @@
 #### Dart SQL Query Builder
 
-##### Usage Example
+- [Example Usage](#example-usage)
+- [Schema](#schema-to-create-database-table)
+  - [Create](#create-table)
+  - [Drop](#dropdelete-table)
+- [Model](#model)
+  - [Structure](#model)
+  - [Soft Deletes](#soft-deletes)
+- [Query](#query)
+  - [Insert or Create](#insert-or-create)
+  - [Update](#update)
+  - [Count](#count)
+  - [Find](#find)
+  - [All](#all)
+  - [Get](#get)
+  - [Delete](#delete)
+  - [Force delete](#forcedelete-only-with-softdeletes)
+  - [With trash](#withtrash-only-with-softdeletes)
+  - [Select](#select)
+  - [Where](#where)
+  - [Where raw](#whereraw)
+  - [OrWhere](#orwhere)
+  - [OrWhere raw](#orwhereraw)
+  - [Chain where and orWhere](#chain-where-and-orwhere)
+  - [Chain where and orWhere](#chain-where-and-orwhere)
+  - [Limit or Take](#limit-or-take)
+  - [Offset](#offset)
+  - [Group By](#groupby)
+  - [Order By](#orderby)
+  - [Join](#join)
+  - [Join raw](#joinraw)
+  - [Left Join](#leftjoin)
+  - [Left Join raw](#leftjoinraw)
+  - [Right Join](#rightjoin)
+  - [Right Join raw](#rightjoinraw)
+- [Development](#development)
+
+##### Example Usage
 
 ```dart
 import 'package:sql_query_builder/sql_query_builder.dart';
@@ -259,13 +295,6 @@ await Actor().whereRaw('name = @name', {'name', 'John Wick'}).get();
 
 ```dart
 await Actor().orWhereRaw('name = @name', {'name', 'John Wick'}).get();
-```
-
-###### chain where and orWhere
-
-```dart
-await Actor()
-  .where('name', 'John Doe').orWhere('name', 'John Wick').get();
 ```
 
 ###### chain where and orWhere

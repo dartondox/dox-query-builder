@@ -1,3 +1,7 @@
+## 1.0.0-alpha.4
+
+- Update readme with links to query
+
 ## 1.0.0-alpha.3
 
 - Auto save created_at and updated_at column

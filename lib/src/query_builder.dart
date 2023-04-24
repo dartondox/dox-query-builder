@@ -60,6 +60,9 @@ class QueryBuilder
   QueryBuilder get queryBuilder => this;
 
   @override
+  String get primaryKey => 'id';
+
+  @override
   PostgreSQLConnection get db => SqlQueryBuilder().db;
 
   @override
@@ -69,7 +72,7 @@ class QueryBuilder
   Logger get logger => Logger();
 
   @override
-  bool get shouldDebug => SqlQueryBuilder().debug;
+  bool shouldDebug = SqlQueryBuilder().debug;
 
   @override
   Map<String, dynamic> get substitutionValues => _substitutionValues;
@@ -104,5 +107,10 @@ class QueryBuilder
     builder.tableName = tableName;
     builder.modelType = type;
     return builder;
+  }
+
+  QueryBuilder debug(bool debug) {
+    shouldDebug = debug;
+    return this;
   }
 }

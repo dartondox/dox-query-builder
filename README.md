@@ -7,6 +7,8 @@
     - [drop/delete table](#dropdelete-table)
 - [Model](#model)
     - [Soft Deletes](#soft-deletes)
+    - [Save](#save)
+    - [Debug](#debug)
     - [Reset query and create new one](#reset-query-and-create-new-one)
 - [Query](#query)
     - [insert or create](#insert-or-create)
@@ -29,13 +31,13 @@
     - [offset](#offset)
     - [groupBy](#groupby)
     - [orderBy](#orderby)
-  - [Join Query](#join-query)
     - [join](#join)
     - [leftJoin](#leftjoin)
     - [rightJoin](#rightjoin)
     - [joinRaw](#joinraw)
     - [leftJoinRaw](#leftjoinraw)
     - [rightJoinRaw](#rightjoinraw)
+    - [debug](#debug-1)
   - [Custom Query Builder Without Model](#custom-query-builder-without-model)
 - [Development](#development)
 
@@ -155,6 +157,24 @@ class Blog extends Model {
 class Blog extends Model with SoftDeletes {
  // columns here
 }
+```
+
+###### Save
+
+```dart
+Actor actor = Actor();
+actor.name = 'John Wick';
+actor.age = 60;
+await actor.save();
+```
+###### Debug
+
+```dart
+Actor actor = Actor();
+actor.name = 'John Wick';
+actor.age = 60;
+actor.debug(true);
+await actor.save();
 ```
 
 ###### Reset query and create new one
@@ -366,8 +386,6 @@ await Actor()
   .get();
 ```
 
-##### Join Query
-
 ###### join
 
 ```dart
@@ -414,6 +432,12 @@ await Actor()
 await Actor()
     .rightJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
     .get();
+```
+
+###### debug
+
+```dart
+await Actor().debug(true).all();
 ```
 
 ##### Custom Query Builder Without Model

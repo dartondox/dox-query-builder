@@ -9,10 +9,11 @@ abstract class SharedMixin {
   QueryBuilderHelper get helper;
   Logger get logger;
   PostgreSQLConnection get db;
-  bool get shouldDebug;
   Map<String, dynamic> get substitutionValues;
   String get rawQueryString;
   String get selectQueryString;
+  String get primaryKey;
+  bool shouldDebug = false;
   dynamic modelType;
   String tableName = '';
   bool isSoftDeletes = false;

@@ -1,6 +1,10 @@
 ## 1.0.1
 
-- Added Examples and Update readme
+- Rename examples file
+
+## 1.0.1
+
+- Added examples and update readme
 
 ## 1.0.0
 

@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Added Examples and Update readme
+
 ## 1.0.0
 
 - Release stable version `v1.0.0`

@@ -44,9 +44,9 @@
 ##### Example Usage
 
 ```dart
+import 'package:postgres/postgres.dart';
 import 'package:sql_query_builder/sql_query_builder.dart';
 
-// create a model
 class Actor extends Model {
   @override
   String get primaryKey => 'id';
@@ -83,17 +83,17 @@ void main() async {
 
   // and finally use model from anywhere in the project.
   Actor actor = Actor();
-  actor.name = 'John Wick';
+  actor.actorName = 'John Wick';
   actor.age = 60;
   await actor.save();
 
-  actor.name = "Tom Cruise";
+  actor.actorName = "Tom Cruise";
   await actor.save(); // save again
 
-  print(actor.id)
+  print(actor.id);
 
-  Actor result = Actor().where('name', 'Tom Cruise').get();
-  print(result.status)
+  Actor result = await Actor().where('name', 'Tom Cruise').get();
+  print(result.age);
 }
 ```
 

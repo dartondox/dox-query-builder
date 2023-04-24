@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Release stable version `v1.0.0`
+
 ## 1.0.0-alpha.6
 
 - Added `debug()` option on model

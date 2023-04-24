@@ -414,7 +414,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .joinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
+    .joinRaw('actor_info on actor_info.admin_id = admin.id')
     .get();
 ```
 
@@ -422,7 +422,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .leftJoinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
+    .leftJoinRaw('actor_info on actor_info.admin_id = admin.id')
     .get();
 ```
 
@@ -430,7 +430,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .rightJoinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
+    .rightJoinRaw('actor_info on actor_info.admin_id = admin.id')
     .get();
 ```
 

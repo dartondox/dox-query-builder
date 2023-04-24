@@ -1,6 +1,11 @@
 import 'shared_mixin.dart';
 
 mixin Count implements SharedMixin {
+  /// Count record
+  ///
+  /// ```
+  /// await Blog().count();
+  /// ```
   count() async {
     String select = selectQueryString == '*'
         ? 'count(*) as total'

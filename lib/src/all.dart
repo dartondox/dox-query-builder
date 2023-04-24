@@ -1,6 +1,11 @@
 import 'shared_mixin.dart';
 
 mixin All implements SharedMixin {
+  /// Get all record from table
+  ///
+  /// ```
+  /// await Blog().all();
+  /// ```
   Future all() async {
     String query = "SELECT $selectQueryString FROM $tableName";
     if (isSoftDeletes) {

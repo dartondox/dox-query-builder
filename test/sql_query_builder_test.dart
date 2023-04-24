@@ -40,7 +40,7 @@ void main() async {
       blog.title = "Updated title";
       await blog.save();
 
-      expect(blog.id!= null, true);
+      expect(blog.id != null, true);
 
       Blog blog2 = Blog();
       blog2.title = 'Amazing blog';
@@ -48,7 +48,7 @@ void main() async {
       blog2.status = 'active';
       await blog2.save();
 
-      expect(blog2.id!= null, true);
+      expect(blog2.id != null, true);
 
       Blog result = await Blog().find(blog.id);
       Blog result2 = await Blog().find(blog2.id);
@@ -81,7 +81,7 @@ void main() async {
       expect(check.id, blog.id);
     });
 
-     test('test to Sql', () async {
+    test('test to Sql', () async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";

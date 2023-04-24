@@ -8,6 +8,15 @@ mixin Select implements SharedMixin {
     return _select;
   }
 
+  /// Select query
+  ///
+  /// ```
+  /// await Blog().select('title, body').get();
+  /// await Blog().select('title').select('body').get();
+  /// await Blog().select(['title', 'body']).get();
+  /// await Blog().select(['title', 'body']).get();
+  /// ```
+  /// [selection] can be string or array
   QueryBuilder select(dynamic selection) {
     if (selection is List<String>) {
       _select = selection.join(',');

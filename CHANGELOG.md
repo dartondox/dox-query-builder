@@ -1,3 +1,15 @@
+## 1.0.5
+
+- Added self documentation
+
+## 1.0.4
+
+- Added package description
+
+## 1.0.3
+
+- Rename examples file
+
 ## 1.0.2
 
 - Rename examples file

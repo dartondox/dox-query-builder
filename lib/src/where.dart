@@ -11,18 +11,38 @@ mixin Where implements SharedMixin {
     return '';
   }
 
+  /// where condition
+  ///
+  /// ```
+  /// List blogs = await where('id', 1).get();
+  /// ```
   QueryBuilder where(String arg1, [dynamic arg2, dynamic arg3]) {
     return _query('AND', arg1, arg2, arg3);
   }
 
+  /// or where condition
+  ///
+  /// ```
+  /// List blogs = await orWhere('id', 1).get();
+  /// ```
   QueryBuilder orWhere(String arg1, [dynamic arg2, dynamic arg3]) {
     return _query('OR', arg1, arg2, arg3);
   }
 
+  /// where raw condition
+  ///
+  /// ```
+  /// List blogs = await whereRaw('id = @id', {"id" : 1}).get();
+  /// ```
   QueryBuilder whereRaw(rawQuery, [dynamic params]) {
     return _rawQuery('AND', rawQuery, params);
   }
 
+  /// where raw condition
+  ///
+  /// ```
+  /// List blogs = await orWhereRaw('id = @id', {"id" : 1}).get();
+  /// ```
   QueryBuilder orWhereRaw(rawQuery, [dynamic params]) {
     return _rawQuery('OR', rawQuery, params);
   }

@@ -11,27 +11,57 @@ mixin Join implements SharedMixin {
     return '';
   }
 
+  /// left join
+  ///
+  /// ```
+  /// List admins = await Admin().leftJoin('admin_info', 'admin_info.admin_id', 'admin.id').get();
+  /// ```
   QueryBuilder leftJoin(String arg1, String arg2, String arg3, [dynamic arg4]) {
     return _query('LEFT JOIN', arg1, arg2, arg3, arg4);
   }
 
+  /// right join
+  ///
+  /// ```
+  /// List admins = await Admin().rightJoin('admin_info', 'admin_info.admin_id', 'admin.id').get();
+  /// ```
   QueryBuilder rightJoin(String arg1, String arg2, String arg3,
       [dynamic arg4]) {
     return _query('RIGHT JOIN', arg1, arg2, arg3, arg4);
   }
 
+  /// join
+  ///
+  /// ```
+  /// List admins = await Admin().join('admin_info', 'admin_info.admin_id', 'admin.id').get();
+  /// ```
   QueryBuilder join(String arg1, String arg2, String arg3, [dynamic arg4]) {
     return _query('JOIN', arg1, arg2, arg3, arg4);
   }
 
+  /// join raw
+  ///
+  /// ```
+  /// List admins = await Admin().joinRaw('admin_info on admin_info.admin_id = admin.id').get();
+  /// ```
   QueryBuilder joinRaw(rawQuery, [dynamic params]) {
     return _rawQuery('JOIN', rawQuery, params);
   }
 
+  /// left join raw
+  ///
+  /// ```
+  /// List admins = await Admin().leftJoinRaw('admin_info on admin_info.admin_id = admin.id').get();
+  /// ```
   QueryBuilder leftJoinRaw(rawQuery, [dynamic params]) {
     return _rawQuery('LEFT JOIN', rawQuery, params);
   }
 
+  /// right join raw
+  ///
+  /// ```
+  /// List admins = await Admin().rightJoinRaw('admin_info on admin_info.admin_id = admin.id').get();
+  /// ```
   QueryBuilder rightJoinRaw(rawQuery, [dynamic params]) {
     return _rawQuery('RIGHT JOIN', rawQuery, params);
   }

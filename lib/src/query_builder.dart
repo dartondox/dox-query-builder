@@ -62,6 +62,10 @@ class QueryBuilder
   @override
   String get primaryKey => 'id';
 
+  /// PostgresSQL database
+  /// ```
+  /// QueryBuilder.db.query("select * from blog");
+  /// ```
   @override
   PostgreSQLConnection get db => SqlQueryBuilder().db;
 
@@ -89,6 +93,7 @@ class QueryBuilder
   @override
   bool isSoftDeletes = false;
 
+  /// table to query
   @override
   String tableName = '';
 
@@ -102,6 +107,14 @@ class QueryBuilder
     return _substitutionValues = {};
   }
 
+  /// set table and continue query
+  ///
+  /// ```
+  /// QueryBuilder.table('blog');
+  /// ```
+  /// set table name [tableName] as first parameter
+  /// and model instance [type] in second parameter [type] is optional
+  /// this return QueryBuilder
   static QueryBuilder table(tableName, [dynamic type]) {
     QueryBuilder builder = QueryBuilder();
     builder.tableName = tableName;
@@ -109,6 +122,11 @@ class QueryBuilder
     return builder;
   }
 
+  /// set debug on or of
+  ///
+  /// ```
+  /// QueryBuilder.table('blog').debug(true)
+  /// ```
   QueryBuilder debug(bool debug) {
     shouldDebug = debug;
     return this;

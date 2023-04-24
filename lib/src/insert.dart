@@ -1,10 +1,26 @@
 import 'shared_mixin.dart';
 
 mixin Insert implements SharedMixin {
+  /// create/insert a record
+  ///
+  /// ```
+  /// Blog blog = await Blog().create({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ```
   Future create(Map<String, dynamic> data) async {
     await insert(data);
   }
 
+  /// insert/create a record
+  ///
+  /// ```
+  /// Blog blog = await Blog().insert({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ```
   Future insert(Map<String, dynamic> data) async {
     List result = await insertMultiple([data]);
     if (result.isNotEmpty) {
@@ -16,6 +32,14 @@ mixin Insert implements SharedMixin {
     return null;
   }
 
+  /// insert/create multiple records
+  ///
+  /// ```
+  /// Blog blog = await Blog().insert([
+  ///   {"title" : "Blog title"},
+  ///   {"title" : "Another blog title"},
+  /// ]);
+  /// ```
   Future insertMultiple(List<Map<String, dynamic>> list) async {
     List columns = [];
     List<String> values = [];

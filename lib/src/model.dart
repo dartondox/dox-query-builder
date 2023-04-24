@@ -19,6 +19,13 @@ class Model extends QueryBuilder {
     return this;
   }
 
+  /// create new record in table
+  ///
+  /// ```
+  /// Blog blog = new Blog();
+  /// blog.title = 'blog title';
+  /// await blog.save()
+  /// ```
   Future save() async {
     Map<String, dynamic> values = helper.typeConverter.toMap(this);
     if (values[primaryKey] == null) {

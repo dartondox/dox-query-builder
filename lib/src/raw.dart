@@ -8,6 +8,11 @@ mixin Raw implements SharedMixin {
     return _rawQuery;
   }
 
+  /// Raw query (this function cannot used with Model)
+  ///
+  /// ```
+  /// await QueryBuilder.rawQuery('select * from blog').get();
+  /// ```
   QueryBuilder rawQuery(String query, [dynamic substitutionValues]) {
     _rawQuery = query;
     if (substitutionValues is Map<String, dynamic>) {

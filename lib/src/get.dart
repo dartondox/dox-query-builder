@@ -13,10 +13,20 @@ mixin Get implements SharedMixin {
     return q;
   }
 
+  /// Get records
+  ///
+  /// ```
+  /// List blogs = await Blog().where('status', 'active').get();
+  /// ```
   Future get() async {
     return helper.formatResult(await helper.runQuery(_buildQuery()));
   }
 
+  /// Get Sql string
+  ///
+  /// ```
+  /// String query = Blog().where('status', 'active').toSql();
+  /// ```
   String toSql() {
     String q = _buildQuery();
     Map<String, dynamic> values = queryBuilder.substitutionValues;

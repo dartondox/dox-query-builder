@@ -1,3 +1,7 @@
+## 1.0.6
+
+- Added discord community link
+
 ## 1.0.5
 
 - Added self documentation

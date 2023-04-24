@@ -1,5 +1,4 @@
-import 'package:sql_query_builder/src/utils/type_converter.dart';
-
+import 'type_converter.dart';
 import '../query_builder.dart';
 
 class QueryBuilderHelper {
@@ -33,6 +32,7 @@ class QueryBuilderHelper {
     if (db.isClosed) {
       await db.open();
     }
+    query = query.replaceAll(RegExp(' +'), ' ');
     if (mapped) {
       return await db.mappedResultsQuery(query, substitutionValues: values);
     } else {

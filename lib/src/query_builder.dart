@@ -54,34 +54,25 @@ class QueryBuilder
         Truncate,
         Delete,
         Count {
-  late QueryBuilderHelper _helper;
-  late Logger _logger;
-  late PostgreSQLConnection _db;
-  bool _debug = false;
-  String _table = '';
-
   Map<String, dynamic> _substitutionValues = {};
 
   @override
   QueryBuilder get queryBuilder => this;
 
   @override
-  PostgreSQLConnection get db => _db;
+  PostgreSQLConnection get db => SqlQueryBuilder().db;
 
   @override
-  QueryBuilderHelper get helper => _helper;
+  QueryBuilderHelper get helper => QueryBuilderHelper(this);
 
   @override
-  Logger get logger => _logger;
+  Logger get logger => Logger();
 
   @override
-  bool get shouldDebug => _debug;
+  bool get shouldDebug => SqlQueryBuilder().debug;
 
   @override
   Map<String, dynamic> get substitutionValues => _substitutionValues;
-
-  @override
-  String get tableName => _table;
 
   @override
   String get rawQueryString => getRawQuery();
@@ -96,6 +87,9 @@ class QueryBuilder
   bool isSoftDeletes = false;
 
   @override
+  String tableName = '';
+
+  @override
   addSubstitutionValues(String key, dynamic value) {
     return _substitutionValues[key] = value;
   }
@@ -105,26 +99,10 @@ class QueryBuilder
     return _substitutionValues = {};
   }
 
-  QueryBuilder() {
-    SqlQueryBuilder instance = SqlQueryBuilder();
-    _db = instance.db;
-    _logger = Logger();
-    _helper = QueryBuilderHelper(this);
-    setDebug(instance.debug);
-  }
-
   static QueryBuilder table(tableName, [dynamic type]) {
-    return QueryBuilder().setTable(tableName, type);
-  }
-
-  QueryBuilder setDebug(bool debug) {
-    _debug = debug;
-    return this;
-  }
-
-  QueryBuilder setTable(tableName, [dynamic type]) {
-    modelType = type;
-    _table = tableName;
-    return this;
+    QueryBuilder builder = QueryBuilder();
+    builder.tableName = tableName;
+    builder.modelType = type;
+    return builder;
   }
 }

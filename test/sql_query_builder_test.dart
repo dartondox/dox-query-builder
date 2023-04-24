@@ -40,31 +40,57 @@ void main() async {
       blog.title = "Updated title";
       await blog.save();
 
+      expect(blog.id!= null, true);
+
       Blog blog2 = Blog();
       blog2.title = 'Amazing blog';
       blog2.description = 'Amazing blog body';
       blog2.status = 'active';
       await blog2.save();
 
-      Blog result = await Blog().find(1);
-      Blog result2 = await Blog().find(2);
+      expect(blog2.id!= null, true);
 
-      expect(result.id, 1);
+      Blog result = await Blog().find(blog.id);
+      Blog result2 = await Blog().find(blog2.id);
+
+      expect(result.id, blog.id);
       expect(result.title, 'Updated title');
       expect(result.description, 'Awesome blog body');
 
-      expect(result2.id, 2);
+      expect(result2.id, blog2.id);
       expect(result2.title, 'Amazing blog');
       expect(result2.description, 'Amazing blog body');
 
-      await Blog().where('id', 1).delete();
-      await Blog().where('id', 2).delete();
+      await Blog().where('id', blog.id).delete();
+      await Blog().where('id', blog2.id).delete();
 
       List blogs = await Blog().withTrash().all();
       expect(blogs.length, 2);
 
       List blogs2 = await Blog().all();
       expect(blogs2.length, 0);
+    });
+
+    test('test with new query', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      blog.save();
+
+      Blog check = await blog.newQuery.find(1);
+      expect(check.id, blog.id);
+    });
+
+     test('test to Sql', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
+
+      expect(blog.id != null, true);
+
+      String query = blog.newQuery.where('id', blog.id).toSql();
+      expect("SELECT * FROM blog WHERE id = ${blog.id}", query);
     });
   });
 }

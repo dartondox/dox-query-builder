@@ -1,30 +1,21 @@
 import 'package:postgres/postgres.dart';
 
+import '../query_builder.dart';
 import '../utils/logger.dart';
 import 'table.column.dart';
 
 class Table {
   final List<TableColumn> columns = [];
   String tableName = '';
-  bool isDebug = false;
 
-  late Logger _logger;
-  late PostgreSQLConnection _db;
+  bool get isDebug => SqlQueryBuilder().debug;
 
-  Logger get logger => _logger;
+  PostgreSQLConnection get db => SqlQueryBuilder().db;
 
-  Table(PostgreSQLConnection db) {
-    _db = db;
-    _logger = Logger();
-  }
+  Logger get logger => Logger();
 
   Table table(table) {
     tableName = table;
-    return this;
-  }
-
-  Table debug(debug) {
-    isDebug = debug;
     return this;
   }
 
@@ -165,6 +156,6 @@ class Table {
     if (isDebug) {
       logger.log(query);
     }
-    await _db.mappedResultsQuery(query);
+    await db.mappedResultsQuery(query);
   }
 }

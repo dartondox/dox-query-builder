@@ -1,7 +1,7 @@
 import 'shared_mixin.dart';
 
 mixin Get implements SharedMixin {
-  Future get() async {
+  _buildQuery() {
     String q;
     if (rawQueryString.isNotEmpty) {
       q = rawQueryString;
@@ -9,6 +9,21 @@ mixin Get implements SharedMixin {
       q = "SELECT $selectQueryString FROM $tableName";
       q += helper.getCommonQuery();
     }
-    return helper.formatResult(await helper.runQuery(q));
+    q = q.replaceAll(RegExp(' +'), ' ');
+    return q;
+  }
+
+  Future get() async {
+    return helper.formatResult(await helper.runQuery(_buildQuery()));
+  }
+
+  String toSql() {
+    String q = _buildQuery();
+    Map<String, dynamic> values = queryBuilder.substitutionValues;
+    String query = '';
+    values.forEach((key, value) {
+      query += q.replaceAll('@$key', value);
+    });
+    return query;
   }
 }

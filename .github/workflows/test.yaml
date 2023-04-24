@@ -28,7 +28,7 @@ jobs:
       - name: 'Test plugin'
         uses: k-paxian/dart-package-publisher@v1.5.1
         with:
-          credentialJson: ${{ secrets.DART_CREDENTIAL }}
+          credentialJson: "{}"
           flutter: false
           suppressBuildRunner: true
           testRunOnly: true

@@ -1,5 +1,4 @@
-import 'package:sql_query_builder/sql_query_builder.dart';
-
+import '../sql_query_builder.dart';
 import 'utils/type_converter.dart';
 
 class Model extends QueryBuilder {
@@ -12,6 +11,8 @@ class Model extends QueryBuilder {
   String get primaryKey => 'id';
 
   TypeConverter get typeConverter => TypeConverter();
+
+  QueryBuilder get newQuery => QueryBuilder.table(tableName, this);
 
   Future save() async {
     Map<String, dynamic> values = typeConverter.toMap(this);

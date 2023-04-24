@@ -1,40 +1,42 @@
 #### Dart SQL Query Builder
 
-- [Example Usage](#example-usage)
-- [Schema](#schema-to-create-database-table)
-  - [Create](#create-table)
-  - [Drop](#dropdelete-table)
+- [Dart SQL Query Builder](#dart-sql-query-builder)
+  - [Example Usage](#example-usage)
+- [Schema (to create database table)](#schema-to-create-database-table)
+    - [create table](#create-table)
+    - [drop/delete table](#dropdelete-table)
 - [Model](#model)
-  - [Structure](#model)
-  - [Soft Deletes](#soft-deletes)
+    - [Soft Deletes](#soft-deletes)
+    - [Reset query and create new one](#reset-query-and-create-new-one)
 - [Query](#query)
-  - [Insert or Create](#insert-or-create)
-  - [Update](#update)
-  - [Count](#count)
-  - [Find](#find)
-  - [All](#all)
-  - [Get](#get)
-  - [Delete](#delete)
-  - [Force delete](#forcedelete-only-with-softdeletes)
-  - [With trash](#withtrash-only-with-softdeletes)
-  - [Select](#select)
-  - [Where](#where)
-  - [Where raw](#whereraw)
-  - [OrWhere](#orwhere)
-  - [OrWhere raw](#orwhereraw)
-  - [Chain where and orWhere](#chain-where-and-orwhere)
-  - [Chain where and orWhere](#chain-where-and-orwhere)
-  - [Limit or Take](#limit-or-take)
-  - [Offset](#offset)
-  - [Group By](#groupby)
-  - [Order By](#orderby)
-  - [Join](#join)
-  - [Join raw](#joinraw)
-  - [Left Join](#leftjoin)
-  - [Left Join raw](#leftjoinraw)
-  - [Right Join](#rightjoin)
-  - [Right Join raw](#rightjoinraw)
-- [Custom Query Builder Without Model](#custom-query-builder-without-model)
+    - [insert or create](#insert-or-create)
+    - [update](#update)
+    - [count](#count)
+    - [find](#find)
+    - [all](#all)
+    - [get](#get)
+    - [toSql](#tosql)
+    - [delete](#delete)
+    - [forceDelete (only with SoftDeletes)](#forcedelete-only-with-softdeletes)
+    - [withTrash (only with SoftDeletes)](#withtrash-only-with-softdeletes)
+    - [select](#select)
+    - [where](#where)
+    - [orWhere](#orwhere)
+    - [whereRaw](#whereraw)
+    - [orWhereRaw](#orwhereraw)
+    - [chain where and orWhere](#chain-where-and-orwhere)
+    - [limit or take](#limit-or-take)
+    - [offset](#offset)
+    - [groupBy](#groupby)
+    - [orderBy](#orderby)
+  - [Join Query](#join-query)
+    - [join](#join)
+    - [leftJoin](#leftjoin)
+    - [rightJoin](#rightjoin)
+    - [joinRaw](#joinraw)
+    - [leftJoinRaw](#leftjoinraw)
+    - [rightJoinRaw](#rightjoinraw)
+  - [Custom Query Builder Without Model](#custom-query-builder-without-model)
 - [Development](#development)
 
 ##### Example Usage
@@ -155,6 +157,17 @@ class Blog extends Model with SoftDeletes {
 }
 ```
 
+###### Reset query and create new one
+
+- If you do not want to create new class and reuse existing class to do new query, use can use `newQuery` attribute.
+
+```dart
+List blog = Blog().where('status', 'active').where('user', 'super_user').get();
+
+// reset existing get query and make new one using `newQuery`
+List blog = await blog.newQuery.where('status', 'deleted').where('user', 'normal').get();
+```
+
 #### Query
 
 ###### insert or create
@@ -220,6 +233,13 @@ List actors = await Actor().where('name', 'John Wick').get();
 for(Actor actor in actors) {
   print(actor.id)
 }
+```
+
+###### toSql
+
+```dart
+String query = Actor().where('name', 'John Wick').toSql();
+print(query)
 ```
 
 _NOTE:: currently there is an ongoing issue with List type_

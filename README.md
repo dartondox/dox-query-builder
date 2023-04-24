@@ -448,3 +448,9 @@ await QueryBuilder.table('actor').get();
 
 #### Development
 Want to contribute? Great! Fork the repo and create PR to us.
+
+#### Join me on discord
+
+<a target="blank" href="https://discord.gg/tfN9Zs9cxu">
+  <img width="30" src="https://skillicons.dev/icons?i=discord" />
+</a>

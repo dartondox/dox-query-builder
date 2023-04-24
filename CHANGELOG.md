@@ -1,3 +1,9 @@
+## 1.0.0-alpha.6
+
+- Added `debug()` option on model
+- Added `toSql` Option
+- Aded `newQuery` attribute on model
+
 ## 1.0.0-alpha.5
 
 - Bug fixed on model save

@@ -390,7 +390,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .join('admin_info', 'admin_info.admin_id', 'admin.id')
+    .join('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 
@@ -398,7 +398,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .leftJoin('admin_info', 'admin_info.admin_id', 'admin.id')
+    .leftJoin('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 
@@ -406,7 +406,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .rightJoin('admin_info', 'admin_info.admin_id', 'admin.id')
+    .rightJoin('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 
@@ -414,7 +414,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .joinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
+    .joinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 
@@ -422,7 +422,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .leftJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
+    .leftJoinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 
@@ -430,7 +430,7 @@ await Actor()
 
 ```dart
 await Actor()
-    .rightJoinRaw('admin_info', 'admin_info.admin_id', 'admin.id')
+    .rightJoinRaw('actor_info', 'actor_info.admin_id', 'admin.id')
     .get();
 ```
 

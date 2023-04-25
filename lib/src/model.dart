@@ -46,4 +46,8 @@ class Model extends QueryBuilder {
           .update(values);
     }
   }
+
+  toMap() {
+    return helper.typeConverter.toMap(this);
+  }
 }

@@ -49,11 +49,21 @@ class Model extends QueryBuilder {
     }
   }
 
-  toMap() {
+  /// Model to Map converter
+  ///
+  /// ```
+  /// Map<String, dynamic> blog = Blog().find(1).toMap();
+  /// ```
+  Map<String, dynamic> toMap() {
     return helper.typeConverter.toMap(this);
   }
 
-  toJson() {
+  /// Model to json string converter
+  ///
+  /// ```
+  /// String blog = Blog().find(1).toJson();
+  /// ```
+  String toJson() {
     return jsonEncode(toMap());
   }
 }

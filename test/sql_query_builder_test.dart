@@ -1,21 +1,10 @@
-import 'dart:io';
-
-import 'package:postgres/postgres.dart';
 import 'package:sql_query_builder/sql_query_builder.dart';
 import 'package:test/test.dart';
 
+import 'connection.dart';
+
 void main() async {
-  String host = Platform.environment['DB_HOST'] ?? 'postgres';
-  int port = int.parse(Platform.environment['PORT'] ?? '5432');
-  PostgreSQLConnection db = PostgreSQLConnection(
-    host,
-    port,
-    "postgres",
-    username: "admin",
-    password: "password",
-  );
-  await db.open();
-  SqlQueryBuilder.initialize(database: db, debug: false);
+  SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
   group('Query Builder', () {
     setUp(() {});
@@ -92,6 +81,27 @@ void main() async {
       String query = blog.newQuery.where('id', blog.id).toSql();
       expect("SELECT * FROM blog WHERE id = ${blog.id}", query);
     });
+
+    test('test toMap', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
+
+      var data = blog.toMap();
+      expect(data['id'], blog.id);
+      expect(data['title'], blog.title);
+    });
+
+    test('test toJson', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
+
+      var data = blog.toJson();
+      print(data);
+    });
   });
 }
 
@@ -110,6 +120,9 @@ class Blog extends Model with SoftDeletes {
 
   @Column(name: 'body')
   String? description;
+
+  @Column(name: 'deleted_at')
+  DateTime? deletedAt;
 
   @Column(name: 'created_at')
   DateTime? createdAt;

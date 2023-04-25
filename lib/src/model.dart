@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../sql_query_builder.dart';
 
 class Model extends QueryBuilder {
@@ -45,5 +47,13 @@ class Model extends QueryBuilder {
           .where('id', id)
           .update(values);
     }
+  }
+
+  toMap() {
+    return helper.typeConverter.toMap(this);
+  }
+
+  toJson() {
+    return jsonEncode(toMap());
   }
 }

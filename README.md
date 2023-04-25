@@ -8,6 +8,8 @@
 - [Model](#model)
     - [Soft Deletes](#soft-deletes)
     - [Save](#save)
+    - [To Map](#to-map)
+    - [To Json](#to-json)
     - [Debug](#debug)
     - [Reset query and create new one](#reset-query-and-create-new-one)
 - [Query](#query)
@@ -167,6 +169,19 @@ actor.name = 'John Wick';
 actor.age = 60;
 await actor.save();
 ```
+
+###### To Map
+
+```dart
+Map<String, dynamic> actor = Actor().find(1).toMap();
+```
+
+###### To Json
+
+```dart
+String actor = Actor().find(1).toJson();
+```
+
 ###### Debug
 
 ```dart

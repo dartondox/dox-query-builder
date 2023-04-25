@@ -88,7 +88,7 @@ void main() async {
       blog.description = "something";
       await blog.save();
 
-      var data = blog.toMap();
+      Map<String, dynamic> data = blog.toMap();
       expect(data['id'], blog.id);
       expect(data['title'], blog.title);
     });
@@ -99,8 +99,8 @@ void main() async {
       blog.description = "something";
       await blog.save();
 
-      var data = blog.toJson();
-      print(data);
+      String data = blog.toJson();
+      expect(true, data.contains('new blog'));
     });
   });
 }

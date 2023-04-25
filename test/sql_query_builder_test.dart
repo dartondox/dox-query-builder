@@ -92,6 +92,16 @@ void main() async {
       expect(data['id'], blog.id);
       expect(data['title'], blog.title);
     });
+
+    test('test toJson', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
+
+      var data = blog.toJson();
+      print(data);
+    });
   });
 }
 
@@ -110,6 +120,9 @@ class Blog extends Model with SoftDeletes {
 
   @Column(name: 'body')
   String? description;
+
+  @Column(name: 'deleted_at')
+  DateTime? deletedAt;
 
   @Column(name: 'created_at')
   DateTime? createdAt;

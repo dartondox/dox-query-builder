@@ -28,10 +28,18 @@ class TypeConverter {
         Column column = getColumn(classMirror, declarationMirror.simpleName);
         final value =
             instanceMirror.getField(declarationMirror.simpleName).reflectee;
-        instanceVariables[column.name.toString()] = value;
+        instanceVariables[column.name.toString()] =
+            isDateTime(declarationMirror)
+                ? (value as DateTime?)?.toIso8601String()
+                : value;
       }
     }
     return instanceVariables;
+  }
+
+  bool isDateTime(declarationMirror) {
+    return MirrorSystem.getName((declarationMirror.type.simpleName)) ==
+        'DateTime';
   }
 
   Column getColumn(ClassMirror classMirror, Symbol symbol) {

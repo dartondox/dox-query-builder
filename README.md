@@ -1,4 +1,4 @@
-#### Dart SQL Query Builder
+#### Dart SQL Query Builder.
 
 - [Dart SQL Query Builder](#dart-sql-query-builder)
   - [Example Usage](#example-usage)

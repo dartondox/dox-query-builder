@@ -1,8 +1,8 @@
-#### Dart SQL Query Builder
+# Dart SQL Query Builder
 
-##### [Documentation](https://dsqb.zinkyawkyaw.dev/)
+## [Documentation](https://dsqb.zinkyawkyaw.dev/)
 
-##### Example Usage
+## Example Usage
 
 ```dart
 import 'package:postgres/postgres.dart';

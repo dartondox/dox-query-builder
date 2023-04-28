@@ -5,6 +5,7 @@
 - [Schema (to create database table)](#schema-to-create-database-table)
     - [create table](#create-table)
     - [drop/delete table](#dropdelete-table)
+    - [update table](#update-table)
 - [Model](#model)
     - [Soft Deletes](#soft-deletes)
     - [Save](#save)
@@ -113,6 +114,19 @@ Schema.create('blog', (Table table) {
   table.money('amount').nullable();
   table.softDeletes();
   table.timestamps();
+});
+```
+
+###### update table
+
+```dart
+await Schema.table('blog', (Table table) {
+  table.dropColumn('amount'); // drop/delete amount column
+  table.renameColumn('title', 'blog_title'); // rename title to blog_title
+  table.string('blog_title').nullable(); // newly rename blog_title to nullable
+  table.string('slug').unique().nullable(); // change slug to nullable
+  table.string('column1').nullable(); // add new colum column1
+  table.string('column2').nullable(); // add new colum column2
 });
 ```
 

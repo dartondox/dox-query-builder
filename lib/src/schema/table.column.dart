@@ -5,10 +5,14 @@ class TableColumn {
   bool isNullable = false;
   dynamic defaultValue;
   bool isUnique = false;
+  bool? shouldDrop = false;
+  String? renameTo;
 
   TableColumn({
     required this.name,
     this.type,
+    this.shouldDrop,
+    this.renameTo,
   });
 
   TableColumn nullable([dynamic nullable]) {

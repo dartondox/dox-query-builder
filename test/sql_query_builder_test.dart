@@ -13,10 +13,10 @@ void main() async {
       Schema.drop('blog');
       Schema.create('blog', (Table table) {
         table.id();
-        table.string('title').nullable();
+        table.string('title');
         table.char('status').withDefault('active');
         table.text('body');
-        table.money('amount').nullable();
+        table.string('slug').nullable();
         table.softDeletes();
         table.timestamps();
       });
@@ -101,6 +101,25 @@ void main() async {
 
       String data = blog.toJson();
       expect(true, data.contains('new blog'));
+    });
+
+    test('schema update', () async {
+      await Schema.table('blog', (Table table) {
+        table.dropColumn('deleted_at');
+        table.renameColumn('title', 'blog_title');
+        table.string('blog_title').nullable();
+        table.string('body');
+        table.string('slug').unique().nullable();
+        table.string('column1').nullable();
+        table.string('column2').nullable();
+      });
+      Table table = Table().table('blog');
+      List columns = await table.getTableColumns();
+      expect(true, columns.contains('id'));
+      expect(true, columns.contains('column1'));
+      expect(true, columns.contains('column2'));
+      expect(true, columns.contains('blog_title'));
+      expect(true, columns.contains('slug'));
     });
   });
 }

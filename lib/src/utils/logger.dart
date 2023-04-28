@@ -68,8 +68,15 @@ class Logger {
     print("${_drawLine('└')}┘");
   }
 
-  String _getPrettyJSONString(jsonObject) {
+  _getPrettyJSONString(Map jsonObject) {
+    Map data = {};
+    jsonObject.forEach((key, value) {
+      if (value.runtimeType.toString() == 'DateTime') {
+        data[key] = (value as DateTime).toIso8601String();
+      }
+    });
+
     var encoder = JsonEncoder.withIndent("  ");
-    return encoder.convert(jsonObject);
+    return encoder.convert(data);
   }
 }

@@ -3,15 +3,21 @@ import 'package:postgres/postgres.dart';
 import '../query_builder.dart';
 import '../utils/logger.dart';
 import 'table.column.dart';
+import 'table.update.dart';
 
-class Table {
+class Table with TableUpdate {
+  @override
   final List<TableColumn> columns = [];
+  @override
   String tableName = '';
 
-  bool get isDebug => SqlQueryBuilder().debug;
+  @override
+  bool debug = SqlQueryBuilder().debug;
 
+  @override
   PostgreSQLConnection get db => SqlQueryBuilder().db;
 
+  @override
   Logger get logger => Logger();
 
   Table table(table) {
@@ -137,23 +143,32 @@ class Table {
     columns.add(updatedAt);
   }
 
+  void dropColumn(String name) {
+    TableColumn col = TableColumn(name: name, shouldDrop: true);
+    columns.add(col);
+  }
+
+  void renameColumn(String from, String to) {
+    TableColumn col = TableColumn(name: from, renameTo: to);
+    columns.add(col);
+  }
+
   Future<void> create() async {
     String query = "CREATE TABLE IF NOT EXISTS $tableName (";
 
     List ret = [];
     for (TableColumn col in columns) {
-      String defaultQuery = '';
-      if (col.defaultValue != null) {
-        defaultQuery = " DEFAULT '${col.defaultValue}'";
-      }
+      String defaultQuery =
+          col.defaultValue != null ? " DEFAULT '${col.defaultValue}'" : '';
       String unique = col.isUnique ? ' UNIQUE' : '';
+
       ret.add(
           "${col.name} ${col.type} ${col.isNullable ? 'NULL' : 'NOT NULL'}$defaultQuery$unique");
     }
 
     query += ret.join(',');
     query += ")";
-    if (isDebug) {
+    if (debug) {
       logger.log(query);
     }
     await db.mappedResultsQuery(query);

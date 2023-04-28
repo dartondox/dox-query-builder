@@ -19,6 +19,24 @@ class Schema {
     await table.create();
   }
 
+  /// update table with schema
+  ///
+  /// ```
+  /// await Schema.table('table', (Table table) {
+  ///   table.id();
+  ///   table.string('title').nullable();
+  ///   table.char('status').withDefault('active');
+  ///   table.text('body');
+  ///   table.softDeletes();
+  ///   table.timestamps();
+  /// });
+  /// ```
+  static Future<void> table(tableName, callback) async {
+    Table table = Table().table(tableName);
+    callback(table);
+    await table.update();
+  }
+
   /// drop table
   ///
   /// ```

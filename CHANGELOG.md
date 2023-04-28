@@ -1,3 +1,8 @@
+## 1.0.7
+
+- Added support for `toMap` and `toJson` in model
+- Added support for table update
+
 ## 1.0.6
 
 - Added discord community link

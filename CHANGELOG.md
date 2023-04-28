@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Added Examples
+
 ## 1.0.7
 
 - Added support for `toMap` and `toJson` in model

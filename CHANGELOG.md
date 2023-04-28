@@ -1,3 +1,11 @@
+## 1.0.10
+
+- remove testing dox cli
+
+## 1.0.9
+
+- dox cli to create migration and model
+
 ## 1.0.8
 
 - Added Examples

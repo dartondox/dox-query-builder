@@ -43,6 +43,8 @@ class Schema {
   /// await Schema.drop('table');
   /// ```
   static Future<void> drop(tableName) async {
-    SqlQueryBuilder().db.query("DROP TABLE IF EXISTS $tableName RESTRICT");
+    await SqlQueryBuilder()
+        .db
+        .query("DROP TABLE IF EXISTS $tableName RESTRICT");
   }
 }

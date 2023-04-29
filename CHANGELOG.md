@@ -1,10 +1,18 @@
+## 1.0.12
+
+- Bug fixed stream close on table update
+
+## 1.0.11
+
+- Bug fixed on schema drop
+
 ## 1.0.10
 
-- remove testing dox cli
+- Remove testing dox cli
 
 ## 1.0.9
 
-- dox cli to create migration and model
+- Dox cli to create migration and model
 
 ## 1.0.8
 

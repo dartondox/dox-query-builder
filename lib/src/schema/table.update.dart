@@ -5,41 +5,41 @@ mixin TableUpdate implements TableSharedMixin {
   Future<void> update() async {
     for (TableColumn col in columns) {
       if (col.shouldDrop == true) {
-        _handleDrop(col);
+        await _handleDrop(col);
       } else if (col.renameTo != null) {
-        _handleRename(col);
+        await _handleRename(col);
       } else {
         List existingColumns = await getTableColumns();
         if (!existingColumns.contains(col.name)) {
-          _handleAdd(col);
+          await _handleAdd(col);
         } else {
-          _handleAlter(col);
+          await _handleAlter(col);
         }
       }
     }
   }
 
-  _handleDrop(TableColumn col) async {
+  Future<void> _handleDrop(TableColumn col) async {
     String query = 'ALTER TABLE $tableName DROP COLUMN ${col.name}';
-    return await _runQuery(query);
+    await _runQuery(query);
   }
 
-  _handleRename(TableColumn col) async {
+  Future<void> _handleRename(TableColumn col) async {
     String query =
         'ALTER TABLE $tableName RENAME COLUMN ${col.name} TO ${col.renameTo}';
-    return await _runQuery(query);
+    await _runQuery(query);
   }
 
-  _handleAdd(TableColumn col) async {
+  Future<void> _handleAdd(TableColumn col) async {
     String defaultQuery =
         col.defaultValue != null ? " DEFAULT '${col.defaultValue}'" : '';
     String unique = col.isUnique ? ' UNIQUE' : '';
     String query =
         "ALTER TABLE $tableName ADD COLUMN ${col.name} ${col.type} ${col.isNullable ? 'NULL' : 'NOT NULL'}$defaultQuery$unique";
-    return await _runQuery(query);
+    await _runQuery(query);
   }
 
-  _handleAlter(TableColumn col) async {
+  Future<void> _handleAlter(TableColumn col) async {
     List queries = [];
 
     /// changing type
@@ -66,7 +66,7 @@ mixin TableUpdate implements TableSharedMixin {
     return await _runQuery(query);
   }
 
-  _runQuery(query) async {
+  Future<void> _runQuery(query) async {
     if (debug) {
       logger.log(query);
     }

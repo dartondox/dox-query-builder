@@ -29,14 +29,15 @@ class Model extends QueryBuilder {
   /// await blog.save()
   /// ```
   Future save() async {
-    Map<String, dynamic> values = helper.typeConverter.toMap(this);
+    Map<String, dynamic> values = toMap();
     if (values[primaryKey] == null) {
       values.removeWhere((key, value) => value == null);
       values['created_at'] = now();
       values['updated_at'] = now();
-      await QueryBuilder.table(tableName, modelType)
+      var res = await QueryBuilder.table(tableName, modelType)
           .debug(_debug)
           .insert(values);
+      return res;
     } else {
       var id = values[primaryKey];
       values.remove(primaryKey);
@@ -46,19 +47,11 @@ class Model extends QueryBuilder {
           .debug(_debug)
           .where('id', id)
           .update(values);
+      return this;
     }
   }
 
-  /// Model to Map converter
-  ///
-  /// ```
-  /// Map<String, dynamic> blog = Blog().find(1).toMap();
-  /// ```
-  Map<String, dynamic> toMap() {
-    return helper.typeConverter.toMap(this);
-  }
-
-  /// Model to json string converter
+  // Model to json string converter
   ///
   /// ```
   /// String blog = Blog().find(1).toJson();

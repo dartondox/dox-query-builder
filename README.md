@@ -4,14 +4,23 @@
 
 ## Example Usage
 
+- Install required dependency
+
+```bash
+$ dart pub add json_serializable --dev
+$ dart pub add build_runner --dev
+```
+
+- Setup model
+
 ```dart
 import 'package:postgres/postgres.dart';
 import 'package:sql_query_builder/sql_query_builder.dart';
 
-class Actor extends Model {
-  @override
-  String get primaryKey => 'id';
+part 'actor.model.g.dart';
 
+@IsModel()
+class Actor extends Model {
   @Column()
   int? id;
 
@@ -27,7 +36,15 @@ class Actor extends Model {
   @Column(name: 'updated_at')
   DateTime? updatedAt;
 }
+```
 
+- Run build runner
+
+```bash
+$ dart run build_runner build
+```
+
+```dart
 void main() async {
   // create database connection and open
   PostgreSQLConnection db = PostgreSQLConnection(
@@ -46,10 +63,10 @@ void main() async {
   Actor actor = Actor();
   actor.actorName = 'John Wick';
   actor.age = 60;
-  await actor.save();
+  actor = await actor.save();
 
   actor.actorName = "Tom Cruise";
-  await actor.save(); // save again
+  actor = await actor.save(); // save again
 
   print(actor.id);
 

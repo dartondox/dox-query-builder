@@ -1,6 +1,6 @@
 name: sql_query_builder
 description: PostgresSQL query builder, Support Model, Where, orWhere, Find, Join, softDeletes, Debugging and many mores.
-version: 1.0.12
+version: 1.1.0
 repository: https://github.com/necessarylion/dart-sql-query-builder
 homepage: https://github.com/necessarylion/dart-sql-query-builder
 
@@ -9,7 +9,10 @@ environment:
 
 dependencies:
   postgres: ^2.6.1
+  json_annotation: ^4.8.0
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
+  json_serializable: ^6.6.1
+  build_runner: ^2.3.3

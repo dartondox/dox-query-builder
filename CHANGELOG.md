@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Remove dart:mirror due to performance issue and replace with build_runner
+
 ## 1.0.12
 
 - Bug fixed stream close on table update

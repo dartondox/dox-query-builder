@@ -1,11 +1,8 @@
-import 'type_converter.dart';
-import '../query_builder.dart';
+import 'package:sql_query_builder/sql_query_builder.dart';
 
 class QueryBuilderHelper {
   final QueryBuilder queryBuilder;
   QueryBuilderHelper(this.queryBuilder);
-
-  TypeConverter get typeConverter => TypeConverter();
 
   String parseColumnKey(column) {
     var timestamp = DateTime.now().microsecondsSinceEpoch.toString();
@@ -41,15 +38,16 @@ class QueryBuilderHelper {
   }
 
   List formatResult(List queryResult) {
-    List result = [];
+    List<Map<String, dynamic>> result = [];
     for (final row in queryResult) {
-      Map ret = {};
-      (row as Map).forEach((mainKey, data) {
-        (data as Map).forEach((key, value) {
+      Map<String, dynamic> ret = {};
+      (row as Map<String, dynamic>).forEach((mainKey, data) {
+        (data as Map<String, dynamic>).forEach((key, value) {
           if (ret[key] == null) {
-            ret[key] = value;
+            ret[key] = value is DateTime ? value.toIso8601String() : value;
           } else {
-            ret["${mainKey}_$key"] = value;
+            ret["${mainKey}_$key"] =
+                value is DateTime ? value.toIso8601String() : value;
           }
         });
       });
@@ -57,9 +55,9 @@ class QueryBuilderHelper {
     }
     if (queryBuilder.modelType != null &&
         queryBuilder.modelType.toString() != 'dynamic') {
-      return result
-          .map((e) => typeConverter.convert(queryBuilder.modelType, e))
-          .toList();
+      return result.map((e) {
+        return queryBuilder.modelType.fromJson(e);
+      }).toList();
     }
     return result;
   }

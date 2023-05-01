@@ -98,6 +98,11 @@ class QueryBuilder
   String tableName = '';
 
   @override
+  Map<String, dynamic> toMap() {
+    return {};
+  }
+
+  @override
   addSubstitutionValues(String key, dynamic value) {
     return _substitutionValues[key] = value;
   }

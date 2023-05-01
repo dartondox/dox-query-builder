@@ -1,6 +1,7 @@
 import 'package:sql_query_builder/sql_query_builder.dart';
 import 'package:test/test.dart';
 
+import 'blog.model.dart';
 import 'connection.dart';
 
 void main() async {
@@ -25,9 +26,9 @@ void main() async {
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
       blog.status = 'deleted';
-      await blog.save();
+      blog = await blog.save();
       blog.title = "Updated title";
-      await blog.save();
+      blog = await blog.save();
 
       expect(blog.id != null, true);
 
@@ -35,7 +36,7 @@ void main() async {
       blog2.title = 'Amazing blog';
       blog2.description = 'Amazing blog body';
       blog2.status = 'active';
-      await blog2.save();
+      blog2 = await blog2.save();
 
       expect(blog2.id != null, true);
 
@@ -64,9 +65,9 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      blog.save();
+      blog = await blog.save();
 
-      Blog check = await blog.newQuery.find(1);
+      Blog check = await blog.newQuery.find(blog.id);
       expect(check.id, blog.id);
     });
 
@@ -74,7 +75,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      await blog.save();
+      blog = await blog.save();
 
       expect(blog.id != null, true);
 
@@ -86,7 +87,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      await blog.save();
+      blog = await blog.save();
 
       Map<String, dynamic> data = blog.toMap();
       expect(data['id'], blog.id);
@@ -97,7 +98,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      await blog.save();
+      blog = await blog.save();
 
       String data = blog.toJson();
       expect(true, data.contains('new blog'));
@@ -122,30 +123,4 @@ void main() async {
       expect(true, columns.contains('slug'));
     });
   });
-}
-
-class Blog extends Model with SoftDeletes {
-  @override
-  String get primaryKey => 'id';
-
-  @Column(name: 'id')
-  int? id;
-
-  @Column()
-  String? title;
-
-  @Column()
-  String? status;
-
-  @Column(name: 'body')
-  String? description;
-
-  @Column(name: 'deleted_at')
-  DateTime? deletedAt;
-
-  @Column(name: 'created_at')
-  DateTime? createdAt;
-
-  @Column(name: 'updated_at')
-  DateTime? updatedAt;
 }

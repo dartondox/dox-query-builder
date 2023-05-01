@@ -17,7 +17,8 @@ abstract class SharedMixin {
   dynamic modelType;
   String tableName = '';
   bool isSoftDeletes = false;
-  Map<String, dynamic> toMap();
+  toMap();
+  fromJson(Map<String, dynamic> json);
 
   addSubstitutionValues(String key, dynamic value) {}
   resetSubstitutionValues() {}

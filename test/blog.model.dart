@@ -25,6 +25,7 @@ class Blog extends Model with SoftDeletes {
   @Column(name: 'updated_at')
   DateTime? updatedAt;
 
+  @override
   fromJson(Map<String, dynamic> json) => _$BlogFromJson(json);
 
   @override

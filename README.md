@@ -36,6 +36,7 @@ class Actor extends Model {
   @Column(name: 'updated_at')
   DateTime? updatedAt;
 
+  @override
   fromJson(Map<String, dynamic> json) => _$ActorFromJson(json);
 
   @override

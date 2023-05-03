@@ -1,6 +1,6 @@
 name: dox_query_builder
 description: PostgresSQL query builder, Support Model, Where, orWhere, Find, Join, softDeletes, Debugging and many mores.
-version: 1.0.1
+version: 1.0.3
 repository: https://github.com/necessarylion/dox-query-builder
 homepage: https://github.com/necessarylion/dox-query-builder
 

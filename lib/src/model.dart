@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../dox_query_builder.dart';
 
 class Model extends QueryBuilder {
-  bool _debug = false;
+  bool _debug = SqlQueryBuilder().debug;
 
   @override
   String get tableName => runtimeType.toString().toLowerCase();

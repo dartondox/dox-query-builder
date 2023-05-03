@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class Logger {
-  int logLength = 120;
+  int logLength = 80;
 
   log(query, [dynamic params]) {
     _topLine('QUERY ');
@@ -73,6 +73,8 @@ class Logger {
     jsonObject.forEach((key, value) {
       if (value.runtimeType.toString() == 'DateTime') {
         data[key] = (value as DateTime).toIso8601String();
+      } else {
+        data[key] = value;
       }
     });
 

@@ -48,7 +48,6 @@ class Actor extends Model {
 
 ```bash
 $ dart run build_runner build
-actor = await actor.save();
 ```
 
 ```dart

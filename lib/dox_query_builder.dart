@@ -1,4 +1,5 @@
-library sql_query_builder;
+
+library dox_query_builder;
 
 export 'src/model.dart';
 export 'src/query_builder.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../sql_query_builder.dart';
+import '../dox_query_builder.dart';
 
 class Model extends QueryBuilder {
   bool _debug = false;

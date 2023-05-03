@@ -15,7 +15,7 @@ $ dart pub add build_runner --dev
 
 ```dart
 import 'package:postgres/postgres.dart';
-import 'package:sql_query_builder/sql_query_builder.dart';
+import 'package:dox_query_builder/dox_query_builder.dart';
 
 part 'actor.model.g.dart';
 

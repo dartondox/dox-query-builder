@@ -1,6 +1,6 @@
 # Dart SQL Query Builder
 
-## [Documentation](https://dox.zinkyawkyaw.dev/)
+## [Full documentation here](https://dox.zinkyawkyaw.dev/)
 
 ## Example Usage
 

@@ -5,7 +5,7 @@ import 'blog.model.dart';
 import 'connection.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
   group('Query Builder', () {
     setUp(() {});

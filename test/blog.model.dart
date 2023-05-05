@@ -4,25 +4,25 @@ part 'blog.model.g.dart';
 
 @IsModel()
 class Blog extends Model with SoftDeletes {
-  @Column()
+  @JsonKey()
   int? id;
 
-  @Column()
+  @JsonKey()
   String? title;
 
-  @Column()
+  @JsonKey()
   String? status;
 
-  @Column(name: 'body')
+  @JsonKey(name: 'body')
   String? description;
 
-  @Column(name: 'deleted_at')
+  @JsonKey(name: 'deleted_at')
   DateTime? deletedAt;
 
-  @Column(name: 'created_at')
+  @JsonKey(name: 'created_at')
   DateTime? createdAt;
 
-  @Column(name: 'updated_at')
+  @JsonKey(name: 'updated_at')
   DateTime? updatedAt;
 
   @override

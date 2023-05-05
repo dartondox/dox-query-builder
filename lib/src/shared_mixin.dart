@@ -17,6 +17,7 @@ abstract class SharedMixin {
   dynamic modelType;
   String tableName = '';
   bool isSoftDeletes = false;
+  List<String> hidden = [];
   toMap();
   fromJson(Map<String, dynamic> json);
 

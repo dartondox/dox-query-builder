@@ -1,5 +1,7 @@
 library dox_query_builder;
 
+export 'package:json_annotation/json_annotation.dart';
+
 export 'src/drivers/db_driver.dart';
 export 'src/drivers/postgres_driver.dart';
 export 'src/model.dart';

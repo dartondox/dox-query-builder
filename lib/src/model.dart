@@ -57,6 +57,10 @@ class Model extends QueryBuilder {
   /// String blog = Blog().find(1).toJson();
   /// ```
   String toJson() {
-    return jsonEncode(toMap());
+    Map<String, dynamic> data = toMap();
+    for (String h in hidden) {
+      data.remove(h);
+    }
+    return jsonEncode(data);
   }
 }

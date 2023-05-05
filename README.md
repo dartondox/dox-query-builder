@@ -7,7 +7,6 @@
 - Install required dependency
 
 ```bash
-$ dart pub add json_serializable --dev
 $ dart pub add build_runner --dev
 ```
 
@@ -21,19 +20,19 @@ part 'actor.model.g.dart';
 
 @IsModel()
 class Actor extends Model {
-  @Column()
+  @JsonKey()
   int? id;
 
-  @Column(name: 'name')
+  @JsonKey(name: 'name')
   String? actorName;
 
-  @Column()
+  @JsonKey()
   int? age;
 
-  @Column(name: 'created_at')
+  @JsonKey(name: 'created_at')
   DateTime? createdAt;
 
-  @Column(name: 'updated_at')
+  @JsonKey(name: 'updated_at')
   DateTime? updatedAt;
 
   @override

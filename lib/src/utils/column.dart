@@ -1,8 +1,4 @@
-import 'package:json_annotation/json_annotation.dart';
-
-class Column extends JsonKey {
-  const Column({name}) : super(name: name);
-}
+import 'package:dox_query_builder/dox_query_builder.dart';
 
 class IsModel extends JsonSerializable {
   const IsModel() : super(ignoreUnannotated: true);

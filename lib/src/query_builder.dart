@@ -100,6 +100,9 @@ class QueryBuilder
   String tableName = '';
 
   @override
+  List<String> hidden = [];
+
+  @override
   toMap() {
     return {};
   }

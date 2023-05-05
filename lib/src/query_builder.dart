@@ -1,4 +1,5 @@
-import 'package:postgres/postgres.dart';
+import 'package:dox_query_builder/src/drivers/db_driver.dart';
+import 'package:dox_query_builder/src/drivers/postgres_driver.dart';
 
 import 'all.dart';
 import 'count.dart';
@@ -27,12 +28,13 @@ class SqlQueryBuilder {
 
   SqlQueryBuilder._internal();
 
-  late PostgreSQLConnection db;
-  late bool debug;
+  DBDriver db = PostgresDriver();
 
-  static initialize({required PostgreSQLConnection database, bool? debug}) {
+  bool debug = true;
+
+  static initialize({required dynamic database, bool? debug}) {
     SqlQueryBuilder sql = SqlQueryBuilder();
-    sql.db = database;
+    sql.db = PostgresDriver(conn: database);
     sql.debug = debug ?? false;
   }
 }
@@ -67,7 +69,7 @@ class QueryBuilder
   /// QueryBuilder.db.query("select * from blog");
   /// ```
   @override
-  PostgreSQLConnection get db => SqlQueryBuilder().db;
+  DBDriver get db => SqlQueryBuilder().db;
 
   @override
   QueryBuilderHelper get helper => QueryBuilderHelper(this);

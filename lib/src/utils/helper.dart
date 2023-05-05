@@ -22,19 +22,12 @@ class QueryBuilderHelper {
     return query;
   }
 
-  Future<List> runQuery(query, {bool mapped = true}) async {
+  Future<List> runQuery(query) async {
     Map<String, dynamic> values = queryBuilder.substitutionValues;
     if (queryBuilder.shouldDebug) queryBuilder.logger.log(query, values);
     var db = queryBuilder.db;
-    if (db.isClosed) {
-      await db.open();
-    }
     query = query.replaceAll(RegExp(' +'), ' ');
-    if (mapped) {
-      return await db.mappedResultsQuery(query, substitutionValues: values);
-    } else {
-      return await db.query(query, substitutionValues: values);
-    }
+    return await db.mappedResultsQuery(query, substitutionValues: values);
   }
 
   List formatResult(List queryResult) {

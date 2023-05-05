@@ -1,4 +1,4 @@
-import 'package:postgres/postgres.dart';
+import 'package:dox_query_builder/src/drivers/db_driver.dart';
 
 import 'query_builder.dart';
 import 'utils/helper.dart';
@@ -8,7 +8,7 @@ abstract class SharedMixin {
   QueryBuilder get queryBuilder;
   QueryBuilderHelper get helper;
   Logger get logger;
-  PostgreSQLConnection get db;
+  DBDriver get db;
   Map<String, dynamic> get substitutionValues;
   String get rawQueryString;
   String get selectQueryString;

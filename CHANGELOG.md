@@ -1,7 +1,8 @@
-## 1.0.3
+## 1.0.9
 
 - Bug fixed on debug option in model
 - Bug fixed on debug query param missing
+- Support Postgres Pool
 
 ## 1.0.1
 

@@ -5,7 +5,7 @@ import 'blog.model.dart';
 import 'connection.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
 
   group('Query Builder', () {
     setUp(() {});
@@ -106,7 +106,6 @@ void main() async {
 
     test('schema update', () async {
       await Schema.table('blog', (Table table) {
-        table.dropColumn('deleted_at');
         table.renameColumn('title', 'blog_title');
         table.string('blog_title').nullable();
         table.string('body');

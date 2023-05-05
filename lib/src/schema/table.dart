@@ -1,6 +1,5 @@
-import 'package:postgres/postgres.dart';
+import 'package:dox_query_builder/dox_query_builder.dart';
 
-import '../query_builder.dart';
 import '../utils/logger.dart';
 import 'table.column.dart';
 import 'table.update.dart';
@@ -15,7 +14,7 @@ class Table with TableUpdate {
   bool debug = SqlQueryBuilder().debug;
 
   @override
-  PostgreSQLConnection get db => SqlQueryBuilder().db;
+  DBDriver get db => SqlQueryBuilder().db;
 
   @override
   Logger get logger => Logger();

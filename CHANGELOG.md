@@ -1,3 +1,7 @@
+## 1.0.11
+
+- Bug fixed id null on save
+
 ## 1.0.10
 
 - Bug fixed on debug option in model

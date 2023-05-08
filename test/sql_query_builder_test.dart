@@ -26,9 +26,9 @@ void main() async {
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
       blog.status = 'deleted';
-      blog = await blog.save();
+      await blog.save();
       blog.title = "Updated title";
-      blog = await blog.save();
+      await blog.save();
 
       expect(blog.id != null, true);
 
@@ -36,7 +36,7 @@ void main() async {
       blog2.title = 'Amazing blog';
       blog2.description = 'Amazing blog body';
       blog2.status = 'active';
-      blog2 = await blog2.save();
+      await blog2.save();
 
       expect(blog2.id != null, true);
 
@@ -65,7 +65,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      blog = await blog.save();
+      await blog.save();
 
       Blog check = await blog.newQuery.find(blog.id);
       expect(check.id, blog.id);
@@ -75,7 +75,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      blog = await blog.save();
+      await blog.save();
 
       expect(blog.id != null, true);
 
@@ -87,7 +87,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      blog = await blog.save();
+      await blog.save();
 
       Map<String, dynamic> data = blog.toMap();
       expect(data['id'], blog.id);
@@ -98,7 +98,7 @@ void main() async {
       Blog blog = Blog();
       blog.title = "new blog";
       blog.description = "something";
-      blog = await blog.save();
+      await blog.save();
 
       String data = blog.toJson();
       expect(true, data.contains('new blog'));

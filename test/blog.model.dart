@@ -5,9 +5,6 @@ part 'blog.model.g.dart';
 @IsModel()
 class Blog extends Model with SoftDeletes {
   @JsonKey()
-  int? id;
-
-  @JsonKey()
   String? title;
 
   @JsonKey()

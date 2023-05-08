@@ -5,6 +5,9 @@ import '../dox_query_builder.dart';
 class Model extends QueryBuilder {
   bool _debug = SqlQueryBuilder().debug;
 
+  @JsonKey()
+  int? id;
+
   @override
   String get tableName => runtimeType.toString().toLowerCase();
 
@@ -37,6 +40,7 @@ class Model extends QueryBuilder {
       var res = await QueryBuilder.table(tableName, modelType)
           .debug(_debug)
           .insert(values);
+      id = res.id;
       return res;
     } else {
       var id = values[primaryKey];

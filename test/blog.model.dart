@@ -1,30 +1,30 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
+import 'blog_info.model.dart';
+
 part 'blog.model.g.dart';
 
-@IsModel()
-class Blog extends Model with SoftDeletes {
-  @JsonKey()
+@DoxModel(primaryKey: 'uid', table: 'blog')
+class Blog extends BlogGenerator with SoftDeletes {
+  @Column()
   String? title;
 
-  @JsonKey()
+  static const Map<String, Relation> relations = {
+    'blogInfo': HasOne(BlogInfo),
+  };
+
+  @Column()
   String? status;
 
-  @JsonKey(name: 'body')
+  @Column(name: 'body')
   String? description;
 
-  @JsonKey(name: 'deleted_at')
+  @Column(name: 'deleted_at')
   DateTime? deletedAt;
 
-  @JsonKey(name: 'created_at')
+  @Column(name: 'created_at')
   DateTime? createdAt;
 
-  @JsonKey(name: 'updated_at')
+  @Column(name: 'updated_at')
   DateTime? updatedAt;
-
-  @override
-  fromJson(Map<String, dynamic> json) => _$BlogFromJson(json);
-
-  @override
-  toMap() => _$BlogToJson(this);
 }

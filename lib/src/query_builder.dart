@@ -1,5 +1,4 @@
-import 'package:dox_query_builder/src/drivers/db_driver.dart';
-import 'package:dox_query_builder/src/drivers/postgres_driver.dart';
+import 'package:dox_query_builder/dox_query_builder.dart';
 
 import 'all.dart';
 import 'count.dart';
@@ -62,7 +61,7 @@ class QueryBuilder
   QueryBuilder get queryBuilder => this;
 
   @override
-  String get primaryKey => 'id';
+  String primaryKey = 'id';
 
   /// PostgresSQL database
   /// ```
@@ -90,7 +89,7 @@ class QueryBuilder
   String get selectQueryString => getSelectQuery();
 
   @override
-  dynamic modelType;
+  dynamic self;
 
   @override
   bool isSoftDeletes = false;
@@ -103,12 +102,12 @@ class QueryBuilder
   List<String> hidden = [];
 
   @override
-  toMap() {
+  Map<String, dynamic> convertToMap(i) {
     return {};
   }
 
   @override
-  fromJson(Map<String, dynamic> json) {}
+  fromMap(Map<String, dynamic> json) {}
 
   @override
   addSubstitutionValues(String key, dynamic value) {
@@ -131,7 +130,7 @@ class QueryBuilder
   static QueryBuilder table(tableName, [dynamic type]) {
     QueryBuilder builder = QueryBuilder();
     builder.tableName = tableName;
-    builder.modelType = type;
+    builder.self = type;
     return builder;
   }
 
@@ -142,6 +141,16 @@ class QueryBuilder
   /// ```
   QueryBuilder debug(bool debug) {
     shouldDebug = debug;
+    return this;
+  }
+
+  /// set debug on or of
+  ///
+  /// ```
+  /// QueryBuilder.table('blog').setPrimaryKey('uid')
+  /// ```
+  QueryBuilder setPrimaryKey(String id) {
+    primaryKey = id;
     return this;
   }
 }

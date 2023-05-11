@@ -25,7 +25,7 @@ mixin Insert implements SharedMixin {
     List result = await insertMultiple([data]);
     if (result.isNotEmpty) {
       Map insertedData = result.first;
-      int id = insertedData[tableName]['id'] ?? 0;
+      int id = insertedData[tableName][primaryKey] ?? 0;
       resetSubstitutionValues();
       return await queryBuilder.find(id);
     }
@@ -61,7 +61,7 @@ mixin Insert implements SharedMixin {
     }
 
     String query =
-        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')} RETURNING id";
+        "INSERT INTO $tableName (${columns.join(',')}) VALUES ${values.join(',')} RETURNING $primaryKey";
     return await helper.runQuery(query);
   }
 }

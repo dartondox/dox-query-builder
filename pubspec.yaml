@@ -9,11 +9,11 @@ environment:
 
 dependencies:
   postgres: ^2.6.1
-  json_annotation: ^4.8.0
   postgres_pool: ^2.1.6
+  dox_model_builder: 
+    path: /Users/zinkyawkyaw/test/dox_model_builder
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
-  json_serializable: ^6.6.1
   build_runner: ^2.3.3

@@ -13,7 +13,7 @@ void main() async {
     test('insert', () async {
       Schema.drop('blog');
       Schema.create('blog', (Table table) {
-        table.id();
+        table.id('uid');
         table.string('title');
         table.char('status').withDefault('active');
         table.text('body');
@@ -30,7 +30,7 @@ void main() async {
       blog.title = "Updated title";
       await blog.save();
 
-      expect(blog.id != null, true);
+      expect(blog.uid != null, true);
 
       Blog blog2 = Blog();
       blog2.title = 'Amazing blog';
@@ -38,21 +38,21 @@ void main() async {
       blog2.status = 'active';
       await blog2.save();
 
-      expect(blog2.id != null, true);
+      expect(blog2.uid != null, true);
 
-      Blog result = await Blog().find(blog.id);
-      Blog result2 = await Blog().find(blog2.id);
+      Blog result = await Blog().find(blog.uid);
+      Blog result2 = await Blog().find(blog2.uid);
 
-      expect(result.id, blog.id);
+      expect(result.uid, blog.uid);
       expect(result.title, 'Updated title');
       expect(result.description, 'Awesome blog body');
 
-      expect(result2.id, blog2.id);
+      expect(result2.uid, blog2.uid);
       expect(result2.title, 'Amazing blog');
       expect(result2.description, 'Amazing blog body');
 
-      await Blog().where('id', blog.id).delete();
-      await Blog().where('id', blog2.id).delete();
+      await Blog().where('uid', blog.uid).delete();
+      await Blog().where('uid', blog2.uid).delete();
 
       List blogs = await Blog().withTrash().all();
       expect(blogs.length, 2);
@@ -67,8 +67,8 @@ void main() async {
       blog.description = "something";
       await blog.save();
 
-      Blog check = await blog.newQuery.find(blog.id);
-      expect(check.id, blog.id);
+      Blog check = await blog.newQuery.find(blog.uid);
+      expect(check.uid, blog.uid);
     });
 
     test('test to Sql', () async {
@@ -77,10 +77,10 @@ void main() async {
       blog.description = "something";
       await blog.save();
 
-      expect(blog.id != null, true);
+      expect(blog.uid != null, true);
 
-      String query = blog.newQuery.where('id', blog.id).toSql();
-      expect("SELECT * FROM blog WHERE id = ${blog.id}", query);
+      String query = blog.newQuery.where('uid', blog.uid).toSql();
+      expect("SELECT * FROM blog WHERE uid = ${blog.uid}", query);
     });
 
     test('test toMap', () async {
@@ -90,7 +90,7 @@ void main() async {
       await blog.save();
 
       Map<String, dynamic> data = blog.toMap();
-      expect(data['id'], blog.id);
+      expect(data['uid'], blog.uid);
       expect(data['title'], blog.title);
     });
 
@@ -115,7 +115,7 @@ void main() async {
       });
       Table table = Table().table('blog');
       List columns = await table.getTableColumns();
-      expect(true, columns.contains('id'));
+      expect(true, columns.contains('uid'));
       expect(true, columns.contains('column1'));
       expect(true, columns.contains('column2'));
       expect(true, columns.contains('blog_title'));

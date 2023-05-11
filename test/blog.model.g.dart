@@ -3,26 +3,45 @@
 part of 'blog.model.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
+// Generator: DoxModelBuilder
 // **************************************************************************
 
-Blog _$BlogFromJson(Map<String, dynamic> json) => Blog()
-  ..id = json['id'] as int?
-  ..title = json['title'] as String?
-  ..status = json['status'] as String?
-  ..description = json['body'] as String?
-  ..deletedAt = json['deleted_at'] == null
-      ? null
-      : DateTime.parse(json['deleted_at'] as String)
-  ..createdAt = json['created_at'] == null
-      ? null
-      : DateTime.parse(json['created_at'] as String)
-  ..updatedAt = json['updated_at'] == null
-      ? null
-      : DateTime.parse(json['updated_at'] as String);
+class BlogGenerator extends Model {
+  @override
+  String get primaryKey => 'uid';
 
-Map<String, dynamic> _$BlogToJson(Blog instance) => <String, dynamic>{
-      'id': instance.id,
+  @override
+  String get tableName => 'blog';
+
+  int? get uid => tempIdValue;
+
+  set uid(val) => tempIdValue = val;
+
+  Future<BlogInfo?> get blogInfo {
+    return hasOne<BlogInfo>(this, () => BlogInfo());
+  }
+
+  @override
+  Blog fromMap(Map<String, dynamic> m) => Blog()
+    ..uid = m['uid'] as int?
+    ..title = m['title'] as String?
+    ..status = m['status'] as String?
+    ..description = m['body'] as String?
+    ..deletedAt = m['deleted_at'] == null
+        ? null
+        : DateTime.parse(m['deleted_at'] as String)
+    ..createdAt = m['created_at'] == null
+        ? null
+        : DateTime.parse(m['created_at'] as String)
+    ..updatedAt = m['updated_at'] == null
+        ? null
+        : DateTime.parse(m['updated_at'] as String);
+
+  @override
+  Map<String, dynamic> convertToMap(i) {
+    Blog instance = i as Blog;
+    return {
+      'uid': instance.uid,
       'title': instance.title,
       'status': instance.status,
       'body': instance.description,
@@ -30,3 +49,5 @@ Map<String, dynamic> _$BlogToJson(Blog instance) => <String, dynamic>{
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
+  }
+}

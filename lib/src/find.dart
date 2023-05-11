@@ -12,7 +12,7 @@ mixin Find implements SharedMixin {
   /// [arg2] is value of column
   /// This cannot be use with other query such as, where, join, delete.
   Future find(dynamic arg1, [dynamic arg2]) async {
-    String column = arg2 == null ? 'id' : arg1;
+    String column = arg2 == null ? primaryKey : arg1;
     String key = 'find_$column';
     dynamic value = arg2 ?? arg1;
 

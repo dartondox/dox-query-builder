@@ -1,6 +1,5 @@
-import 'package:dox_query_builder/src/drivers/db_driver.dart';
+import 'package:dox_query_builder/dox_query_builder.dart';
 
-import 'query_builder.dart';
 import 'utils/helper.dart';
 import 'utils/logger.dart';
 
@@ -12,14 +11,14 @@ abstract class SharedMixin {
   Map<String, dynamic> get substitutionValues;
   String get rawQueryString;
   String get selectQueryString;
-  String get primaryKey;
+  String primaryKey = 'id';
   bool shouldDebug = false;
-  dynamic modelType;
+  dynamic self;
   String tableName = '';
   bool isSoftDeletes = false;
   List<String> hidden = [];
-  toMap();
-  fromJson(Map<String, dynamic> json);
+  Map<String, dynamic> convertToMap(i);
+  fromMap(Map<String, dynamic> json);
 
   addSubstitutionValues(String key, dynamic value) {}
   resetSubstitutionValues() {}

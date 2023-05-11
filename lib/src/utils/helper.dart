@@ -46,10 +46,10 @@ class QueryBuilderHelper {
       });
       result.add(ret);
     }
-    if (queryBuilder.modelType != null &&
-        queryBuilder.modelType.toString() != 'dynamic') {
+    if (queryBuilder.self != null &&
+        queryBuilder.self.toString() != 'dynamic') {
       return result.map((e) {
-        return queryBuilder.modelType.fromJson(e);
+        return queryBuilder.self.fromMap(e);
       }).toList();
     }
     return result;

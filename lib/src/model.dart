@@ -5,17 +5,15 @@ import '../dox_query_builder.dart';
 class Model extends QueryBuilder {
   bool _debug = SqlQueryBuilder().debug;
 
-  @JsonKey()
-  int? id;
-
   @override
   String get tableName => runtimeType.toString().toLowerCase();
 
   @override
-  dynamic get modelType => this;
+  dynamic get self => this;
 
-  QueryBuilder get newQuery =>
-      QueryBuilder.table(tableName, this).debug(_debug);
+  QueryBuilder get newQuery => QueryBuilder.table(tableName, this)
+      .debug(_debug)
+      .setPrimaryKey(primaryKey);
 
   @override
   Model debug(bool debug) {
@@ -23,6 +21,8 @@ class Model extends QueryBuilder {
     super.debug(debug);
     return this;
   }
+
+  int? tempIdValue;
 
   /// create new record in table
   ///
@@ -37,19 +37,21 @@ class Model extends QueryBuilder {
       values.removeWhere((key, value) => value == null);
       values['created_at'] = now();
       values['updated_at'] = now();
-      var res = await QueryBuilder.table(tableName, modelType)
+      var res = await QueryBuilder.table(tableName)
+          .setPrimaryKey(primaryKey)
           .debug(_debug)
           .insert(values);
-      id = res.id;
-      return res;
+      tempIdValue = res[primaryKey];
+      return fromMap(res);
     } else {
       var id = values[primaryKey];
       values.remove(primaryKey);
       values.remove('created_at');
       values['updated_at'] = now();
-      await QueryBuilder.table(tableName, modelType)
+      await QueryBuilder.table(tableName, this)
+          .setPrimaryKey(primaryKey)
           .debug(_debug)
-          .where('id', id)
+          .where(primaryKey, id)
           .update(values);
       return this;
     }
@@ -67,4 +69,6 @@ class Model extends QueryBuilder {
     }
     return jsonEncode(data);
   }
+
+  Map<String, dynamic> toMap() => convertToMap(this);
 }

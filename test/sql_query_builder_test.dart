@@ -89,65 +89,65 @@ void main() async {
       expect(blogs2.length, 0);
     });
 
-    // test('test with new query', () async {
-    //   Blog blog = Blog();
-    //   blog.title = "new blog";
-    //   blog.description = "something";
-    //   await blog.save();
+    test('test with new query', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
 
-    //   Blog check = await blog.newQuery.find(blog.uid);
-    //   expect(check.uid, blog.uid);
-    // });
+      Blog check = await blog.newQuery.find(blog.uid);
+      expect(check.uid, blog.uid);
+    });
 
-    // test('test to Sql', () async {
-    //   Blog blog = Blog();
-    //   blog.title = "new blog";
-    //   blog.description = "something";
-    //   await blog.save();
+    test('test to Sql', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
 
-    //   expect(blog.uid != null, true);
+      expect(blog.uid != null, true);
 
-    //   String query = blog.newQuery.where('uid', blog.uid).toSql();
-    //   expect("SELECT * FROM blog WHERE uid = ${blog.uid}", query);
-    // });
+      String query = blog.newQuery.where('uid', blog.uid).toSql();
+      expect("SELECT * FROM blog WHERE uid = ${blog.uid}", query);
+    });
 
-    // test('test toMap', () async {
-    //   Blog blog = Blog();
-    //   blog.title = "new blog";
-    //   blog.description = "something";
-    //   await blog.save();
+    test('test toMap', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
 
-    //   Map<String, dynamic> data = blog.toMap();
-    //   expect(data['uid'], blog.uid);
-    //   expect(data['title'], blog.title);
-    // });
+      Map<String, dynamic> data = blog.toMap();
+      expect(data['uid'], blog.uid);
+      expect(data['title'], blog.title);
+    });
 
-    // test('test toJson', () async {
-    //   Blog blog = Blog();
-    //   blog.title = "new blog";
-    //   blog.description = "something";
-    //   await blog.save();
+    test('test toJson', () async {
+      Blog blog = Blog();
+      blog.title = "new blog";
+      blog.description = "something";
+      await blog.save();
 
-    //   String data = blog.toJson();
-    //   expect(true, data.contains('new blog'));
-    // });
+      String data = blog.toJson();
+      expect(true, data.contains('new blog'));
+    });
 
-    // test('schema update', () async {
-    //   await Schema.table('blog', (Table table) {
-    //     table.renameColumn('title', 'blog_title');
-    //     table.string('blog_title').nullable();
-    //     table.string('body');
-    //     table.string('slug').unique().nullable();
-    //     table.string('column1').nullable();
-    //     table.string('column2').nullable();
-    //   });
-    //   Table table = Table().table('blog');
-    //   List columns = await table.getTableColumns();
-    //   expect(true, columns.contains('uid'));
-    //   expect(true, columns.contains('column1'));
-    //   expect(true, columns.contains('column2'));
-    //   expect(true, columns.contains('blog_title'));
-    //   expect(true, columns.contains('slug'));
-    // });
+    test('schema update', () async {
+      await Schema.table('blog', (Table table) {
+        table.renameColumn('title', 'blog_title');
+        table.string('blog_title').nullable();
+        table.string('body');
+        table.string('slug').unique().nullable();
+        table.string('column1').nullable();
+        table.string('column2').nullable();
+      });
+      Table table = Table().table('blog');
+      List columns = await table.getTableColumns();
+      expect(true, columns.contains('uid'));
+      expect(true, columns.contains('column1'));
+      expect(true, columns.contains('column2'));
+      expect(true, columns.contains('blog_title'));
+      expect(true, columns.contains('slug'));
+    });
   });
 }

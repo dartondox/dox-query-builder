@@ -1,3 +1,10 @@
+## 1.1.0
+
+- Create own annotation and builder
+- Added belongsTo support
+- Added hasOne support
+- Added hasMany support
+
 ## 1.0.11
 
 - Bug fixed id null on save

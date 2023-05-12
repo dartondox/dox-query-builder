@@ -6,7 +6,7 @@ part of 'blog_info.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
-class BlogInfoGenerator extends Model {
+class BlogInfoGenerator extends Model<BlogInfo> {
   @override
   String get primaryKey => 'id';
 
@@ -17,14 +17,16 @@ class BlogInfoGenerator extends Model {
   @override
   BlogInfo fromMap(Map<String, dynamic> m) => BlogInfo()
     ..id = m['id'] as int?
-    ..category = m['category'] as String?;
+    ..info = m['info'] as Map<String, dynamic>?
+    ..blogId = m['blog_id'] as int?;
 
   @override
   Map<String, dynamic> convertToMap(i) {
     BlogInfo instance = i as BlogInfo;
     return {
       'id': instance.id,
-      'category': instance.category,
+      'info': instance.info,
+      'blog_id': instance.blogId,
     };
   }
 }

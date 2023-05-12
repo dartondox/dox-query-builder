@@ -1,6 +1,8 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-class QueryBuilderHelper {
+Type typeOf<T>() => T;
+
+class QueryBuilderHelper<T> {
   final QueryBuilder queryBuilder;
   QueryBuilderHelper(this.queryBuilder);
 
@@ -49,9 +51,27 @@ class QueryBuilderHelper {
     if (queryBuilder.self != null &&
         queryBuilder.self.toString() != 'dynamic') {
       return result.map((e) {
-        return queryBuilder.self.fromMap(e);
+        return queryBuilder.self.fromMap(e) as T;
       }).toList();
     }
     return result;
+  }
+
+  String pascalToSnake(String input) {
+    final result = StringBuffer();
+    for (final letter in input.codeUnits) {
+      if (letter >= 65 && letter <= 90) {
+        // Check if uppercase ASCII
+        if (result.isNotEmpty) {
+          // Add underscore if not first letter
+          result.write('_');
+        }
+        result.write(String.fromCharCode(letter + 32)); // Add lowercase ASCII
+      } else {
+        result.write(String.fromCharCode(letter)); // Add original character
+      }
+    }
+    String finalString = result.toString().replaceAll(RegExp('_+'), '_');
+    return finalString;
   }
 }

@@ -4,14 +4,10 @@ import 'blog_info.model.dart';
 
 part 'blog.model.g.dart';
 
-@DoxModel(primaryKey: 'uid', table: 'blog')
+@DoxModel(primaryKey: 'uid')
 class Blog extends BlogGenerator with SoftDeletes {
   @Column()
   String? title;
-
-  static const Map<String, Relation> relations = {
-    'blogInfo': HasOne(BlogInfo),
-  };
 
   @Column()
   String? status;
@@ -27,4 +23,12 @@ class Blog extends BlogGenerator with SoftDeletes {
 
   @Column(name: 'updated_at')
   DateTime? updatedAt;
+
+  Future<BlogInfo?> get blogInfo async {
+    return await hasOne(() => BlogInfo()).end;
+  }
+
+  Future<List<BlogInfo>> get blogInfos async {
+    return await hasMany(() => BlogInfo()).end;
+  }
 }

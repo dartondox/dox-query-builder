@@ -3,7 +3,7 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 import 'utils/helper.dart';
 import 'utils/logger.dart';
 
-abstract class SharedMixin {
+abstract class SharedMixin<T> {
   QueryBuilder get queryBuilder;
   QueryBuilderHelper get helper;
   Logger get logger;

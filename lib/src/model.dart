@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import '../dox_query_builder.dart';
 
-class Model extends QueryBuilder {
+class Model<T> extends QueryBuilder<T> {
   bool _debug = SqlQueryBuilder().debug;
 
   @override
-  String get tableName => runtimeType.toString().toLowerCase();
+  String get tableName => helper.pascalToSnake(runtimeType.toString());
 
   @override
   dynamic get self => this;

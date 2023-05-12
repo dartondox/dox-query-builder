@@ -1,3 +1,5 @@
+import 'package:dox_query_builder/src/relationships/relation_where.dart';
+
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
@@ -62,6 +64,20 @@ mixin Where implements SharedMixin {
       _wheres.add("$type $column $condition @$columnKey");
     }
     addSubstitutionValues(columnKey, value);
+    return queryBuilder;
+  }
+
+  /// where raw condition
+  ///
+  /// ```
+  /// List blogs = await whereRaw('id = @id', {"id" : 1}).get();
+  /// ```
+  QueryBuilder whereBuilder(WhereBuilder whereBuilder) {
+    _wheres.addAll(whereBuilder.getWheres());
+    var params = whereBuilder.getParams();
+    params.forEach((key, value) {
+      addSubstitutionValues(key, value);
+    });
     return queryBuilder;
   }
 

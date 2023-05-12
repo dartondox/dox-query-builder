@@ -6,20 +6,13 @@ part of 'blog.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
-class BlogGenerator extends Model {
+class BlogGenerator extends Model<Blog> {
   @override
   String get primaryKey => 'uid';
-
-  @override
-  String get tableName => 'blog';
 
   int? get uid => tempIdValue;
 
   set uid(val) => tempIdValue = val;
-
-  Future<BlogInfo?> get blogInfo {
-    return hasOne<BlogInfo>(this, () => BlogInfo());
-  }
 
   @override
   Blog fromMap(Map<String, dynamic> m) => Blog()

@@ -1,9 +1,11 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
+import 'package:dox_query_builder/src/relationships/belongs_to.dart';
+import 'package:dox_query_builder/src/relationships/has_many.dart';
+import 'package:dox_query_builder/src/relationships/has_one.dart';
 
 import 'all.dart';
 import 'count.dart';
 import 'delete.dart';
-import 'find.dart';
 import 'get.dart';
 import 'group_by.dart';
 import 'insert.dart';
@@ -38,7 +40,7 @@ class SqlQueryBuilder {
   }
 }
 
-class QueryBuilder
+class QueryBuilder<T>
     with
         Limit,
         Where,
@@ -51,9 +53,11 @@ class QueryBuilder
         Update,
         Select,
         All,
-        Find,
         Truncate,
         Delete,
+        HasOne,
+        HasMany,
+        BelongsTo,
         Count {
   Map<String, dynamic> _substitutionValues = {};
 
@@ -71,7 +75,7 @@ class QueryBuilder
   DBDriver get db => SqlQueryBuilder().db;
 
   @override
-  QueryBuilderHelper get helper => QueryBuilderHelper(this);
+  QueryBuilderHelper get helper => QueryBuilderHelper<T>(this);
 
   @override
   Logger get logger => Logger();

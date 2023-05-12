@@ -1,13 +1,13 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:dox_query_builder/src/shared_mixin.dart';
 
-mixin HasOne implements SharedMixin {
+mixin HasMany implements SharedMixin {
   /// ```
-  /// Future<BlogInfo?> get blogInfo {
-  ///   return hasOne<BlogInfo>(() => BlogInfo());
+  /// Future<List<BlogInfo>> get blogInfo {
+  ///   return hasMany<BlogInfo>(() => BlogInfo());
   /// }
   /// ```
-  QueryBuilder hasOne(
+  QueryBuilder hasMany(
     Model Function() model, {
     String? foreignKey,
     String? localKey,
@@ -17,6 +17,6 @@ mixin HasOne implements SharedMixin {
     String fKey = foreignKey ?? "${s.tableName}_id";
     String lKey = localKey ?? s.primaryKey;
     var mapData = s.toMap();
-    return m.where(fKey, mapData[lKey]).setGetType('getFirst');
+    return m.where(fKey, mapData[lKey]).setGetType('get');
   }
 }

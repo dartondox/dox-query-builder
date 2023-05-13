@@ -30,7 +30,7 @@ mixin Get implements SharedMixin {
   Future find(dynamic arg1, [dynamic arg2]) {
     String column = arg2 == null ? primaryKey : arg1;
     dynamic value = arg2 ?? arg1;
-    return queryBuilder.where(column, value).getFirst();
+    return queryBuilder.where(column, value).limit(1).getFirst();
   }
 
   /// Get records
@@ -48,6 +48,7 @@ mixin Get implements SharedMixin {
   /// Blog blogs = await Blog().where('status', 'active').getFirst();
   /// ```
   Future getFirst() async {
+    queryBuilder.limit(1);
     List result = helper.formatResult(await helper.runQuery(_buildQuery()));
     return result.isEmpty ? null : result.first;
   }
@@ -70,7 +71,7 @@ mixin Get implements SharedMixin {
   // Get records
   ///
   /// ```
-  /// List blogs = await Blog().where('status', 'active').get();
+  /// List blogs = await Blog().where('status', 'active').end;
   /// ```
   Future get end async {
     if (_getType == 'get') {

@@ -6,9 +6,6 @@ part 'blog_info.model.g.dart';
 
 @DoxModel()
 class BlogInfo extends BlogInfoGenerator {
-  @override
-  List get preloadList => [];
-
   @Column()
   Map<String, dynamic>? info;
 

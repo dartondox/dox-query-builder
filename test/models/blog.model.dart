@@ -6,9 +6,6 @@ part 'blog.model.g.dart';
 
 @DoxModel(primaryKey: 'uid')
 class Blog extends BlogGenerator with SoftDeletes {
-  @override
-  List get preloadList => [];
-
   @Column(beforeSave: slugTitle)
   String? title;
 
@@ -16,7 +13,7 @@ class Blog extends BlogGenerator with SoftDeletes {
   String? status;
 
   @Column(name: 'body')
-  String? description = 'something';
+  String? description;
 
   @Column(name: 'deleted_at')
   DateTime? deletedAt;
@@ -27,10 +24,10 @@ class Blog extends BlogGenerator with SoftDeletes {
   @Column(name: 'updated_at')
   DateTime? updatedAt = now();
 
-  @HasOne(BlogInfo)
+  @HasOne(BlogInfo, eager: true)
   BlogInfo? blogInfo;
 
-  @HasMany(BlogInfo)
+  @HasMany(BlogInfo, eager: true)
   List<BlogInfo> blogInfos = [];
 
   static slugTitle(title) {

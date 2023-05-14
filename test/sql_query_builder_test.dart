@@ -146,8 +146,6 @@ void main() async {
     });
 
     test('hasOne', () async {
-      Blog().truncate();
-
       Blog blog = Blog();
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
@@ -161,6 +159,21 @@ void main() async {
       blog.preload('blogInfo');
       await blog.reload();
       expect(blog.blogInfo?.info?['name'], 'awesome');
+    });
+
+    test('eager load', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      BlogInfo blogInfo = BlogInfo();
+      blogInfo.info = {"name": "Hahaha"};
+      blogInfo.blogId = blog.uid;
+      await blogInfo.save();
+
+      Blog b = await Blog().getFirst();
+      expect(b.blogInfo?.info?['name'], 'Hahaha');
     });
   });
 }

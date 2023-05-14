@@ -15,6 +15,9 @@ class BlogInfoGenerator extends Model<BlogInfo> {
   set id(val) => tempIdValue = val;
 
   @override
+  List get preloadList => [];
+
+  @override
   Map<String, Function> get relationsResultMatcher => {
         'blog': getBlog,
       };

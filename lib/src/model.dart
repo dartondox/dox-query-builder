@@ -76,6 +76,7 @@ class Model<T> extends QueryBuilder<T> {
   Map<String, dynamic> toOriginalMap() => originalMap;
 
   /// start ********** preload
+
   List get preloadList => [];
   final List _preloadList = [];
 

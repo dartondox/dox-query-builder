@@ -3,11 +3,7 @@ class Column {
   final Function? beforeSave;
   final Function? beforeGet;
 
-  const Column({
-    this.name,
-    this.beforeSave,
-    this.beforeGet,
-  });
+  const Column({this.name, this.beforeSave, this.beforeGet});
 }
 
 class HasOne {
@@ -15,8 +11,10 @@ class HasOne {
   final String? foreignKey;
   final String? localKey;
   final Function? onQuery;
+  final bool? eager;
 
-  const HasOne(this.model, {this.foreignKey, this.localKey, this.onQuery});
+  const HasOne(this.model,
+      {this.foreignKey, this.localKey, this.onQuery, this.eager});
 }
 
 class HasMany {
@@ -24,8 +22,10 @@ class HasMany {
   final String? foreignKey;
   final String? localKey;
   final Function? onQuery;
+  final bool? eager;
 
-  const HasMany(this.model, {this.foreignKey, this.localKey, this.onQuery});
+  const HasMany(this.model,
+      {this.foreignKey, this.localKey, this.onQuery, this.eager});
 }
 
 class BelongsTo {
@@ -33,6 +33,8 @@ class BelongsTo {
   final String? foreignKey;
   final String? ownerKey;
   final Function? onQuery;
+  final bool? eager;
 
-  const BelongsTo(this.model, {this.foreignKey, this.ownerKey, this.onQuery});
+  const BelongsTo(this.model,
+      {this.foreignKey, this.ownerKey, this.onQuery, this.eager});
 }

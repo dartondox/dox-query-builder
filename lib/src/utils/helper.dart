@@ -32,7 +32,7 @@ class QueryBuilderHelper<T> {
     return await db.mappedResultsQuery(query, substitutionValues: values);
   }
 
-  List formatResult(List queryResult) {
+  Future<List> formatResult(List queryResult) async {
     List<Map<String, dynamic>> result = [];
     for (final row in queryResult) {
       Map<String, dynamic> ret = {};
@@ -50,9 +50,13 @@ class QueryBuilderHelper<T> {
     }
     if (queryBuilder.self != null &&
         queryBuilder.self.toString() != 'dynamic') {
-      return result.map((e) {
-        return queryBuilder.self.fromMap(e) as T;
-      }).toList();
+      List<T> ret = [];
+      for (var e in result) {
+        var res = queryBuilder.self.fromMap(e) as T;
+        await queryBuilder.initPreload(res);
+        ret.add(res);
+      }
+      return ret;
     }
     return result;
   }
@@ -73,5 +77,12 @@ class QueryBuilderHelper<T> {
     }
     String finalString = result.toString().replaceAll(RegExp('_+'), '_');
     return finalString;
+  }
+
+  lcFirst(String? str) {
+    if (str == null) {
+      return '';
+    }
+    return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 }

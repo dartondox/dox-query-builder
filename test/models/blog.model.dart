@@ -6,6 +6,9 @@ part 'blog.model.g.dart';
 
 @DoxModel(primaryKey: 'uid')
 class Blog extends BlogGenerator with SoftDeletes {
+  @override
+  List get preloadList => ['blogInfo'];
+
   @Column()
   String? title;
 
@@ -13,7 +16,7 @@ class Blog extends BlogGenerator with SoftDeletes {
   String? status;
 
   @Column(name: 'body')
-  String? description;
+  String? description = 'something';
 
   @Column(name: 'deleted_at')
   DateTime? deletedAt;
@@ -22,13 +25,11 @@ class Blog extends BlogGenerator with SoftDeletes {
   DateTime? createdAt;
 
   @Column(name: 'updated_at')
-  DateTime? updatedAt;
+  DateTime? updatedAt = now();
 
-  Future<BlogInfo?> get blogInfo async {
-    return await hasOne(() => BlogInfo()).end;
-  }
+  @HasOne(BlogInfo)
+  BlogInfo? blogInfo;
 
-  Future<List<BlogInfo>> get blogInfos async {
-    return await hasMany(() => BlogInfo()).end;
-  }
+  @HasMany(BlogInfo)
+  List<BlogInfo> blogInfos = [];
 }

@@ -1,19 +1,18 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:test/test.dart';
 
-import 'blog.model.dart';
-import 'blog_info.model.dart';
 import 'connection.dart';
+import 'models/blog.model.dart';
+import 'models/blog_info.model.dart';
 
 void main() async {
   SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
   group('Query Builder', () {
-    setUp(() {});
-
-    test('insert', () async {
+    setUp(() {
       Schema.drop('blog');
       Schema.drop('blog_info');
+      Schema.drop('comment');
       Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');
@@ -31,6 +30,15 @@ void main() async {
         table.timestamps();
       });
 
+      Schema.create('comment', (Table table) {
+        table.id('id');
+        table.string('comment').nullable();
+        table.integer('blog_id');
+        table.timestamps();
+      });
+    });
+
+    test('insert', () async {
       Blog blog = Blog();
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
@@ -43,19 +51,6 @@ void main() async {
       info.info = {"name": "awesome"};
       info.blogId = blog.uid;
       await info.save();
-
-      print(info.id);
-
-      BlogInfo? blogInfo = await blog.blogInfo;
-
-      Blog? b = await blogInfo?.blog;
-      print(b?.uid);
-      print(b?.title);
-
-      BlogInfo? newInfo = await blog.blogInfo;
-
-      print(newInfo?.id);
-      print(newInfo?.info);
 
       expect(blog.uid != null, true);
 
@@ -148,6 +143,26 @@ void main() async {
       expect(true, columns.contains('column2'));
       expect(true, columns.contains('blog_title'));
       expect(true, columns.contains('slug'));
+    });
+
+    test('hasOne', () async {
+      Blog().truncate();
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      blog.status = 'deleted';
+      await blog.save();
+
+      blog.blogInfo = BlogInfo();
+
+      blog.blogInfo?.info = {"name": "awesome"};
+      blog.blogInfo?.blogId = blog.uid;
+      await blog.blogInfo?.save();
+
+      expect(blog.blogInfo?.id != null, true);
+      await blog.reload();
+
+      expect(blog.blogInfo?.info?['name'], 'awesome');
     });
   });
 }

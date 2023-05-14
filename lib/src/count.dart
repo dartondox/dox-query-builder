@@ -12,7 +12,7 @@ mixin Count implements SharedMixin {
         : 'count(*) as total, $selectQueryString';
     String q = "SELECT $select FROM $tableName";
     q += helper.getCommonQuery();
-    List result = helper.formatResult(await helper.runQuery(q));
+    List result = await helper.formatResult(await helper.runQuery(q));
     return result.length == 1 ? result.first : result;
   }
 }

@@ -55,9 +55,9 @@ class QueryBuilder<T>
         All,
         Truncate,
         Delete,
-        HasOne,
-        HasMany,
-        BelongsTo,
+        HasOneQuery,
+        HasManyQuery,
+        BelongsToQuery,
         Count {
   Map<String, dynamic> _substitutionValues = {};
 
@@ -109,6 +109,9 @@ class QueryBuilder<T>
   Map<String, dynamic> convertToMap(i) {
     return {};
   }
+
+  @override
+  Future<void> initPreload(i) async {}
 
   @override
   fromMap(Map<String, dynamic> json) {}

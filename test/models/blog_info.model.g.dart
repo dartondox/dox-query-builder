@@ -15,6 +15,32 @@ class BlogInfoGenerator extends Model<BlogInfo> {
   set id(val) => tempIdValue = val;
 
   @override
+  Map<String, Function> get relationsResultMatcher => {
+        'blog': getBlog,
+      };
+
+  @override
+  Map<String, Function> get relationsQueryMatcher => {
+        'blog': queryBlog,
+      };
+
+  static Future getBlog(BlogInfo i) async {
+    var q = i.belongsTo(
+      i,
+      () => Blog(),
+    );
+    i.blog = isEmpty(i.blog) ? await q.end : i.blog;
+    return i.blog;
+  }
+
+  static Blog queryBlog(BlogInfo i) {
+    return i.belongsTo(
+      i,
+      () => Blog(),
+    );
+  }
+
+  @override
   BlogInfo fromMap(Map<String, dynamic> m) => BlogInfo()
     ..id = m['id'] as int?
     ..info = m['info'] as Map<String, dynamic>?

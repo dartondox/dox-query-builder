@@ -12,7 +12,6 @@ class BlogInfo extends BlogInfoGenerator {
   @Column(name: 'blog_id')
   int? blogId;
 
-  Future<Blog?> get blog async {
-    return await belongsTo(() => Blog()).end;
-  }
+  @BelongsTo(Blog)
+  Blog? blog;
 }

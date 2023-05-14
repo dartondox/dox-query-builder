@@ -9,4 +9,5 @@ export 'src/query_builder.dart';
 export 'src/schema.dart';
 export 'src/schema/table.dart';
 export 'src/soft_deletes.dart';
+export 'src/utils/annotation.dart';
 export 'src/utils/functions.dart';

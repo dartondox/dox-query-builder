@@ -19,6 +19,7 @@ abstract class SharedMixin<T> {
   List<String> hidden = [];
   Map<String, dynamic> convertToMap(i);
   fromMap(Map<String, dynamic> json);
+  Future initPreload(i);
 
   addSubstitutionValues(String key, dynamic value) {}
   resetSubstitutionValues() {}

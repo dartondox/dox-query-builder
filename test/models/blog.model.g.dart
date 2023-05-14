@@ -15,6 +15,50 @@ class BlogGenerator extends Model<Blog> {
   set uid(val) => tempIdValue = val;
 
   @override
+  Map<String, Function> get relationsResultMatcher => {
+        'blogInfo': getBlogInfo,
+        'blogInfos': getBlogInfos,
+      };
+
+  @override
+  Map<String, Function> get relationsQueryMatcher => {
+        'blogInfo': queryBlogInfo,
+        'blogInfos': queryBlogInfos,
+      };
+
+  static Future getBlogInfo(Blog i) async {
+    var q = i.hasOne(
+      i,
+      () => BlogInfo(),
+    );
+    i.blogInfo = isEmpty(i.blogInfo) ? await q.end : i.blogInfo;
+    return i.blogInfo;
+  }
+
+  static BlogInfo queryBlogInfo(Blog i) {
+    return i.hasOne(
+      i,
+      () => BlogInfo(),
+    );
+  }
+
+  static Future getBlogInfos(Blog i) async {
+    var q = i.hasMany(
+      i,
+      () => BlogInfo(),
+    );
+    i.blogInfos = isEmpty(i.blogInfos) ? await q.end : i.blogInfos;
+    return i.blogInfos;
+  }
+
+  static BlogInfo queryBlogInfos(Blog i) {
+    return i.hasMany(
+      i,
+      () => BlogInfo(),
+    );
+  }
+
+  @override
   Blog fromMap(Map<String, dynamic> m) => Blog()
     ..uid = m['uid'] as int?
     ..title = m['title'] as String?

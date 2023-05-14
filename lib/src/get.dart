@@ -27,10 +27,10 @@ mixin Get implements SharedMixin {
   /// If both [arg1] and [arg2] ar provided, [arg1] is column name and
   /// [arg2] is value of column
   /// This cannot be use with other query such as, where, join, delete.
-  Future find(dynamic arg1, [dynamic arg2]) {
+  Future find(dynamic arg1, [dynamic arg2]) async {
     String column = arg2 == null ? primaryKey : arg1;
     dynamic value = arg2 ?? arg1;
-    return queryBuilder.where(column, value).limit(1).getFirst();
+    return await queryBuilder.where(column, value).limit(1).getFirst();
   }
 
   /// Get records
@@ -39,7 +39,7 @@ mixin Get implements SharedMixin {
   /// List blogs = await Blog().where('status', 'active').get();
   /// ```
   Future get() async {
-    return helper.formatResult(await helper.runQuery(_buildQuery()));
+    return await helper.formatResult(await helper.runQuery(_buildQuery()));
   }
 
   /// Get records
@@ -49,7 +49,8 @@ mixin Get implements SharedMixin {
   /// ```
   Future getFirst() async {
     queryBuilder.limit(1);
-    List result = helper.formatResult(await helper.runQuery(_buildQuery()));
+    List result =
+        await helper.formatResult(await helper.runQuery(_buildQuery()));
     return result.isEmpty ? null : result.first;
   }
 

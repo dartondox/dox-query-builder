@@ -1,17 +1,48 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
-import 'package:dox_query_builder/src/shared_mixin.dart';
 
-mixin HasManyQuery implements SharedMixin {
-  hasMany(
-    Model i,
-    Model Function() model, {
-    String? foreignKey,
-    String? localKey,
-  }) {
-    Model m = model().debug(i.shouldDebug);
-    String fKey = foreignKey ?? "${i.tableName}_id";
-    String lKey = localKey ?? i.primaryKey;
-    var mapData = i.toMap();
-    return m.where(fKey, mapData[lKey]).setGetType('get');
+T? hasMany<T>(
+  List list,
+  Model Function() model, {
+  String? foreignKey,
+  String? localKey,
+  dynamic onQuery,
+}) {
+  if (list.isEmpty) return null;
+
+  Model owner = list.first;
+  localKey = localKey ?? owner.primaryKey;
+  foreignKey = foreignKey ?? "${owner.tableName}_id";
+
+  List<String> ids = list.map((i) {
+    var map = i.toMap();
+    return map[localKey].toString();
+  }).toList();
+
+  Model m = model().debug(owner.shouldDebug);
+
+  m.select('*, $foreignKey as _owner_id').whereIn(foreignKey, ids);
+
+  if (onQuery != null) {
+    m = onQuery(m);
   }
+  return m as T;
+}
+
+getHasMany<T>(q, List list) async {
+  if (q == null) return [];
+  List results = await q.get();
+
+  Map<String, List<T>> ret = {};
+
+  /// filter matched values with local id value
+  for (var r in results) {
+    var map = r.toOriginalMap();
+    String ownerId = map['_owner_id'].toString();
+    if (ret[ownerId] == null) {
+      ret[ownerId] = [];
+    }
+    ret[ownerId]?.add(r as T);
+  }
+
+  return ret;
 }

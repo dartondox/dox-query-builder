@@ -24,19 +24,18 @@ class BlogInfoGenerator extends Model<BlogInfo> {
         'blog': queryBlog,
       };
 
-  static Future getBlog(BlogInfo i) async {
-    var q = queryBlog(i);
-    i.blog = isEmpty(i.blog) ? await q.end : i.blog;
-    return i.blog;
+  static Future getBlog(List list) async {
+    var result = await getBelongsTo<Blog>(queryBlog(list), list);
+    for (BlogInfo i in list) {
+      i.blog = result[i.tempIdValue.toString()];
+      if (list.length == 1) {
+        return i.blog;
+      }
+    }
   }
 
-  static Blog queryBlog(BlogInfo i) {
-    var q = i.belongsTo(
-      i,
-      () => Blog(),
-    );
-
-    return q;
+  static Blog? queryBlog(List list) {
+    return belongsTo<Blog>(list, () => Blog());
   }
 
   @override

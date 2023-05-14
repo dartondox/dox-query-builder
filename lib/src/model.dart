@@ -56,7 +56,7 @@ class Model<T> extends QueryBuilder<T> {
   }
 
   Future reload() async {
-    await initPreload(this);
+    await initPreload([this]);
   }
 
   // Model to json string converter
@@ -73,6 +73,7 @@ class Model<T> extends QueryBuilder<T> {
   }
 
   Map<String, dynamic> toMap() => convertToMap(this);
+  Map<String, dynamic> toOriginalMap() => originalMap;
 
   /// start ********** preload
   List get preloadList => [];
@@ -98,7 +99,7 @@ class Model<T> extends QueryBuilder<T> {
   /// print(blog.comments);
   /// `
   Future<MODEL?> $getRelation<MODEL>(name) async {
-    return await _getRelation(this, name) as MODEL;
+    return await _getRelation([this], name) as MODEL;
   }
 
   /// Get relation query
@@ -110,12 +111,14 @@ class Model<T> extends QueryBuilder<T> {
   MODEL? related<MODEL>(name) {
     if (relationsQueryMatcher[name] != null) {
       Function funcName = relationsQueryMatcher[name]!;
-      return Function.apply(funcName, [this]);
+      return Function.apply(funcName, [
+        [this]
+      ]);
     }
     return null;
   }
 
-  Future _getRelation(i, name) async {
+  Future _getRelation(List i, name) async {
     if (relationsResultMatcher[name] != null) {
       Function funcName = relationsResultMatcher[name]!;
       return await Function.apply(funcName, [i]);
@@ -123,10 +126,10 @@ class Model<T> extends QueryBuilder<T> {
   }
 
   @override
-  Future<void> initPreload(i) async {
-    List list = <dynamic>{...preloadList, ..._preloadList}.toList();
-    for (String key in list) {
-      await _getRelation(i, key);
+  Future<void> initPreload(List list) async {
+    List pList = <dynamic>{...preloadList, ..._preloadList}.toList();
+    for (String key in pList) {
+      await _getRelation(list, key);
     }
   }
 

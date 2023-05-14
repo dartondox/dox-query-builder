@@ -27,7 +27,7 @@ class Blog extends BlogGenerator with SoftDeletes {
   @Column(name: 'updated_at')
   DateTime? updatedAt = now();
 
-  @HasOne(BlogInfo, onQuery: blogInfoQuery)
+  @HasOne(BlogInfo)
   BlogInfo? blogInfo;
 
   @HasMany(BlogInfo)
@@ -35,9 +35,5 @@ class Blog extends BlogGenerator with SoftDeletes {
 
   static slugTitle(title) {
     return title;
-  }
-
-  static blogInfoQuery(BlogInfo q) {
-    return q;
   }
 }

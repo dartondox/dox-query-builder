@@ -147,21 +147,19 @@ void main() async {
 
     test('hasOne', () async {
       Blog().truncate();
+
       Blog blog = Blog();
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
-      blog.status = 'deleted';
       await blog.save();
 
-      blog.blogInfo = BlogInfo();
+      BlogInfo blogInfo = BlogInfo();
+      blogInfo.info = {"name": "awesome"};
+      blogInfo.blogId = blog.uid;
+      await blogInfo.save();
 
-      blog.blogInfo?.info = {"name": "awesome"};
-      blog.blogInfo?.blogId = blog.uid;
-      await blog.blogInfo?.save();
-
-      expect(blog.blogInfo?.id != null, true);
+      blog.preload('blogInfo');
       await blog.reload();
-
       expect(blog.blogInfo?.info?['name'], 'awesome');
     });
   });

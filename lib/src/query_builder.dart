@@ -1,7 +1,4 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
-import 'package:dox_query_builder/src/relationships/belongs_to.dart';
-import 'package:dox_query_builder/src/relationships/has_many.dart';
-import 'package:dox_query_builder/src/relationships/has_one.dart';
 
 import 'all.dart';
 import 'count.dart';
@@ -55,9 +52,6 @@ class QueryBuilder<T>
         All,
         Truncate,
         Delete,
-        HasOneQuery,
-        HasManyQuery,
-        BelongsToQuery,
         Count {
   Map<String, dynamic> _substitutionValues = {};
 
@@ -106,12 +100,14 @@ class QueryBuilder<T>
   List<String> hidden = [];
 
   @override
+  Map<String, dynamic> originalMap = {};
+
   Map<String, dynamic> convertToMap(i) {
     return {};
   }
 
   @override
-  Future<void> initPreload(i) async {}
+  Future<void> initPreload(List list) async {}
 
   @override
   fromMap(Map<String, dynamic> json) {}

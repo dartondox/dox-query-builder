@@ -1,5 +1,3 @@
-import 'package:dox_query_builder/src/relationships/relation_where.dart';
-
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
@@ -20,6 +18,21 @@ mixin Where implements SharedMixin {
   /// ```
   QueryBuilder where(String arg1, [dynamic arg2, dynamic arg3]) {
     return _query('AND', arg1, arg2, arg3);
+  }
+
+  /// where condition
+  ///
+  /// ```
+  /// List blogs = await whereIn('id', [1, 2, 3]).get();
+  /// ```
+  QueryBuilder whereIn(String column, List ids) {
+    String val = "(${ids.join(',')})";
+    if (_wheres.isEmpty) {
+      _wheres.add("$column in $val");
+    } else {
+      _wheres.add("AND $column in $val");
+    }
+    return queryBuilder;
   }
 
   /// or where condition
@@ -64,20 +77,6 @@ mixin Where implements SharedMixin {
       _wheres.add("$type $column $condition @$columnKey");
     }
     addSubstitutionValues(columnKey, value);
-    return queryBuilder;
-  }
-
-  /// where raw condition
-  ///
-  /// ```
-  /// List blogs = await whereRaw('id = @id', {"id" : 1}).get();
-  /// ```
-  QueryBuilder whereBuilder(WhereBuilder whereBuilder) {
-    _wheres.addAll(whereBuilder.getWheres());
-    var params = whereBuilder.getParams();
-    params.forEach((key, value) {
-      addSubstitutionValues(key, value);
-    });
     return queryBuilder;
   }
 

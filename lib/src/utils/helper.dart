@@ -52,10 +52,11 @@ class QueryBuilderHelper<T> {
         queryBuilder.self.toString() != 'dynamic') {
       List<T> ret = [];
       for (var e in result) {
-        var res = queryBuilder.self.fromMap(e) as T;
-        await queryBuilder.initPreload(res);
-        ret.add(res);
+        var res = queryBuilder.self.fromMap(e);
+        res.originalMap = e;
+        ret.add(res as T);
       }
+      await queryBuilder.initPreload(ret as List<Model>);
       return ret;
     }
     return result;

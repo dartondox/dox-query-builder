@@ -26,34 +26,32 @@ class BlogGenerator extends Model<Blog> {
         'blogInfos': queryBlogInfos,
       };
 
-  static Future getBlogInfo(Blog i) async {
-    var q = queryBlogInfo(i);
-    i.blogInfo = isEmpty(i.blogInfo) ? await q.end : i.blogInfo;
-    return i.blogInfo;
+  static Future getBlogInfo(List list) async {
+    var result = await getHasOne<BlogInfo>(queryBlogInfo(list), list);
+    for (Blog i in list) {
+      i.blogInfo = result[i.tempIdValue.toString()];
+      if (list.length == 1) {
+        return i.blogInfo;
+      }
+    }
   }
 
-  static BlogInfo queryBlogInfo(Blog i) {
-    var q = i.hasOne(
-      i,
-      () => BlogInfo(),
-    );
-    q = Blog.blogInfoQuery(q);
-    return q;
+  static BlogInfo? queryBlogInfo(List list) {
+    return hasOne<BlogInfo>(list, () => BlogInfo());
   }
 
-  static Future getBlogInfos(Blog i) async {
-    var q = queryBlogInfos(i);
-    i.blogInfos = isEmpty(i.blogInfos) ? await q.end : i.blogInfos;
-    return i.blogInfos;
+  static Future getBlogInfos(List list) async {
+    var result = await getHasMany<BlogInfo>(queryBlogInfos(list), list);
+    for (Blog i in list) {
+      i.blogInfos = result[i.tempIdValue.toString()];
+      if (list.length == 1) {
+        return i.blogInfos;
+      }
+    }
   }
 
-  static BlogInfo queryBlogInfos(Blog i) {
-    var q = i.hasMany(
-      i,
-      () => BlogInfo(),
-    );
-
-    return q;
+  static BlogInfo? queryBlogInfos(List list) {
+    return hasMany<BlogInfo>(list, () => BlogInfo());
   }
 
   @override

@@ -17,9 +17,9 @@ abstract class SharedMixin<T> {
   String tableName = '';
   bool isSoftDeletes = false;
   List<String> hidden = [];
-  Map<String, dynamic> convertToMap(i);
+  Map<String, dynamic> originalMap = {};
   fromMap(Map<String, dynamic> json);
-  Future initPreload(i);
+  Future initPreload(List list);
 
   addSubstitutionValues(String key, dynamic value) {}
   resetSubstitutionValues() {}

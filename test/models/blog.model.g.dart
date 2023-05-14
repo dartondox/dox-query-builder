@@ -27,35 +27,33 @@ class BlogGenerator extends Model<Blog> {
       };
 
   static Future getBlogInfo(Blog i) async {
-    var q = i.hasOne(
-      i,
-      () => BlogInfo(),
-    );
+    var q = queryBlogInfo(i);
     i.blogInfo = isEmpty(i.blogInfo) ? await q.end : i.blogInfo;
     return i.blogInfo;
   }
 
   static BlogInfo queryBlogInfo(Blog i) {
-    return i.hasOne(
+    var q = i.hasOne(
       i,
       () => BlogInfo(),
     );
+    q = Blog.blogInfoQuery(q);
+    return q;
   }
 
   static Future getBlogInfos(Blog i) async {
-    var q = i.hasMany(
-      i,
-      () => BlogInfo(),
-    );
+    var q = queryBlogInfos(i);
     i.blogInfos = isEmpty(i.blogInfos) ? await q.end : i.blogInfos;
     return i.blogInfos;
   }
 
   static BlogInfo queryBlogInfos(Blog i) {
-    return i.hasMany(
+    var q = i.hasMany(
       i,
       () => BlogInfo(),
     );
+
+    return q;
   }
 
   @override
@@ -79,7 +77,7 @@ class BlogGenerator extends Model<Blog> {
     Blog instance = i as Blog;
     return {
       'uid': instance.uid,
-      'title': instance.title,
+      'title': Blog.slugTitle(instance.title),
       'status': instance.status,
       'body': instance.description,
       'deleted_at': instance.deletedAt?.toIso8601String(),

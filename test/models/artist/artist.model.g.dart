@@ -40,7 +40,15 @@ class ArtistGenerator extends Model<Artist> {
   }
 
   static Song? querySongs(List list) {
-    return manyToMany<Song>(list, () => Song());
+    return manyToMany<Song>(
+      list,
+      () => Song(),
+      localKey: 'id',
+      relatedKey: 'id',
+      pivotForeignKey: 'artist_id',
+      pivotRelatedForeignKey: 'song_id',
+      pivotTable: 'artist_song',
+    );
   }
 
   @override

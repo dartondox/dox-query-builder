@@ -9,6 +9,13 @@ class Artist extends ArtistGenerator {
   @Column()
   String? name;
 
-  @ManyToMany(Song)
+  @ManyToMany(
+    Song,
+    localKey: 'id',
+    relatedKey: 'id',
+    pivotForeignKey: 'artist_id',
+    pivotRelatedForeignKey: 'song_id',
+    pivotTable: 'artist_song',
+  )
   List<Song> songs = [];
 }

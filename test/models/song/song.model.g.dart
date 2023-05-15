@@ -40,7 +40,10 @@ class SongGenerator extends Model<Song> {
   }
 
   static Artist? queryArtists(List list) {
-    return manyToMany<Artist>(list, () => Artist());
+    return manyToMany<Artist>(
+      list,
+      () => Artist(),
+    );
   }
 
   @override

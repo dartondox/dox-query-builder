@@ -40,7 +40,10 @@ class BlogInfoGenerator extends Model<BlogInfo> {
   }
 
   static Blog? queryBlog(List list) {
-    return belongsTo<Blog>(list, () => Blog());
+    return belongsTo<Blog>(
+      list,
+      () => Blog(),
+    );
   }
 
   @override

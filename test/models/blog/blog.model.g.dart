@@ -45,7 +45,10 @@ class BlogGenerator extends Model<Blog> {
   }
 
   static BlogInfo? queryBlogInfo(List list) {
-    return hasOne<BlogInfo>(list, () => BlogInfo());
+    return hasOne<BlogInfo>(
+      list,
+      () => BlogInfo(),
+    );
   }
 
   static Future getBlogInfos(List list) async {
@@ -59,7 +62,10 @@ class BlogGenerator extends Model<Blog> {
   }
 
   static BlogInfo? queryBlogInfos(List list) {
-    return hasMany<BlogInfo>(list, () => BlogInfo());
+    return hasMany<BlogInfo>(
+      list,
+      () => BlogInfo(),
+    );
   }
 
   @override

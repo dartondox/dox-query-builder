@@ -103,7 +103,9 @@ void main() async {
       expect(blog.uid != null, true);
 
       String query = blog.newQuery.where('uid', blog.uid).toSql();
-      expect("SELECT * FROM blog WHERE uid = ${blog.uid}", query);
+      expect(
+          "SELECT * FROM blog WHERE uid = ${blog.uid} AND deleted_at IS NULL",
+          query);
     });
 
     test('test toMap', () async {
@@ -156,9 +158,47 @@ void main() async {
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
-      blog.preload('blogInfo');
       await blog.reload();
       expect(blog.blogInfo?.info?['name'], 'awesome');
+    });
+
+    test('belongsTo', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      BlogInfo blogInfo = BlogInfo();
+      blogInfo.info = {"name": "awesome"};
+      blogInfo.blogId = blog.uid;
+      await blogInfo.save();
+
+      BlogInfo info = await BlogInfo().preload('blog').getFirst();
+      expect(info.blog?.title, 'Awesome blog');
+
+      BlogInfo info2 = await BlogInfo().getFirst();
+      await info2.$getRelation('blog');
+      expect(info2.blog?.title, 'Awesome blog');
+
+      BlogInfo info3 = await BlogInfo().getFirst();
+      Blog? b = await info3.related<Blog>('blog')?.getFirst();
+      expect(b?.title, 'Awesome blog');
+    });
+
+    test('hasMany', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      BlogInfo blogInfo = BlogInfo();
+      blogInfo.info = {"name": "awesome"};
+      blogInfo.blogId = blog.uid;
+      await blogInfo.save();
+
+      await blog.reload();
+
+      expect(blog.blogInfos.first.info?['name'], 'awesome');
     });
 
     test('eager load', () async {

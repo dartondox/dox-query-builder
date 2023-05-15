@@ -13,13 +13,9 @@ class Model<T> extends QueryBuilder<T> {
   @override
   dynamic get self => this;
 
-  QueryBuilder get newQuery => QueryBuilder.table(tableName, this)
-      .debug(_debug)
-      .setPrimaryKey(primaryKey);
-
   @override
-  Model debug(bool debug) {
-    _debug = debug;
+  Model debug([debug]) {
+    _debug = debug ?? true;
     super.debug(debug);
     return this;
   }
@@ -55,6 +51,8 @@ class Model<T> extends QueryBuilder<T> {
     }
   }
 
+  /// Reload eager relationship after new record created/updated.
+  /// await Blog().reload()
   Future reload() async {
     await initPreload([this]);
   }
@@ -72,8 +70,12 @@ class Model<T> extends QueryBuilder<T> {
     return jsonEncode(data);
   }
 
-  Map<String, dynamic> toMap() => convertToMap(this);
-  Map<String, dynamic> toOriginalMap() => originalMap;
+  Map<String, dynamic> toMap({bool original = false}) {
+    if (original == true) {
+      return originalMap;
+    }
+    return convertToMap(this);
+  }
 
   /// start ********** preload
 

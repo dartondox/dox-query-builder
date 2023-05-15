@@ -45,7 +45,8 @@ getBelongsTo<T>(q, List list) async {
 
   /// filter matched values with local id value
   for (var r in results) {
-    var map = r.toOriginalMap();
+    r = r as Model;
+    var map = r.toMap(original: true);
     ret[map['_foreign_id'].toString()] = r as T;
   }
 

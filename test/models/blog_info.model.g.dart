@@ -14,6 +14,8 @@ class BlogInfoGenerator extends Model<BlogInfo> {
 
   set id(val) => tempIdValue = val;
 
+  BlogInfo get newQuery => BlogInfo();
+
   @override
   List get preloadList => [];
 

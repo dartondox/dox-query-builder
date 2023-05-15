@@ -36,7 +36,8 @@ getHasOne<T>(q, List list) async {
 
   /// filter matched values with local id value
   for (var r in results) {
-    var map = r.toOriginalMap();
+    r = r as Model;
+    var map = r.toMap(original: true);
     String ownerId = map['_owner_id'].toString();
     ret[ownerId] = r as T;
   }

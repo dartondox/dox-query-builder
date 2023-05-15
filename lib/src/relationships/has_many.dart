@@ -36,12 +36,18 @@ getHasMany<T>(q, List list) async {
 
   /// filter matched values with local id value
   for (var r in results) {
-    var map = r.toOriginalMap();
+    r = r as Model;
+    var map = r.toMap(original: true);
     String ownerId = map['_owner_id'].toString();
     if (ret[ownerId] == null) {
       ret[ownerId] = [];
     }
     ret[ownerId]?.add(r as T);
+  }
+
+  /// to prevent result null instead return empty list
+  for (var i in list) {
+    ret[i.tempIdValue.toString()] = ret[i.tempIdValue.toString()] ?? [];
   }
 
   return ret;

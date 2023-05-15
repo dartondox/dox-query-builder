@@ -81,35 +81,26 @@ class QueryBuilder<T>
   Map<String, dynamic> get substitutionValues => _substitutionValues;
 
   @override
-  String get rawQueryString => getRawQuery();
-
-  @override
   String get selectQueryString => getSelectQuery();
 
-  @override
   dynamic self;
 
   @override
   bool isSoftDeletes = false;
 
-  /// table to query
   @override
   String tableName = '';
 
-  @override
   List<String> hidden = [];
 
-  @override
   Map<String, dynamic> originalMap = {};
 
   Map<String, dynamic> convertToMap(i) {
     return {};
   }
 
-  @override
   Future<void> initPreload(List list) async {}
 
-  @override
   fromMap(Map<String, dynamic> json) {}
 
   @override
@@ -142,8 +133,8 @@ class QueryBuilder<T>
   /// ```
   /// QueryBuilder.table('blog').debug(true)
   /// ```
-  QueryBuilder debug(bool debug) {
-    shouldDebug = debug;
+  QueryBuilder debug([debug]) {
+    shouldDebug = debug ?? true;
     return this;
   }
 

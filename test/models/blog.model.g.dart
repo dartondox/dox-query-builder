@@ -14,6 +14,8 @@ class BlogGenerator extends Model<Blog> {
 
   set uid(val) => tempIdValue = val;
 
+  Model get newQuery => Blog().debug(shouldDebug);
+
   @override
   List get preloadList => [
         'blogInfo',

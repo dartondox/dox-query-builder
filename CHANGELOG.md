@@ -1,9 +1,11 @@
-## 1.1.0
+## 1.1.1
 
 - Create own annotation and builder
 - Added belongsTo support
 - Added hasOne support
 - Added hasMany support
+- Added manyToMany support
+- Added eager loading support
 
 ## 1.0.11
 

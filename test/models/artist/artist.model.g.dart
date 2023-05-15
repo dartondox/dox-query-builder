@@ -10,6 +10,12 @@ class ArtistGenerator extends Model<Artist> {
   @override
   String get primaryKey => 'id';
 
+  @override
+  Map<String, dynamic> get timestampsColumn => {
+        'created_at': 'created_at',
+        'updated_at': 'updated_at',
+      };
+
   int? get id => tempIdValue;
 
   set id(val) => tempIdValue = val;
@@ -54,7 +60,13 @@ class ArtistGenerator extends Model<Artist> {
   @override
   Artist fromMap(Map<String, dynamic> m) => Artist()
     ..id = m['id'] as int?
-    ..name = m['name'] as String?;
+    ..name = m['name'] as String?
+    ..createdAt = m['created_at'] == null
+        ? null
+        : DateTime.parse(m['created_at'] as String)
+    ..updatedAt = m['updated_at'] == null
+        ? null
+        : DateTime.parse(m['updated_at'] as String);
 
   @override
   Map<String, dynamic> convertToMap(i) {
@@ -62,6 +74,8 @@ class ArtistGenerator extends Model<Artist> {
     return {
       'id': instance.id,
       'name': instance.name,
+      'created_at': instance.createdAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
     };
   }
 }

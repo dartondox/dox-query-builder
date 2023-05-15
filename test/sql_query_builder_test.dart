@@ -80,6 +80,9 @@ void main() async {
 
       expect(blogs.length, 2);
 
+      Blog findTrash = await Blog().withTrash().find(blog.uid);
+      expect(findTrash.deletedAt is DateTime, true);
+
       List blogs2 = await Blog().all();
       expect(blogs2.length, 0);
     });
@@ -89,6 +92,9 @@ void main() async {
       blog.title = "new blog";
       blog.description = "something";
       await blog.save();
+
+      expect(blog.createdAt is DateTime, true);
+      expect(blog.updatedAt is DateTime, true);
 
       Blog check = await blog.newQuery.find(blog.uid);
       expect(check.uid, blog.uid);

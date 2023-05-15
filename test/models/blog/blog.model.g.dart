@@ -10,6 +10,12 @@ class BlogGenerator extends Model<Blog> {
   @override
   String get primaryKey => 'uid';
 
+  @override
+  Map<String, dynamic> get timestampsColumn => {
+        'created_at': 'created_at',
+        'updated_at': 'updated_at',
+      };
+
   int? get uid => tempIdValue;
 
   set uid(val) => tempIdValue = val;

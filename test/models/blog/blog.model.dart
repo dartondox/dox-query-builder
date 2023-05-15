@@ -4,7 +4,7 @@ import '../blog_info/blog_info.model.dart';
 
 part 'blog.model.g.dart';
 
-@DoxModel(primaryKey: 'uid')
+@DoxModel(primaryKey: 'uid', createdAt: 'created_at', updatedAt: 'updated_at')
 class Blog extends BlogGenerator with SoftDeletes {
   @Column(beforeSave: slugTitle)
   String? title;
@@ -17,12 +17,6 @@ class Blog extends BlogGenerator with SoftDeletes {
 
   @Column(name: 'deleted_at')
   DateTime? deletedAt;
-
-  @Column(name: 'created_at')
-  DateTime? createdAt;
-
-  @Column(name: 'updated_at')
-  DateTime? updatedAt = now();
 
   @HasOne(BlogInfo, eager: true)
   BlogInfo? blogInfo;

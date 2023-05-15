@@ -4,6 +4,8 @@ import '../dox_query_builder.dart';
 
 class Model<T> extends QueryBuilder<T> {
   int? tempIdValue;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   List<String> hidden = [];
 
@@ -14,6 +16,11 @@ class Model<T> extends QueryBuilder<T> {
 
   @override
   dynamic get self => this;
+
+  Map<String, dynamic> get timestampsColumn => {
+        'created_at': 'created_at',
+        'updated_at': 'updated_at',
+      };
 
   @override
   Model debug([debug]) {
@@ -30,21 +37,39 @@ class Model<T> extends QueryBuilder<T> {
   /// await blog.save()
   /// ```
   Future save() async {
+    String? createdAtColumn = timestampsColumn['created_at'];
+    String? updatedAtColumn = timestampsColumn['updated_at'];
+
     Map<String, dynamic> values = toMap();
     if (values[primaryKey] == null) {
       values.removeWhere((key, value) => value == null);
-      values['created_at'] = now();
-      values['updated_at'] = now();
+
+      if (createdAtColumn != null) {
+        values[createdAtColumn] = now();
+        createdAt = values[createdAtColumn];
+      }
+
+      if (updatedAtColumn != null) {
+        values[updatedAtColumn] = now();
+        updatedAt = values[updatedAtColumn];
+      }
+
       var res = await QueryBuilder.table(tableName)
           .setPrimaryKey(primaryKey)
           .debug(_debug)
           .insert(values);
+
       tempIdValue = res[primaryKey];
     } else {
       var id = values[primaryKey];
       values.remove(primaryKey);
-      values.remove('created_at');
-      values['updated_at'] = now();
+      values.remove(createdAtColumn);
+
+      if (updatedAtColumn != null) {
+        values[updatedAtColumn] = now();
+        updatedAt = values[updatedAtColumn];
+      }
+
       await QueryBuilder.table(tableName, this)
           .setPrimaryKey(primaryKey)
           .debug(_debug)

@@ -123,6 +123,7 @@ void main() async {
       Map<String, dynamic> data = blog.toMap();
       expect(data['uid'], blog.uid);
       expect(data['title'], blog.title);
+      expect(data['created_at'].toString().contains(':'), true);
     });
 
     test('test toJson', () async {

@@ -1,6 +1,6 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-import 'blog_info.model.dart';
+import '../blog_info/blog_info.model.dart';
 
 part 'blog.model.g.dart';
 

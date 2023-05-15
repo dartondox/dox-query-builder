@@ -5,6 +5,8 @@ import '../dox_query_builder.dart';
 class Model<T> extends QueryBuilder<T> {
   int? tempIdValue;
 
+  List<String> hidden = [];
+
   bool _debug = SqlQueryBuilder().debug;
 
   @override

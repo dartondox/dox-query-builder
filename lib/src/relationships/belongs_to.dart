@@ -4,14 +4,14 @@ T? belongsTo<T>(
   List list,
   Model Function() model, {
   String? foreignKey,
-  String? ownerKey,
+  String? localKey,
   dynamic onQuery,
 }) {
   if (list.isEmpty) return null;
 
   Model foreign = list.first;
   Model owner = model().debug(foreign.shouldDebug);
-  ownerKey = ownerKey ?? owner.primaryKey;
+  localKey = localKey ?? owner.primaryKey;
   foreignKey = foreignKey ?? "${owner.tableName}_id";
 
   List<String> ids = list.map((i) {
@@ -27,7 +27,7 @@ T? belongsTo<T>(
       .leftJoin(
         foreign.tableName,
         '${foreign.tableName}.$foreignKey',
-        '${owner.tableName}.$ownerKey',
+        '${owner.tableName}.$localKey',
       )
       .whereIn('${foreign.tableName}.$foreignKey', ids);
 

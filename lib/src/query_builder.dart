@@ -55,16 +55,14 @@ class QueryBuilder<T>
         Count {
   Map<String, dynamic> _substitutionValues = {};
 
+  dynamic self;
+
   @override
   QueryBuilder get queryBuilder => this;
 
   @override
   String primaryKey = 'id';
 
-  /// PostgresSQL database
-  /// ```
-  /// QueryBuilder.db.query("select * from blog");
-  /// ```
   @override
   DBDriver get db => SqlQueryBuilder().db;
 
@@ -83,25 +81,11 @@ class QueryBuilder<T>
   @override
   String get selectQueryString => getSelectQuery();
 
-  dynamic self;
-
   @override
   bool isSoftDeletes = false;
 
   @override
   String tableName = '';
-
-  List<String> hidden = [];
-
-  Map<String, dynamic> originalMap = {};
-
-  Map<String, dynamic> convertToMap(i) {
-    return {};
-  }
-
-  Future<void> initPreload(List list) async {}
-
-  fromMap(Map<String, dynamic> json) {}
 
   @override
   addSubstitutionValues(String key, dynamic value) {
@@ -147,4 +131,18 @@ class QueryBuilder<T>
     primaryKey = id;
     return this;
   }
+
+  /// **** map
+
+  Map<String, dynamic> originalMap = {};
+
+  Map<String, dynamic> convertToMap(i) {
+    return {};
+  }
+
+  Future<void> initPreload(List list) async {}
+
+  fromMap(Map<String, dynamic> json) {}
+
+  /// **** map
 }

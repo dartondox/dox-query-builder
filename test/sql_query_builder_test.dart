@@ -2,8 +2,8 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:test/test.dart';
 
 import 'connection.dart';
-import 'models/blog.model.dart';
-import 'models/blog_info.model.dart';
+import 'models/blog/blog.model.dart';
+import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
   SqlQueryBuilder.initialize(database: await connection(), debug: false);

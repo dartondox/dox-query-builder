@@ -142,7 +142,7 @@ class QueryBuilder<T>
 
   Future<void> initPreload(List list) async {}
 
-  fromMap(Map<String, dynamic> json) {}
+  fromMap(Map<String, dynamic> m) {}
 
   /// **** map
 }

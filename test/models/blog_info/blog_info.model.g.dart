@@ -67,12 +67,14 @@ class BlogInfoGenerator extends Model<BlogInfo> {
   @override
   Map<String, dynamic> convertToMap(i) {
     BlogInfo instance = i as BlogInfo;
-    return {
+    Map<String, dynamic> map = {
       'id': instance.id,
       'info': instance.info,
       'blog_id': instance.blogId,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
+
+    return map;
   }
 }

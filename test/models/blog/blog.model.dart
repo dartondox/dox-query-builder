@@ -6,7 +6,7 @@ part 'blog.model.g.dart';
 
 @DoxModel(primaryKey: 'uid', createdAt: 'created_at', updatedAt: 'updated_at')
 class Blog extends BlogGenerator with SoftDeletes {
-  @Column(beforeSave: slugTitle)
+  @Column(beforeSave: slugTitle, beforeGet: beforeGet)
   String? title;
 
   @Column()
@@ -24,7 +24,11 @@ class Blog extends BlogGenerator with SoftDeletes {
   @HasMany(BlogInfo, eager: true)
   List<BlogInfo> blogInfos = [];
 
-  static slugTitle(title) {
-    return title;
+  static slugTitle(Map<String, dynamic> map) {
+    return map['title'];
+  }
+
+  static beforeGet(Map<String, dynamic> map) {
+    return map['title'];
   }
 }

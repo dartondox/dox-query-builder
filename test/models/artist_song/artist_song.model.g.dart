@@ -46,12 +46,14 @@ class ArtistSongGenerator extends Model<ArtistSong> {
   @override
   Map<String, dynamic> convertToMap(i) {
     ArtistSong instance = i as ArtistSong;
-    return {
+    Map<String, dynamic> map = {
       'id': instance.id,
       'blog_id': instance.songId,
       'artist_id': instance.artistId,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
+
+    return map;
   }
 }

@@ -1,4 +1,4 @@
-## 1.1.4
+## 1.1.5
 
 - Create own annotation and builder
 - Added belongsTo support

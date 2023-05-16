@@ -77,7 +77,7 @@ class BlogGenerator extends Model<Blog> {
   @override
   Blog fromMap(Map<String, dynamic> m) => Blog()
     ..uid = m['uid'] as int?
-    ..title = m['title'] as String?
+    ..title = Blog.beforeGet(m)
     ..status = m['status'] as String?
     ..description = m['body'] as String?
     ..deletedAt = m['deleted_at'] == null
@@ -93,14 +93,16 @@ class BlogGenerator extends Model<Blog> {
   @override
   Map<String, dynamic> convertToMap(i) {
     Blog instance = i as Blog;
-    return {
+    Map<String, dynamic> map = {
       'uid': instance.uid,
-      'title': Blog.slugTitle(instance.title),
+      'title': instance.title,
       'status': instance.status,
       'body': instance.description,
       'deleted_at': instance.deletedAt?.toIso8601String(),
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
+    map['title'] = Blog.slugTitle(map);
+    return map;
   }
 }

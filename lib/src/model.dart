@@ -97,11 +97,18 @@ class Model<T> extends QueryBuilder<T> {
     return jsonEncode(data);
   }
 
-  Map<String, dynamic> toMap({bool original = false}) {
+  Map<String, dynamic> toMap(
+      {bool original = false, bool removeHiddenField = false}) {
     if (original == true) {
       return originalMap;
     }
-    return convertToMap(this);
+    var data = convertToMap(this);
+    if (removeHiddenField) {
+      for (String h in hidden) {
+        data.remove(h);
+      }
+    }
+    return data;
   }
 
   /// start ********** preload

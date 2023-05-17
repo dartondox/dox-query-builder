@@ -1,3 +1,7 @@
+## 1.1.7
+
+- Add option in `toMap()` to remove hidden fields
+
 ## 1.1.6
 
 - Create own annotation and builder

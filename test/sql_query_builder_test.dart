@@ -132,8 +132,8 @@ void main() async {
       blog.description = "something";
       await blog.save();
 
-      String data = blog.toJson();
-      expect(true, data.contains('new blog'));
+      Map<String, dynamic> data = blog.toJson();
+      expect(true, data['title'].contains('new blog'));
     });
 
     test('schema update', () async {

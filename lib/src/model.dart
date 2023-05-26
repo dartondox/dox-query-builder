@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../dox_query_builder.dart';
 
 class Model<T> extends QueryBuilder<T> {
@@ -87,14 +85,14 @@ class Model<T> extends QueryBuilder<T> {
   // Model to json string converter
   ///
   /// ```
-  /// String blog = Blog().find(1).toJson();
+  /// Map<String, dynamic> blog = Blog().find(1).toJson();
   /// ```
-  String toJson() {
+  Map<String, dynamic> toJson() {
     Map<String, dynamic> data = toMap();
     for (String h in hidden) {
       data.remove(h);
     }
-    return jsonEncode(data);
+    return data;
   }
 
   Map<String, dynamic> toMap(

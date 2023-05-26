@@ -1,3 +1,7 @@
+## 1.1.9
+
+- Bug fixed on jsonEncode(Model)
+
 ## 1.1.8
 
 - Update readme

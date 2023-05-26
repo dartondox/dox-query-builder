@@ -1,3 +1,7 @@
+## 1.1.8
+
+- Update readme
+
 ## 1.1.7
 
 - Add option in `toMap()` to remove hidden fields

@@ -88,7 +88,7 @@ class Model<T> extends QueryBuilder<T> {
   /// Map<String, dynamic> blog = Blog().find(1).toJson();
   /// ```
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> data = toMap();
+    Map<String, dynamic> data = toMap(removeHiddenField: true);
     for (String h in hidden) {
       data.remove(h);
     }

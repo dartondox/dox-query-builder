@@ -1,3 +1,7 @@
+## 1.1.10
+
+- Remove hidden fields on toJson
+
 ## 1.1.9
 
 - Bug fixed on jsonEncode(Model)

@@ -19,26 +19,26 @@ import 'where.dart';
 
 class QueryBuilder<T>
     with
-        Limit,
-        Where,
-        OrderBy,
-        GroupBy,
-        Insert,
-        Join,
-        Raw,
-        Get,
-        Update,
-        Select,
-        All,
-        Truncate,
-        Delete,
-        Count {
-  Map<String, dynamic> _substitutionValues = {};
+        Limit<T>,
+        Where<T>,
+        OrderBy<T>,
+        GroupBy<T>,
+        Insert<T>,
+        Join<T>,
+        Raw<T>,
+        Get<T>,
+        Update<T>,
+        Select<T>,
+        All<T>,
+        Truncate<T>,
+        Delete<T>,
+        Count<T> {
+  Map<String, dynamic> _substitutionValues = <String, dynamic>{};
 
   dynamic self;
 
   @override
-  QueryBuilder get queryBuilder => this;
+  QueryBuilder<T> get queryBuilder => this;
 
   @override
   String primaryKey = 'id';
@@ -47,7 +47,7 @@ class QueryBuilder<T>
   DBDriver get db => SqlQueryBuilder().db;
 
   @override
-  QueryBuilderHelper get helper => QueryBuilderHelper<T>(this);
+  QueryBuilderHelper<T> get helper => QueryBuilderHelper<T>(this);
 
   @override
   Logger get logger => Logger();
@@ -74,7 +74,7 @@ class QueryBuilder<T>
 
   @override
   Map<String, dynamic> resetSubstitutionValues() {
-    return _substitutionValues = {};
+    return _substitutionValues = <String, dynamic>{};
   }
 
   /// set table and continue query
@@ -85,8 +85,8 @@ class QueryBuilder<T>
   /// set table name [tableName] as first parameter
   /// and model instance [type] in second parameter [type] is optional
   /// this return QueryBuilder
-  static QueryBuilder table(tableName, [dynamic type]) {
-    QueryBuilder builder = QueryBuilder();
+  static QueryBuilder<T> table<T>(String tableName, [dynamic type]) {
+    QueryBuilder<T> builder = QueryBuilder<T>();
     builder.tableName = tableName;
     builder.self = type;
     return builder;
@@ -97,7 +97,7 @@ class QueryBuilder<T>
   /// ```
   /// QueryBuilder.table('blog').debug(true)
   /// ```
-  QueryBuilder debug([debug]) {
+  QueryBuilder<T> debug([bool? debug]) {
     shouldDebug = debug ?? true;
     return this;
   }
@@ -107,17 +107,17 @@ class QueryBuilder<T>
   /// ```
   /// QueryBuilder.table('blog').setPrimaryKey('uid')
   /// ```
-  QueryBuilder setPrimaryKey(String id) {
+  QueryBuilder<T> setPrimaryKey(String id) {
     primaryKey = id;
     return this;
   }
 
   /// **** map
 
-  Map<String, dynamic> originalMap = {};
+  Map<String, dynamic> originalMap = <String, dynamic>{};
 
-  Map<String, dynamic> convertToMap(i) {
-    return {};
+  Map<String, dynamic> convertToMap(dynamic i) {
+    return <String, dynamic>{};
   }
 
   Future<void> initPreload(List<Model<T>> list) async {}

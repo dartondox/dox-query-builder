@@ -6,30 +6,32 @@ part of 'artist_song.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
+// ignore_for_file: always_specify_types
+
 class ArtistSongGenerator extends Model<ArtistSong> {
   @override
   String get primaryKey => 'id';
 
   @override
-  Map<String, dynamic> get timestampsColumn => {
+  Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
 
   int? get id => tempIdValue;
 
-  set id(val) => tempIdValue = val;
+  set id(dynamic val) => tempIdValue = val;
 
   ArtistSong get newQuery => ArtistSong();
 
   @override
-  List get preloadList => [];
+  List<String> get preloadList => <String>[];
 
   @override
-  Map<String, Function> get relationsResultMatcher => {};
+  Map<String, Function> get relationsResultMatcher => <String, Function>{};
 
   @override
-  Map<String, Function> get relationsQueryMatcher => {};
+  Map<String, Function> get relationsQueryMatcher => <String, Function>{};
 
   @override
   ArtistSong fromMap(Map<String, dynamic> m) => ArtistSong()
@@ -44,7 +46,7 @@ class ArtistSongGenerator extends Model<ArtistSong> {
         : DateTime.parse(m['updated_at'] as String);
 
   @override
-  Map<String, dynamic> convertToMap(i) {
+  Map<String, dynamic> convertToMap(dynamic i) {
     ArtistSong instance = i as ArtistSong;
     Map<String, dynamic> map = {
       'id': instance.id,

@@ -30,6 +30,7 @@ class QueryBuilderHelper<T> {
     return await db.mappedResultsQuery(query, substitutionValues: values);
   }
 
+  // ignore: always_specify_types
   Future<List> formatResult(
       List<Map<String, Map<String, dynamic>>> queryResult) async {
     List<Map<String, dynamic>> result = <Map<String, dynamic>>[];

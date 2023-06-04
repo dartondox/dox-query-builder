@@ -29,10 +29,11 @@ linter:
     - unawaited_futures
     - unnecessary_final
     - unnecessary_const
+    - always_specify_types
 
-analyzer:
-  exclude:
-    - test/**
+# analyzer:
+#   exclude:
+#     - test/**
 
 # For more information about the core and recommended set of lints, see
 # https://dart.dev/go/core-lints

@@ -6,7 +6,7 @@ import 'table.update.dart';
 
 class Table with TableUpdate {
   @override
-  final List<TableColumn> columns = [];
+  final List<TableColumn> columns = <TableColumn>[];
   @override
   String tableName = '';
 
@@ -19,7 +19,7 @@ class Table with TableUpdate {
   @override
   Logger get logger => Logger();
 
-  Table table(table) {
+  Table table(String table) {
     tableName = table;
     return this;
   }
@@ -155,7 +155,7 @@ class Table with TableUpdate {
   Future<void> create() async {
     String query = "CREATE TABLE IF NOT EXISTS $tableName (";
 
-    List ret = [];
+    List<String> ret = <String>[];
     for (TableColumn col in columns) {
       String defaultQuery =
           col.defaultValue != null ? " DEFAULT '${col.defaultValue}'" : '';

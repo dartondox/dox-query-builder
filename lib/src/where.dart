@@ -1,8 +1,8 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin Where implements SharedMixin {
-  final List<String> _wheres = [];
+mixin Where<T> implements SharedMixin<T> {
+  final List<String> _wheres = <String>[];
 
   String getWhereQuery() {
     if (_wheres.isNotEmpty) {
@@ -16,7 +16,7 @@ mixin Where implements SharedMixin {
   /// ```
   /// List blogs = await where('id', 1).get();
   /// ```
-  QueryBuilder where(String arg1, [dynamic arg2, dynamic arg3]) {
+  QueryBuilder<T> where(String arg1, [dynamic arg2, dynamic arg3]) {
     return _query('AND', arg1, arg2, arg3);
   }
 
@@ -25,7 +25,7 @@ mixin Where implements SharedMixin {
   /// ```
   /// List blogs = await whereIn('id', [1, 2, 3]).get();
   /// ```
-  QueryBuilder whereIn(String column, List ids) {
+  QueryBuilder<T> whereIn(String column, List<dynamic> ids) {
     String val = "(${ids.join(',')})";
     if (_wheres.isEmpty) {
       _wheres.add("$column in $val");
@@ -40,7 +40,7 @@ mixin Where implements SharedMixin {
   /// ```
   /// List blogs = await orWhere('id', 1).get();
   /// ```
-  QueryBuilder orWhere(String arg1, [dynamic arg2, dynamic arg3]) {
+  QueryBuilder<T> orWhere(String arg1, [dynamic arg2, dynamic arg3]) {
     return _query('OR', arg1, arg2, arg3);
   }
 
@@ -49,7 +49,7 @@ mixin Where implements SharedMixin {
   /// ```
   /// List blogs = await whereRaw('id = @id', {"id" : 1}).get();
   /// ```
-  QueryBuilder whereRaw(rawQuery, [dynamic params]) {
+  QueryBuilder<T> whereRaw(String rawQuery, [dynamic params]) {
     return _rawQuery('AND', rawQuery, params);
   }
 
@@ -58,11 +58,12 @@ mixin Where implements SharedMixin {
   /// ```
   /// List blogs = await orWhereRaw('id = @id', {"id" : 1}).get();
   /// ```
-  QueryBuilder orWhereRaw(rawQuery, [dynamic params]) {
+  QueryBuilder<T> orWhereRaw(String rawQuery, [dynamic params]) {
     return _rawQuery('OR', rawQuery, params);
   }
 
-  QueryBuilder _query(String type, dynamic arg1, [dynamic arg2, dynamic arg3]) {
+  QueryBuilder<T> _query(String type, dynamic arg1,
+      [dynamic arg2, dynamic arg3]) {
     String column = arg1.toString();
     String condition = '=';
     String value = arg2.toString();
@@ -80,7 +81,7 @@ mixin Where implements SharedMixin {
     return queryBuilder;
   }
 
-  QueryBuilder _rawQuery(String type, String rawQuery, [dynamic params]) {
+  QueryBuilder<T> _rawQuery(String type, String rawQuery, [dynamic params]) {
     if (_wheres.isEmpty) {
       _wheres.add(rawQuery);
     } else {

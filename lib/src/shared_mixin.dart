@@ -3,9 +3,9 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 import 'utils/helper.dart';
 import 'utils/logger.dart';
 
-abstract class SharedMixin {
-  QueryBuilder get queryBuilder;
-  QueryBuilderHelper get helper;
+abstract class SharedMixin<T> {
+  QueryBuilder<T> get queryBuilder;
+  QueryBuilderHelper<T> get helper;
   Logger get logger;
   DBDriver get db;
   Map<String, dynamic> get substitutionValues;

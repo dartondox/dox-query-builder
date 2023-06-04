@@ -6,36 +6,38 @@ part of 'blog.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
-class BlogGenerator extends Model<Blog> {
+// ignore_for_file: always_specify_types
+
+class BlogGenerator extends Model<Blog> with SoftDeletes<Blog> {
   @override
   String get primaryKey => 'uid';
 
   @override
-  Map<String, dynamic> get timestampsColumn => {
+  Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
 
   int? get uid => tempIdValue;
 
-  set uid(val) => tempIdValue = val;
+  set uid(dynamic val) => tempIdValue = val;
 
   Blog get newQuery => Blog();
 
   @override
-  List get preloadList => [
+  List<String> get preloadList => <String>[
         'blogInfo',
         'blogInfos',
       ];
 
   @override
-  Map<String, Function> get relationsResultMatcher => {
+  Map<String, Function> get relationsResultMatcher => <String, Function>{
         'blogInfo': getBlogInfo,
         'blogInfos': getBlogInfos,
       };
 
   @override
-  Map<String, Function> get relationsQueryMatcher => {
+  Map<String, Function> get relationsQueryMatcher => <String, Function>{
         'blogInfo': queryBlogInfo,
         'blogInfos': queryBlogInfos,
       };
@@ -43,7 +45,9 @@ class BlogGenerator extends Model<Blog> {
   static Future getBlogInfo(List list) async {
     var result = await getHasOne<BlogInfo>(queryBlogInfo(list), list);
     for (Blog i in list) {
-      i.blogInfo = result[i.tempIdValue.toString()];
+      if (result[i.tempIdValue.toString()] != null) {
+        i.blogInfo = result[i.tempIdValue.toString()]!;
+      }
       if (list.length == 1) {
         return i.blogInfo;
       }
@@ -60,7 +64,9 @@ class BlogGenerator extends Model<Blog> {
   static Future getBlogInfos(List list) async {
     var result = await getHasMany<BlogInfo>(queryBlogInfos(list), list);
     for (Blog i in list) {
-      i.blogInfos = result[i.tempIdValue.toString()];
+      if (result[i.tempIdValue.toString()] != null) {
+        i.blogInfos = result[i.tempIdValue.toString()]!;
+      }
       if (list.length == 1) {
         return i.blogInfos;
       }
@@ -91,7 +97,7 @@ class BlogGenerator extends Model<Blog> {
         : DateTime.parse(m['updated_at'] as String);
 
   @override
-  Map<String, dynamic> convertToMap(i) {
+  Map<String, dynamic> convertToMap(dynamic i) {
     Blog instance = i as Blog;
     Map<String, dynamic> map = {
       'uid': instance.uid,

@@ -2,7 +2,7 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 
 import 'shared_mixin.dart';
 
-mixin Get implements SharedMixin {
+mixin Get<T> implements SharedMixin<T> {
   String _buildQuery() {
     String q = "SELECT $selectQueryString FROM $tableName";
     q += helper.getCommonQuery();
@@ -20,6 +20,7 @@ mixin Get implements SharedMixin {
   /// If both [arg1] and [arg2] ar provided, [arg1] is column name and
   /// [arg2] is value of column
   /// This cannot be use with other query such as, where, join, delete.
+  // ignore: always_specify_types
   Future find(dynamic arg1, [dynamic arg2]) async {
     String column = arg2 == null ? primaryKey : arg1;
     dynamic value = arg2 ?? arg1;
@@ -31,6 +32,7 @@ mixin Get implements SharedMixin {
   /// ```
   /// List blogs = await Blog().where('status', 'active').get();
   /// ```
+  // ignore: always_specify_types
   Future get() async {
     return await helper.formatResult(await helper.runQuery(_buildQuery()));
   }
@@ -40,8 +42,10 @@ mixin Get implements SharedMixin {
   /// ```
   /// Blog blogs = await Blog().where('status', 'active').getFirst();
   /// ```
+  // ignore: always_specify_types
   Future getFirst() async {
     queryBuilder.limit(1);
+    // ignore: always_specify_types
     List result =
         await helper.formatResult(await helper.runQuery(_buildQuery()));
     return result.isEmpty ? null : result.first;
@@ -56,7 +60,7 @@ mixin Get implements SharedMixin {
     String q = _buildQuery();
     Map<String, dynamic> values = queryBuilder.substitutionValues;
     String query = '';
-    values.forEach((key, value) {
+    values.forEach((String key, dynamic value) {
       query += q.replaceAll('@$key', value);
     });
     return query;
@@ -67,8 +71,9 @@ mixin Get implements SharedMixin {
   /// ```
   /// var result = await QueryBuilder.query('select * from blog where id =  @id', {'id' : 1});
   ///
-  Future query(query, {Map<String, dynamic>? substitutionValues = const {}}) {
-    return SqlQueryBuilder().db.query(
+  Future<List<Map<String, Map<String, dynamic>>>> query(String query,
+      {Map<String, dynamic>? substitutionValues = const <String, dynamic>{}}) {
+    return SqlQueryBuilder().db.mappedResultsQuery(
           query,
           substitutionValues: substitutionValues,
         );

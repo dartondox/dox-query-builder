@@ -1,7 +1,7 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin Limit implements SharedMixin {
+mixin Limit<T> implements SharedMixin<T> {
   String _limit = '';
   String _offset = '0';
 
@@ -17,7 +17,7 @@ mixin Limit implements SharedMixin {
   /// ```
   /// List blogs = await Blog().take(10).get()
   /// ```
-  QueryBuilder take(int value) {
+  QueryBuilder<T> take(int value) {
     _limit = value.toString();
     return queryBuilder;
   }
@@ -27,7 +27,7 @@ mixin Limit implements SharedMixin {
   /// ```
   /// List blogs = await Blog().limit(10).get()
   /// ```
-  QueryBuilder limit(int value) {
+  QueryBuilder<T> limit(int value) {
     _limit = value.toString();
     return queryBuilder;
   }
@@ -37,7 +37,7 @@ mixin Limit implements SharedMixin {
   /// ```
   /// List blogs = await Blog().limit(10).offset(10).get()
   /// ```
-  QueryBuilder offset(int value) {
+  QueryBuilder<T> offset(int value) {
     _offset = value.toString();
     return queryBuilder;
   }

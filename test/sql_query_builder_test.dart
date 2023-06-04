@@ -48,7 +48,7 @@ void main() async {
       await blog.save();
 
       BlogInfo info = BlogInfo();
-      info.info = {"name": "awesome"};
+      info.info = <String, String>{"name": "awesome"};
       info.blogId = blog.uid;
       await info.save();
 
@@ -83,7 +83,7 @@ void main() async {
       Blog findTrash = await Blog().withTrash().find(blog.uid);
       expect(findTrash.deletedAt is DateTime, true);
 
-      List blogs2 = await Blog().all();
+      List<Blog> blogs2 = await Blog().all();
       expect(blogs2.length, 0);
     });
 
@@ -146,7 +146,7 @@ void main() async {
         table.string('column2').nullable();
       });
       Table table = Table().table('blog');
-      List columns = await table.getTableColumns();
+      List<String> columns = await table.getTableColumns();
       expect(true, columns.contains('uid'));
       expect(true, columns.contains('column1'));
       expect(true, columns.contains('column2'));
@@ -161,7 +161,7 @@ void main() async {
       await blog.save();
 
       BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = {"name": "awesome"};
+      blogInfo.info = <String, String>{"name": "awesome"};
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
@@ -176,7 +176,7 @@ void main() async {
       await blog.save();
 
       BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = {"name": "awesome"};
+      blogInfo.info = <String, String>{"name": "awesome"};
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
@@ -199,7 +199,7 @@ void main() async {
       await blog.save();
 
       BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = {"name": "awesome"};
+      blogInfo.info = <String, String>{"name": "awesome"};
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
@@ -215,12 +215,25 @@ void main() async {
       await blog.save();
 
       BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = {"name": "dox"};
+      blogInfo.info = <String, String>{"name": "dox"};
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
       Blog b = await Blog().getFirst();
       expect(b.blogInfo?.info?['name'], 'dox');
+    });
+
+    test('test query builder with map result', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      Map<String, dynamic> b = await QueryBuilder.table('blog')
+          .where('title', 'Awesome blog')
+          .getFirst();
+
+      expect(b['uid'], 1);
     });
   });
 }

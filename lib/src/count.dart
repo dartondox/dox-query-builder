@@ -1,11 +1,12 @@
 import 'shared_mixin.dart';
 
-mixin Count implements SharedMixin {
+mixin Count<T> implements SharedMixin<T> {
   /// Count record
   ///
   /// ```
   /// await Blog().count();
   /// ```
+  // ignore: always_specify_types
   Future count() async {
     String select = selectQueryString == '*'
         ? 'count(*) as total'

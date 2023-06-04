@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:dox_query_builder/dox_query_builder.dart';
 
 T? manyToMany<T>(
@@ -51,11 +53,11 @@ String _sortTableByAlphabet(String firstTable, String secondTable) {
   return '${tables[0]}_${tables[1]}';
 }
 
-Future getManyToMany<T>(q, List list) async {
-  if (q == null) return [];
+Future<Map<String, List<T>>> getManyToMany<T>(dynamic q, List list) async {
+  if (q == null) return <String, List<T>>{};
   List results = await q.get();
 
-  Map<String, List<T>> ret = {};
+  Map<String, List<T>> ret = <String, List<T>>{};
 
   /// filter matched values with local id value
   for (var r in results) {

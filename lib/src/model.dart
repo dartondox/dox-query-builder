@@ -15,13 +15,13 @@ class Model<T> extends QueryBuilder<T> {
   @override
   dynamic get self => this;
 
-  Map<String, dynamic> get timestampsColumn => {
+  Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
 
   @override
-  Model<T> debug([debug]) {
+  Model<T> debug([bool? debug]) {
     _debug = debug ?? true;
     super.debug(debug);
     return this;
@@ -40,7 +40,7 @@ class Model<T> extends QueryBuilder<T> {
 
     Map<String, dynamic> values = toMap();
     if (values[primaryKey] == null) {
-      values.removeWhere((String key, value) => value == null);
+      values.removeWhere((String key, dynamic value) => value == null);
 
       if (createdAtColumn != null) {
         values[createdAtColumn] = now();
@@ -52,6 +52,7 @@ class Model<T> extends QueryBuilder<T> {
         updatedAt = values[updatedAtColumn];
       }
 
+      // ignore: always_specify_types
       var res = await QueryBuilder.table(tableName)
           .setPrimaryKey(primaryKey)
           .debug(_debug)
@@ -59,7 +60,7 @@ class Model<T> extends QueryBuilder<T> {
 
       tempIdValue = res[primaryKey];
     } else {
-      var id = values[primaryKey];
+      dynamic id = values[primaryKey];
       values.remove(primaryKey);
       values.remove(createdAtColumn);
 
@@ -111,8 +112,8 @@ class Model<T> extends QueryBuilder<T> {
 
   /// start ********** preload
 
-  List get preloadList => [];
-  final List _preloadList = [];
+  List<String> get preloadList => <String>[];
+  final List<String> _preloadList = <String>[];
 
   Map<String, Function> relationsResultMatcher = <String, Function>{};
   Map<String, Function> relationsQueryMatcher = <String, Function>{};
@@ -153,6 +154,7 @@ class Model<T> extends QueryBuilder<T> {
     return null;
   }
 
+  // ignore: always_specify_types
   Future _getRelation(List<Model<T>> i, String name) async {
     if (relationsResultMatcher[name] != null) {
       Function funcName = relationsResultMatcher[name]!;

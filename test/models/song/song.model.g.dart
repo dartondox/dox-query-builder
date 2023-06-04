@@ -6,39 +6,43 @@ part of 'song.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
+// ignore_for_file: always_specify_types
+
 class SongGenerator extends Model<Song> {
   @override
   String get primaryKey => 'id';
 
   @override
-  Map<String, dynamic> get timestampsColumn => {
+  Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
 
   int? get id => tempIdValue;
 
-  set id(val) => tempIdValue = val;
+  set id(dynamic val) => tempIdValue = val;
 
   Song get newQuery => Song();
 
   @override
-  List get preloadList => [];
+  List<String> get preloadList => <String>[];
 
   @override
-  Map<String, Function> get relationsResultMatcher => {
+  Map<String, Function> get relationsResultMatcher => <String, Function>{
         'artists': getArtists,
       };
 
   @override
-  Map<String, Function> get relationsQueryMatcher => {
+  Map<String, Function> get relationsQueryMatcher => <String, Function>{
         'artists': queryArtists,
       };
 
   static Future getArtists(List list) async {
     var result = await getManyToMany<Artist>(queryArtists(list), list);
     for (Song i in list) {
-      i.artists = result[i.tempIdValue.toString()];
+      if (result[i.tempIdValue.toString()] != null) {
+        i.artists = result[i.tempIdValue.toString()]!;
+      }
       if (list.length == 1) {
         return i.artists;
       }
@@ -64,7 +68,7 @@ class SongGenerator extends Model<Song> {
         : DateTime.parse(m['updated_at'] as String);
 
   @override
-  Map<String, dynamic> convertToMap(i) {
+  Map<String, dynamic> convertToMap(dynamic i) {
     Song instance = i as Song;
     Map<String, dynamic> map = {
       'id': instance.id,

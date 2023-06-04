@@ -1,13 +1,16 @@
-import 'dart:async';
-
 import 'package:dox_query_builder/dox_query_builder.dart';
 
 import '../blog_info/blog_info.model.dart';
 
 part 'blog.model.g.dart';
 
-@DoxModel(primaryKey: 'uid', createdAt: 'created_at', updatedAt: 'updated_at')
-class Blog extends BlogGenerator with SoftDeletes {
+@DoxModel(
+  primaryKey: 'uid',
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+  softDelete: true,
+)
+class Blog extends BlogGenerator {
   @Column(beforeSave: slugTitle, beforeGet: beforeGet)
   String? title;
 

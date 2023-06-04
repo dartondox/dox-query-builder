@@ -1,6 +1,6 @@
 import 'shared_mixin.dart';
 
-mixin Truncate implements SharedMixin {
+mixin Truncate<T> implements SharedMixin<T> {
   /// Truncate table
   ///
   /// ```

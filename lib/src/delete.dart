@@ -2,7 +2,7 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 
 import 'shared_mixin.dart';
 
-mixin Delete implements SharedMixin {
+mixin Delete<T> implements SharedMixin<T> {
   /// delete a record
   ///
   /// if SoftDeletes is used in model it will act as soft delete,
@@ -13,7 +13,7 @@ mixin Delete implements SharedMixin {
   /// ```
   Future<void> delete() async {
     if (isSoftDeletes) {
-      await queryBuilder.update({'deleted_at': now()});
+      await queryBuilder.update(<String, dynamic>{'deleted_at': now()});
     } else {
       String q;
       q = "DELETE FROM $tableName";

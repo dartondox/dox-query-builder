@@ -1,6 +1,6 @@
 import 'shared_mixin.dart';
 
-mixin Update implements SharedMixin {
+mixin Update<T> implements SharedMixin<T> {
   /// where raw condition
   ///
   /// ```
@@ -12,8 +12,8 @@ mixin Update implements SharedMixin {
     String q;
     q = "UPDATE $tableName SET ";
 
-    List<String> columnToUpdate = [];
-    data.forEach((column, value) {
+    List<String> columnToUpdate = <String>[];
+    data.forEach((String column, dynamic value) {
       String key = helper.parseColumnKey(column);
       columnToUpdate.add("$column = @$key");
       addSubstitutionValues(key, value);

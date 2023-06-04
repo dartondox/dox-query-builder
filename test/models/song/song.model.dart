@@ -10,5 +10,5 @@ class Song extends SongGenerator {
   String? title;
 
   @ManyToMany(Artist)
-  List<Artist> artists = [];
+  List<Artist> artists = <Artist>[];
 }

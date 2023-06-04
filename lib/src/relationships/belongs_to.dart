@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:dox_query_builder/dox_query_builder.dart';
 
 T? belongsTo<T>(
@@ -15,7 +17,7 @@ T? belongsTo<T>(
   foreignKey = foreignKey ?? "${owner.tableName}_id";
 
   List<String> ids = list.map((i) {
-    var map = i.toMap();
+    Map<String, dynamic> map = i.toMap();
     return map[foreignKey].toString();
   }).toList();
 
@@ -37,16 +39,16 @@ T? belongsTo<T>(
   return owner as T;
 }
 
-Future<Map<String, T>> getBelongsTo<T>(q, List list) async {
-  if (q == null) return {};
+Future<Map<String, T>> getBelongsTo<T>(dynamic q, List list) async {
+  if (q == null) return <String, T>{};
   List results = await q.get();
 
-  Map<String, T> ret = {};
+  Map<String, T> ret = <String, T>{};
 
   /// filter matched values with local id value
   for (var r in results) {
     r = r as Model;
-    var map = r.toMap(original: true);
+    Map<String, dynamic> map = r.toMap(original: true);
     ret[map['_foreign_id'].toString()] = r as T;
   }
 

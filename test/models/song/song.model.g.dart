@@ -37,20 +37,17 @@ class SongGenerator extends Model<Song> {
         'artists': queryArtists,
       };
 
-  static Future getArtists(List list) async {
-    var result = await getManyToMany<Artist>(queryArtists(list), list);
-    for (Song i in list) {
+  static Future<void> getArtists(List<Model<Song>> list) async {
+    var result = await getManyToMany<Song, Artist>(queryArtists(list), list);
+    for (dynamic i in list) {
       if (result[i.tempIdValue.toString()] != null) {
         i.artists = result[i.tempIdValue.toString()]!;
-      }
-      if (list.length == 1) {
-        return i.artists;
       }
     }
   }
 
-  static Artist? queryArtists(List list) {
-    return manyToMany<Artist>(
+  static Artist? queryArtists(List<Model<Song>> list) {
+    return manyToMany<Song, Artist>(
       list,
       () => Artist(),
     );
@@ -70,7 +67,7 @@ class SongGenerator extends Model<Song> {
   @override
   Map<String, dynamic> convertToMap(dynamic i) {
     Song instance = i as Song;
-    Map<String, dynamic> map = {
+    Map<String, dynamic> map = <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'created_at': instance.createdAt?.toIso8601String(),

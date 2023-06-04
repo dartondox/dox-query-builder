@@ -1,28 +1,26 @@
-// ignore_for_file: always_specify_types
-
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-T? belongsTo<T>(
-  List list,
-  Model Function() model, {
+M? belongsTo<T, M>(
+  List<Model<T>> list,
+  Model<M> Function() model, {
   String? foreignKey,
   String? localKey,
   dynamic onQuery,
 }) {
   if (list.isEmpty) return null;
 
-  Model foreign = list.first;
-  Model owner = model().debug(foreign.shouldDebug);
+  Model<T> foreign = list.first;
+  Model<M> owner = model().debug(foreign.shouldDebug);
   localKey = localKey ?? owner.primaryKey;
   foreignKey = foreignKey ?? "${owner.tableName}_id";
 
-  List<String> ids = list.map((i) {
+  List<String> ids = list.map((dynamic i) {
     Map<String, dynamic> map = i.toMap();
     return map[foreignKey].toString();
   }).toList();
 
   owner
-      .select([
+      .select(<String>[
         '${owner.tableName}.*',
         '${foreign.tableName}.${foreign.primaryKey} as _foreign_id'
       ])
@@ -36,20 +34,22 @@ T? belongsTo<T>(
   if (onQuery != null) {
     owner = onQuery(owner);
   }
-  return owner as T;
+  return owner as M;
 }
 
-Future<Map<String, T>> getBelongsTo<T>(dynamic q, List list) async {
-  if (q == null) return <String, T>{};
-  List results = await q.get();
+Future<Map<String, M>> getBelongsTo<T, M>(
+  dynamic q,
+  List<Model<T>> list,
+) async {
+  if (q == null) return <String, M>{};
+  List<M> results = await q.get();
 
-  Map<String, T> ret = <String, T>{};
+  Map<String, M> ret = <String, M>{};
 
   /// filter matched values with local id value
-  for (var r in results) {
-    r = r as Model;
-    Map<String, dynamic> map = r.toMap(original: true);
-    ret[map['_foreign_id'].toString()] = r as T;
+  for (M r in results) {
+    Map<String, dynamic> map = (r as Model<M>).toMap(original: true);
+    ret[map['_foreign_id'].toString()] = r;
   }
 
   return ret;

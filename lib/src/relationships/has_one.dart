@@ -1,47 +1,44 @@
-// ignore_for_file: always_specify_types
-
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-T? hasOne<T>(
-  List list,
-  Model Function() model, {
+M? hasOne<T, M>(
+  List<Model<T>> list,
+  Model<M> Function() model, {
   String? foreignKey,
   String? localKey,
   dynamic onQuery,
 }) {
   if (list.isEmpty) return null;
 
-  Model owner = list.first;
+  Model<T> owner = list.first;
   localKey = localKey ?? owner.primaryKey;
   foreignKey = foreignKey ?? "${owner.tableName}_id";
 
-  List<String> ids = list.map((i) {
-    var map = i.toMap();
+  List<String> ids = list.map((Model<T> i) {
+    Map<String, dynamic> map = i.toMap();
     return map[localKey].toString();
   }).toList();
 
-  Model m = model().debug(owner.shouldDebug);
+  Model<M> m = model().debug(owner.shouldDebug);
 
   m.select('*, $foreignKey as _owner_id').whereIn(foreignKey, ids);
 
   if (onQuery != null) {
     m = onQuery(m);
   }
-  return m as T;
+  return m as M;
 }
 
-Future<Map<String, T>> getHasOne<T>(q, List list) async {
-  if (q == null) return {};
-  List results = await q.get();
+Future<Map<String, M>> getHasOne<T, M>(dynamic q, List<Model<T>> list) async {
+  if (q == null) return <String, M>{};
+  List<M> results = await q.get();
 
-  Map<String, T> ret = {};
+  Map<String, M> ret = <String, M>{};
 
   /// filter matched values with local id value
-  for (var r in results) {
-    r = r as Model;
-    var map = r.toMap(original: true);
+  for (M r in results) {
+    Map<String, dynamic> map = (r as Model<M>).toMap(original: true);
     String ownerId = map['_owner_id'].toString();
-    ret[ownerId] = r as T;
+    ret[ownerId] = r;
   }
 
   return ret;

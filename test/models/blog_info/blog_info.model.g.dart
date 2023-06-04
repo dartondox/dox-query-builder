@@ -37,20 +37,17 @@ class BlogInfoGenerator extends Model<BlogInfo> {
         'blog': queryBlog,
       };
 
-  static Future getBlog(List list) async {
-    var result = await getBelongsTo<Blog>(queryBlog(list), list);
-    for (BlogInfo i in list) {
+  static Future<void> getBlog(List<Model<BlogInfo>> list) async {
+    var result = await getBelongsTo<BlogInfo, Blog>(queryBlog(list), list);
+    for (dynamic i in list) {
       if (result[i.tempIdValue.toString()] != null) {
         i.blog = result[i.tempIdValue.toString()]!;
-      }
-      if (list.length == 1) {
-        return i.blog;
       }
     }
   }
 
-  static Blog? queryBlog(List list) {
-    return belongsTo<Blog>(
+  static Blog? queryBlog(List<Model<BlogInfo>> list) {
+    return belongsTo<BlogInfo, Blog>(
       list,
       () => Blog(),
     );
@@ -71,7 +68,7 @@ class BlogInfoGenerator extends Model<BlogInfo> {
   @override
   Map<String, dynamic> convertToMap(dynamic i) {
     BlogInfo instance = i as BlogInfo;
-    Map<String, dynamic> map = {
+    Map<String, dynamic> map = <String, dynamic>{
       'id': instance.id,
       'info': instance.info,
       'blog_id': instance.blogId,

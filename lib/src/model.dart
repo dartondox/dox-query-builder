@@ -52,8 +52,7 @@ class Model<T> extends QueryBuilder<T> {
         updatedAt = values[updatedAtColumn];
       }
 
-      // ignore: always_specify_types
-      var res = await QueryBuilder.table(tableName)
+      Map<String, dynamic> res = await QueryBuilder.table(tableName)
           .setPrimaryKey(primaryKey)
           .debug(_debug)
           .insert(values);
@@ -154,8 +153,7 @@ class Model<T> extends QueryBuilder<T> {
     return null;
   }
 
-  // ignore: always_specify_types
-  Future _getRelation(List<Model<T>> i, String name) async {
+  Future<void> _getRelation(List<Model<T>> i, String name) async {
     if (relationsResultMatcher[name] != null) {
       Function funcName = relationsResultMatcher[name]!;
       return await Function.apply(funcName, <dynamic>[i]);

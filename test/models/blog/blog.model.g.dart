@@ -42,39 +42,33 @@ class BlogGenerator extends Model<Blog> with SoftDeletes<Blog> {
         'blogInfos': queryBlogInfos,
       };
 
-  static Future getBlogInfo(List list) async {
-    var result = await getHasOne<BlogInfo>(queryBlogInfo(list), list);
-    for (Blog i in list) {
+  static Future<void> getBlogInfo(List<Model<Blog>> list) async {
+    var result = await getHasOne<Blog, BlogInfo>(queryBlogInfo(list), list);
+    for (dynamic i in list) {
       if (result[i.tempIdValue.toString()] != null) {
         i.blogInfo = result[i.tempIdValue.toString()]!;
-      }
-      if (list.length == 1) {
-        return i.blogInfo;
       }
     }
   }
 
-  static BlogInfo? queryBlogInfo(List list) {
-    return hasOne<BlogInfo>(
+  static BlogInfo? queryBlogInfo(List<Model<Blog>> list) {
+    return hasOne<Blog, BlogInfo>(
       list,
       () => BlogInfo(),
     );
   }
 
-  static Future getBlogInfos(List list) async {
-    var result = await getHasMany<BlogInfo>(queryBlogInfos(list), list);
-    for (Blog i in list) {
+  static Future<void> getBlogInfos(List<Model<Blog>> list) async {
+    var result = await getHasMany<Blog, BlogInfo>(queryBlogInfos(list), list);
+    for (dynamic i in list) {
       if (result[i.tempIdValue.toString()] != null) {
         i.blogInfos = result[i.tempIdValue.toString()]!;
-      }
-      if (list.length == 1) {
-        return i.blogInfos;
       }
     }
   }
 
-  static BlogInfo? queryBlogInfos(List list) {
-    return hasMany<BlogInfo>(
+  static BlogInfo? queryBlogInfos(List<Model<Blog>> list) {
+    return hasMany<Blog, BlogInfo>(
       list,
       () => BlogInfo(),
     );
@@ -99,7 +93,7 @@ class BlogGenerator extends Model<Blog> with SoftDeletes<Blog> {
   @override
   Map<String, dynamic> convertToMap(dynamic i) {
     Blog instance = i as Blog;
-    Map<String, dynamic> map = {
+    Map<String, dynamic> map = <String, dynamic>{
       'uid': instance.uid,
       'title': instance.title,
       'status': instance.status,

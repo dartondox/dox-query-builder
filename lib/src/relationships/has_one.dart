@@ -28,8 +28,8 @@ T? hasOne<T>(
   return m as T;
 }
 
-getHasOne<T>(q, List list) async {
-  if (q == null) return null;
+Future<Map<String, T>> getHasOne<T>(q, List list) async {
+  if (q == null) return {};
   List results = await q.get();
 
   Map<String, T> ret = {};

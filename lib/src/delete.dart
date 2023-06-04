@@ -13,7 +13,7 @@ mixin Delete implements SharedMixin {
   /// ```
   Future<void> delete() async {
     if (isSoftDeletes) {
-      queryBuilder.update({'deleted_at': now()});
+      await queryBuilder.update({'deleted_at': now()});
     } else {
       String q;
       q = "DELETE FROM $tableName";

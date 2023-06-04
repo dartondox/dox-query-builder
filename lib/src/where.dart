@@ -80,14 +80,14 @@ mixin Where implements SharedMixin {
     return queryBuilder;
   }
 
-  QueryBuilder _rawQuery(String type, rawQuery, [dynamic params]) {
+  QueryBuilder _rawQuery(String type, String rawQuery, [dynamic params]) {
     if (_wheres.isEmpty) {
       _wheres.add(rawQuery);
     } else {
       _wheres.add("$type $rawQuery");
     }
-    if (params is Map) {
-      params.forEach((key, value) {
+    if (params is Map<String, dynamic>) {
+      params.forEach((String key, dynamic value) {
         addSubstitutionValues(key, value);
       });
     }

@@ -37,11 +37,11 @@ T? belongsTo<T>(
   return owner as T;
 }
 
-getBelongsTo<T>(q, List list) async {
-  if (q == null) return null;
+Future<Map<String, T>> getBelongsTo<T>(q, List list) async {
+  if (q == null) return {};
   List results = await q.get();
 
-  Map<String, dynamic> ret = {};
+  Map<String, T> ret = {};
 
   /// filter matched values with local id value
   for (var r in results) {

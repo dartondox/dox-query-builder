@@ -4,7 +4,7 @@ import 'shared_mixin.dart';
 mixin OrderBy implements SharedMixin {
   final List<String> _orderBy = [];
 
-  getOrderByQuery() {
+  String getOrderByQuery() {
     if (_orderBy.isNotEmpty) {
       return " ORDER BY ${_orderBy.join(',')}";
     }

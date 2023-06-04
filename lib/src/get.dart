@@ -3,7 +3,7 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 import 'shared_mixin.dart';
 
 mixin Get implements SharedMixin {
-  _buildQuery() {
+  String _buildQuery() {
     String q = "SELECT $selectQueryString FROM $tableName";
     q += helper.getCommonQuery();
     q = q.replaceAll(RegExp(' +'), ' ');
@@ -67,7 +67,7 @@ mixin Get implements SharedMixin {
   /// ```
   /// var result = await QueryBuilder.query('select * from blog where id =  @id', {'id' : 1});
   ///
-  query(query, {Map<String, dynamic>? substitutionValues = const {}}) {
+  Future query(query, {Map<String, dynamic>? substitutionValues = const {}}) {
     return SqlQueryBuilder().db.query(
           query,
           substitutionValues: substitutionValues,

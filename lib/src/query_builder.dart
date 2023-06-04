@@ -17,26 +17,6 @@ import 'utils/helper.dart';
 import 'utils/logger.dart';
 import 'where.dart';
 
-class SqlQueryBuilder {
-  static final SqlQueryBuilder _singleton = SqlQueryBuilder._internal();
-
-  factory SqlQueryBuilder() {
-    return _singleton;
-  }
-
-  SqlQueryBuilder._internal();
-
-  DBDriver db = PostgresDriver();
-
-  bool debug = true;
-
-  static initialize({required dynamic database, bool? debug}) {
-    SqlQueryBuilder sql = SqlQueryBuilder();
-    sql.db = PostgresDriver(conn: database);
-    sql.debug = debug ?? false;
-  }
-}
-
 class QueryBuilder<T>
     with
         Limit,
@@ -88,12 +68,12 @@ class QueryBuilder<T>
   String tableName = '';
 
   @override
-  addSubstitutionValues(String key, dynamic value) {
+  dynamic addSubstitutionValues(String key, dynamic value) {
     return _substitutionValues[key] = value;
   }
 
   @override
-  resetSubstitutionValues() {
+  Map<String, dynamic> resetSubstitutionValues() {
     return _substitutionValues = {};
   }
 
@@ -140,9 +120,9 @@ class QueryBuilder<T>
     return {};
   }
 
-  Future<void> initPreload(List list) async {}
+  Future<void> initPreload(List<Model<T>> list) async {}
 
-  fromMap(Map<String, dynamic> m) {}
+  dynamic fromMap(Map<String, dynamic> m) {}
 
   /// **** map
 }

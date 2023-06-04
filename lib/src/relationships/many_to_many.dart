@@ -51,7 +51,7 @@ String _sortTableByAlphabet(String firstTable, String secondTable) {
   return '${tables[0]}_${tables[1]}';
 }
 
-getManyToMany<T>(q, List list) async {
+Future getManyToMany<T>(q, List list) async {
   if (q == null) return [];
   List results = await q.get();
 

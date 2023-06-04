@@ -5,7 +5,7 @@ class Model<T> extends QueryBuilder<T> {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  List<String> hidden = [];
+  List<String> hidden = <String>[];
 
   bool _debug = SqlQueryBuilder().debug;
 
@@ -21,7 +21,7 @@ class Model<T> extends QueryBuilder<T> {
       };
 
   @override
-  Model debug([debug]) {
+  Model<T> debug([debug]) {
     _debug = debug ?? true;
     super.debug(debug);
     return this;
@@ -34,13 +34,13 @@ class Model<T> extends QueryBuilder<T> {
   /// blog.title = 'blog title';
   /// await blog.save()
   /// ```
-  Future save() async {
+  Future<void> save() async {
     String? createdAtColumn = timestampsColumn['created_at'];
     String? updatedAtColumn = timestampsColumn['updated_at'];
 
     Map<String, dynamic> values = toMap();
     if (values[primaryKey] == null) {
-      values.removeWhere((key, value) => value == null);
+      values.removeWhere((String key, value) => value == null);
 
       if (createdAtColumn != null) {
         values[createdAtColumn] = now();
@@ -78,8 +78,8 @@ class Model<T> extends QueryBuilder<T> {
 
   /// Reload eager relationship after new record created/updated.
   /// await Blog().reload()
-  Future reload() async {
-    await initPreload([this]);
+  Future<void> reload() async {
+    await initPreload(<Model<T>>[this]);
   }
 
   // Model to json string converter
@@ -100,7 +100,7 @@ class Model<T> extends QueryBuilder<T> {
     if (original == true) {
       return originalMap;
     }
-    var data = convertToMap(this);
+    Map<String, dynamic> data = convertToMap(this);
     if (removeHiddenField) {
       for (String h in hidden) {
         data.remove(h);
@@ -114,15 +114,15 @@ class Model<T> extends QueryBuilder<T> {
   List get preloadList => [];
   final List _preloadList = [];
 
-  Map<String, Function> relationsResultMatcher = {};
-  Map<String, Function> relationsQueryMatcher = {};
+  Map<String, Function> relationsResultMatcher = <String, Function>{};
+  Map<String, Function> relationsQueryMatcher = <String, Function>{};
 
   /// preload relationship
   /// ```
   /// Blog blog = await Blog().preload('comments').find(1);
   /// print(blog.comments);
   /// ```
-  Model preload(String key) {
+  Model<T> preload(String key) {
     _preloadList.add(key);
     return this;
   }
@@ -133,8 +133,8 @@ class Model<T> extends QueryBuilder<T> {
   /// await blog.$getRelation('comments');
   /// print(blog.comments);
   /// `
-  Future<MODEL?> $getRelation<MODEL>(name) async {
-    return await _getRelation([this], name) as MODEL;
+  Future<MODEL?> $getRelation<MODEL>(String name) async {
+    return await _getRelation(<Model<T>>[this], name) as MODEL;
   }
 
   /// Get relation query
@@ -143,26 +143,26 @@ class Model<T> extends QueryBuilder<T> {
   /// Comment comment = blog.related<Comment>('comments');
   /// await comment.get();
   /// `
-  MODEL? related<MODEL>(name) {
+  MODEL? related<MODEL>(String name) {
     if (relationsQueryMatcher[name] != null) {
       Function funcName = relationsQueryMatcher[name]!;
-      return Function.apply(funcName, [
-        [this]
+      return Function.apply(funcName, <dynamic>[
+        <Model<T>>[this]
       ]);
     }
     return null;
   }
 
-  Future _getRelation(List i, name) async {
+  Future _getRelation(List<Model<T>> i, String name) async {
     if (relationsResultMatcher[name] != null) {
       Function funcName = relationsResultMatcher[name]!;
-      return await Function.apply(funcName, [i]);
+      return await Function.apply(funcName, <dynamic>[i]);
     }
   }
 
   @override
-  Future<void> initPreload(List list) async {
-    List pList = <dynamic>{...preloadList, ..._preloadList}.toList();
+  Future<void> initPreload(List<Model<T>> list) async {
+    List<String> pList = <String>{...preloadList, ..._preloadList}.toList();
     for (String key in pList) {
       await _getRelation(list, key);
     }

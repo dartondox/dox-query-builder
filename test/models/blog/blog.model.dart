@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dox_query_builder/dox_query_builder.dart';
 
 import '../blog_info/blog_info.model.dart';
@@ -22,13 +24,13 @@ class Blog extends BlogGenerator with SoftDeletes {
   BlogInfo? blogInfo;
 
   @HasMany(BlogInfo, eager: true)
-  List<BlogInfo> blogInfos = [];
+  List<BlogInfo> blogInfos = <BlogInfo>[];
 
-  static slugTitle(Map<String, dynamic> map) {
+  static String slugTitle(Map<String, dynamic> map) {
     return map['title'];
   }
 
-  static beforeGet(Map<String, dynamic> map) {
+  static String beforeGet(Map<String, dynamic> map) {
     return map['title'];
   }
 }

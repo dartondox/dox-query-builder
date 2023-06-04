@@ -28,7 +28,7 @@ T? hasMany<T>(
   return m as T;
 }
 
-getHasMany<T>(q, List list) async {
+Future getHasMany<T>(q, List list) async {
   if (q == null) return [];
   List results = await q.get();
 

@@ -215,12 +215,12 @@ void main() async {
       await blog.save();
 
       BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = {"name": "Hahaha"};
+      blogInfo.info = {"name": "dox"};
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
       Blog b = await Blog().getFirst();
-      expect(b.blogInfo?.info?['name'], 'Hahaha');
+      expect(b.blogInfo?.info?['name'], 'dox');
     });
   });
 }

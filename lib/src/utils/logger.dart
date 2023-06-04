@@ -3,7 +3,7 @@ import 'dart:convert';
 class Logger {
   int logLength = 80;
 
-  log(query, [dynamic params]) {
+  void log(query, [dynamic params]) {
     _topLine('QUERY ');
     _newEmptyLine();
     _wrapLine(query);
@@ -19,7 +19,7 @@ class Logger {
     _bottomLine();
   }
 
-  _wrapLine(line) {
+  void _wrapLine(line) {
     int len = logLength - 4;
     for (int i = 0; i < line.length; i += len) {
       String q =
@@ -28,9 +28,9 @@ class Logger {
     }
   }
 
-  fillSpaceIfRequired(String q) {
+  String fillSpaceIfRequired(String q) {
     if (q.length >= logLength - 2) {
-      return;
+      return q;
     }
     int requiredSpace = logLength - q.length - 2;
     String space = '';
@@ -40,7 +40,7 @@ class Logger {
     return "$q$space";
   }
 
-  _newEmptyLine() {
+  void _newEmptyLine() {
     print("│${_drawLine('', separator: ' ').substring(0, logLength - 1)}│");
   }
 
@@ -56,19 +56,19 @@ class Logger {
     return line;
   }
 
-  _topLine(String title) {
+  void _topLine(String title) {
     print("${_drawLine('┌── $title ')}┐");
   }
 
-  _centerLine(String title) {
+  void _centerLine(String title) {
     print("${_drawLine('├── $title ')}┤");
   }
 
-  _bottomLine() {
+  void _bottomLine() {
     print("${_drawLine('└')}┘");
   }
 
-  _getPrettyJSONString(Map jsonObject) {
+  String _getPrettyJSONString(Map jsonObject) {
     Map data = {};
     jsonObject.forEach((key, value) {
       if (value.runtimeType.toString() == 'DateTime') {

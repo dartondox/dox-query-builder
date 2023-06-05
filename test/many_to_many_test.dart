@@ -56,15 +56,15 @@ void main() async {
         <String, String>{'song_id': '1', 'artist_id': '3'},
       ]);
 
-      Artist artist = await Artist().preload('songs').find(1);
+      Artist? artist = await Artist().preload('songs').find(1);
 
-      expect(artist.songs.length, 2);
-      expect(artist.songs.map((Song e) => e.id).toList(), <int>[1, 2]);
+      expect(artist?.songs.length, 2);
+      expect(artist?.songs.map((Song e) => e.id).toList(), <int>[1, 2]);
 
-      Song song = await Song().preload('artists').find(2);
+      Song? song = await Song().preload('artists').find(2);
 
-      expect(song.artists.length, 3);
-      expect(song.artists.map((Artist e) => e.id).toList(), <int>[1, 2, 3]);
+      expect(song?.artists.length, 3);
+      expect(song?.artists.map((Artist e) => e.id).toList(), <int>[1, 2, 3]);
     });
   });
 }

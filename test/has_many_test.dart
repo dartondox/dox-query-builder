@@ -69,8 +69,8 @@ void main() async {
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
-      Blog b = await Blog().getFirst();
-      expect(b.blogInfos.first.info?['name'], 'awesome');
+      Blog? b = await Blog().getFirst();
+      expect(b?.blogInfos.first.info?['name'], 'awesome');
     });
   });
 }

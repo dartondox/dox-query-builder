@@ -169,4 +169,24 @@ class Model<T> extends QueryBuilder<T> {
   }
 
   /// end ********** preload
+
+  @override
+  Future<List<T>> get() async {
+    return await super.get();
+  }
+
+  @override
+  Future<List<T>> all() async {
+    return await super.all();
+  }
+
+  @override
+  Future<T?> getFirst() async {
+    return await super.getFirst();
+  }
+
+  @override
+  Future<T?> find(dynamic arg1, [dynamic arg2]) async {
+    return await super.find(arg1, arg2);
+  }
 }

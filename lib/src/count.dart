@@ -10,8 +10,7 @@ mixin Count<T> implements SharedMixin<T> {
   Future<int> count() async {
     String q = "SELECT count(*) as total FROM $tableName";
     q += helper.getCommonQuery();
-    List<dynamic> result = await helper.formatResult(await helper.runQuery(q),
-        shouldMapWithModel: false);
+    List<dynamic> result = helper.getMapResult(await helper.runQuery(q));
     if (result.length == 1) {
       if (result.first['total'] != null) {
         return int.parse(result.first['total'].toString());

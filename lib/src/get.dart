@@ -71,11 +71,27 @@ mixin Get<T> implements SharedMixin<T> {
   /// ```
   /// var result = await QueryBuilder.query('select * from blog where id =  @id', {'id' : 1});
   ///
-  Future<List<Map<String, Map<String, dynamic>>>> query(String query,
-      {Map<String, dynamic>? substitutionValues = const <String, dynamic>{}}) {
+  Future<List<Map<String, Map<String, dynamic>>>> query(
+    String query, {
+    Map<String, dynamic>? substitutionValues = const <String, dynamic>{},
+  }) {
     return SqlQueryBuilder().db.mappedResultsQuery(
           query,
           substitutionValues: substitutionValues,
         );
+  }
+
+  /// Get all record from table
+  ///
+  /// ```
+  /// await Blog().all();
+  /// ```
+  // ignore: always_specify_types
+  Future all() async {
+    String query = "SELECT $selectQueryString FROM $tableName";
+    if (isSoftDeletes) {
+      query += ' WHERE deleted_at IS NULL';
+    }
+    return helper.formatResult(await helper.runQuery(query));
   }
 }

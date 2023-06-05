@@ -100,6 +100,18 @@ void main() {
       expect(total, 0);
     });
 
+    test('with trashed', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      await blog.delete();
+
+      int total = await Blog().withTrash().count();
+      expect(total, 1);
+    });
+
     test('find', () async {
       Blog blog = Blog();
       blog.title = 'dox query builder';
@@ -160,8 +172,8 @@ void main() {
       blog.description = "something";
       await blog.save();
 
-      Blog check = await blog.newQuery.find(blog.uid);
-      expect(check.uid, blog.uid);
+      Blog? check = await blog.newQuery.find(blog.uid);
+      expect(check?.uid, blog.uid);
     });
 
     test('timestamp should return with date time format', () async {

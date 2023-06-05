@@ -65,16 +65,16 @@ void main() async {
 
       expect(blog2.uid != null, true);
 
-      Blog result = await Blog().find(blog.uid);
-      Blog result2 = await Blog().find(blog2.uid);
+      Blog? result = await Blog().find(blog.uid);
+      Blog? result2 = await Blog().find(blog2.uid);
 
-      expect(result.uid, blog.uid);
-      expect(result.title, 'Updated title');
-      expect(result.description, 'Awesome blog body');
+      expect(result?.uid, blog.uid);
+      expect(result?.title, 'Updated title');
+      expect(result?.description, 'Awesome blog body');
 
-      expect(result2.uid, blog2.uid);
-      expect(result2.title, 'Amazing blog');
-      expect(result2.description, 'Amazing blog body');
+      expect(result2?.uid, blog2.uid);
+      expect(result2?.title, 'Amazing blog');
+      expect(result2?.description, 'Amazing blog body');
 
       await Blog().where('uid', blog.uid).delete();
       await Blog().where('uid', blog2.uid).delete();
@@ -99,8 +99,8 @@ void main() async {
       expect(blog.createdAt is DateTime, true);
       expect(blog.updatedAt is DateTime, true);
 
-      Blog check = await blog.newQuery.find(blog.uid);
-      expect(check.uid, blog.uid);
+      Blog? check = await blog.newQuery.find(blog.uid);
+      expect(check?.uid, blog.uid);
     });
 
     test('test to Sql', () async {
@@ -183,15 +183,15 @@ void main() async {
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
-      BlogInfo info = await BlogInfo().preload('blog').getFirst();
-      expect(info.blog?.title, 'Awesome blog');
+      BlogInfo? info = await BlogInfo().preload('blog').getFirst();
+      expect(info?.blog?.title, 'Awesome blog');
 
-      BlogInfo info2 = await BlogInfo().getFirst();
-      await info2.$getRelation('blog');
-      expect(info2.blog?.title, 'Awesome blog');
+      BlogInfo? info2 = await BlogInfo().getFirst();
+      await info2?.$getRelation('blog');
+      expect(info2?.blog?.title, 'Awesome blog');
 
-      BlogInfo info3 = await BlogInfo().getFirst();
-      Blog? b = await info3.related<Blog>('blog')?.getFirst();
+      BlogInfo? info3 = await BlogInfo().getFirst();
+      Blog? b = await info3?.related<Blog>('blog')?.getFirst();
       expect(b?.title, 'Awesome blog');
     });
 
@@ -222,8 +222,8 @@ void main() async {
       blogInfo.blogId = blog.uid;
       await blogInfo.save();
 
-      Blog b = await Blog().getFirst();
-      expect(b.blogInfo?.info?['name'], 'dox');
+      Blog? b = await Blog().getFirst();
+      expect(b?.blogInfo?.info?['name'], 'dox');
     });
 
     test('test query builder with map result', () async {

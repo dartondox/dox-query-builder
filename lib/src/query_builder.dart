@@ -1,6 +1,5 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-import 'all.dart';
 import 'count.dart';
 import 'delete.dart';
 import 'get.dart';
@@ -29,7 +28,6 @@ class QueryBuilder<T>
         Get<T>,
         Update<T>,
         Select<T>,
-        All<T>,
         Truncate<T>,
         Delete<T>,
         Count<T> {

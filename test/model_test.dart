@@ -76,6 +76,9 @@ void main() {
 
       int total = await Blog().count();
       expect(total, 2);
+
+      List<Blog> all = await Blog().all();
+      expect(all.length, 2);
     });
 
     test('save', () async {

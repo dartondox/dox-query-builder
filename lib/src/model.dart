@@ -121,6 +121,7 @@ class Model<T> extends QueryBuilder<T> {
   /// start ********** preload
 
   /// defined auto eager loading list
+  // coverage:ignore-line to ignore one line.
   List<String> get preloadList => <String>[];
   final List<String> _preloadList = <String>[];
 

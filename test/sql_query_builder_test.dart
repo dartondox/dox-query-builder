@@ -107,5 +107,18 @@ void main() async {
 
       expect(b['uid'], 1);
     });
+
+    test('order by', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{'title': 'b', 'body': 'body'},
+        <String, dynamic>{'title': 'a', 'body': 'body'},
+      ]);
+
+      List<Blog> blogs = await Blog().orderBy('title').get();
+      expect(blogs.first.title, 'a');
+
+      List<Blog> blogs2 = await Blog().orderBy('title', 'desc').get();
+      expect(blogs2.first.title, 'b');
+    });
   });
 }

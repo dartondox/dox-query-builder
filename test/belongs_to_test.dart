@@ -3,12 +3,14 @@ import 'package:test/test.dart';
 
 import 'connection.dart';
 import 'models/blog/blog.model.dart';
+import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
-  group('Query Builder', () {
+  group('Belongs To |', () {
     setUp(() async {
+      SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
       await Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');
@@ -40,17 +42,30 @@ void main() async {
       await Schema.drop('comment');
     });
 
-    test('test query builder with map result', () async {
+    test('belongs To', () async {
       Blog blog = Blog();
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
       await blog.save();
 
-      Map<String, dynamic> b = await QueryBuilder.table('blog')
-          .where('title', 'Awesome blog')
-          .getFirst();
+      BlogInfo blogInfo = BlogInfo();
+      blogInfo.info = <String, String>{"name": "awesome"};
+      blogInfo.blogId = blog.uid;
+      await blogInfo.save();
 
-      expect(b['uid'], 1);
+      /// using $getRelation()
+      BlogInfo? info = await BlogInfo().preload('blog').getFirst();
+      expect(info?.blog?.title, 'Awesome blog');
+
+      /// using preload()
+      BlogInfo? info2 = await BlogInfo().getFirst();
+      await info2?.$getRelation('blog');
+      expect(info2?.blog?.title, 'Awesome blog');
+
+      /// using related()
+      BlogInfo? info3 = await BlogInfo().getFirst();
+      Blog? b = await info3?.related<Blog>('blog')?.getFirst();
+      expect(b?.title, 'Awesome blog');
     });
   });
 }

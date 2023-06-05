@@ -2,13 +2,13 @@ import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:test/test.dart';
 
 import 'connection.dart';
-import 'models/blog/blog.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
-  group('Query Builder', () {
+  group('Schema |', () {
     setUp(() async {
+      SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
       await Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');
@@ -40,17 +40,22 @@ void main() async {
       await Schema.drop('comment');
     });
 
-    test('test query builder with map result', () async {
-      Blog blog = Blog();
-      blog.title = 'Awesome blog';
-      blog.description = 'Awesome blog body';
-      await blog.save();
-
-      Map<String, dynamic> b = await QueryBuilder.table('blog')
-          .where('title', 'Awesome blog')
-          .getFirst();
-
-      expect(b['uid'], 1);
+    test('schema update', () async {
+      await Schema.table('blog', (Table table) {
+        table.renameColumn('title', 'blog_title');
+        table.string('blog_title').nullable();
+        table.string('body');
+        table.string('slug').unique().nullable();
+        table.string('column1').nullable();
+        table.string('column2').nullable();
+      });
+      Table table = Table().table('blog');
+      List<String> columns = await table.getTableColumns();
+      expect(true, columns.contains('uid'));
+      expect(true, columns.contains('column1'));
+      expect(true, columns.contains('column2'));
+      expect(true, columns.contains('blog_title'));
+      expect(true, columns.contains('slug'));
     });
   });
 }

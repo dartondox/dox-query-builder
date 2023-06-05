@@ -143,8 +143,8 @@ class Model<T> extends QueryBuilder<T> {
   /// await blog.$getRelation('comments');
   /// print(blog.comments);
   /// `
-  Future<MODEL?> $getRelation<MODEL>(String name) async {
-    return await _getRelation(<Model<T>>[this], name) as MODEL;
+  Future<M?> $getRelation<M>(String name) async {
+    return await _getRelation(<Model<T>>[this], name) as M;
   }
 
   /// Get relation query
@@ -153,7 +153,7 @@ class Model<T> extends QueryBuilder<T> {
   /// Comment comment = blog.related<Comment>('comments');
   /// await comment.get();
   /// `
-  MODEL? related<MODEL>(String name) {
+  M? related<M>(String name) {
     if (relationsQueryMatcher[name] != null) {
       Function funcName = relationsQueryMatcher[name]!;
       return Function.apply(funcName, <dynamic>[

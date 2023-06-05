@@ -178,17 +178,6 @@ class Model<T> extends QueryBuilder<T> {
     }
   }
 
-  /// end ********** preload
-
-  /// get result from the query
-  /// ```
-  /// List<Blog> blogs = await Blog().where('status', 'active').get();
-  /// ```
-  @override
-  Future<List<T>> get() async {
-    return await super.get();
-  }
-
   /// get all records
   /// ```
   /// List<Blog> blogs = await Blog().all();
@@ -196,15 +185,6 @@ class Model<T> extends QueryBuilder<T> {
   @override
   Future<List<T>> all() async {
     return await super.all();
-  }
-
-  /// get the first value of query
-  /// ```
-  /// Blog? blogs = await Blog().where('status', 'active').getFirst();
-  /// ```
-  @override
-  Future<T?> getFirst() async {
-    return await super.getFirst();
   }
 
   /// find the record

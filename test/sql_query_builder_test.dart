@@ -40,6 +40,55 @@ void main() async {
       await Schema.drop('comment');
     });
 
+    test('truncate', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      await Blog().truncate();
+      int total = await Blog().count();
+      expect(total, 0);
+    });
+
+    test('limit', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{
+          'title': 'dox query builder',
+          'body': 'Best orm for the dart'
+        },
+        <String, dynamic>{
+          'title': 'dox core',
+          'body': 'dart web framework',
+        }
+      ]);
+
+      List<Blog> blogs = await Blog().limit(1).get();
+      expect(blogs.length, 1);
+
+      List<Blog> blogs2 = await Blog().limit(2).get();
+      expect(blogs2.length, 2);
+    });
+
+    test('offset', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{
+          'title': 'dox query builder',
+          'body': 'Best orm for the dart'
+        },
+        <String, dynamic>{
+          'title': 'dox core',
+          'body': 'dart web framework',
+        }
+      ]);
+
+      List<Blog> blog = await Blog().offset(0).limit(1).get();
+      expect(blog.first.title, 'dox query builder');
+
+      List<Blog> blog2 = await Blog().offset(1).limit(1).get();
+      expect(blog2.first.title, 'dox core');
+    });
+
     test('test query builder with map result', () async {
       Blog blog = Blog();
       blog.title = 'Awesome blog';

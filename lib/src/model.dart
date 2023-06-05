@@ -62,7 +62,7 @@ class Model<T> extends QueryBuilder<T> {
       dynamic id = values[primaryKey];
       values.remove(primaryKey);
       values.remove(createdAtColumn);
-
+      values.removeWhere((String key, dynamic value) => value == null);
       if (updatedAtColumn != null) {
         values[updatedAtColumn] = now();
         updatedAt = values[updatedAtColumn];

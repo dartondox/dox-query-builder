@@ -68,6 +68,12 @@ void main() async {
 
       List<Blog> blogs2 = await Blog().limit(2).get();
       expect(blogs2.length, 2);
+
+      List<Blog> blogs3 = await Blog().take(1).get();
+      expect(blogs3.length, 1);
+
+      List<Blog> blogs4 = await Blog().take(2).get();
+      expect(blogs4.length, 2);
     });
 
     test('offset', () async {

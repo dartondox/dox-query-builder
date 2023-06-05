@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 
 import 'connection.dart';
 import 'models/blog/blog.model.dart';
+import 'models/blog_info/blog_info.model.dart';
 
 void main() {
   group('Model |', () {
@@ -88,6 +89,22 @@ void main() {
       expect(blog.description, 'Best Orm');
     });
 
+    test('save again', () async {
+      Blog blog = Blog();
+
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      blog.title = 'new title';
+
+      await blog.save();
+
+      expect(blog.uid, 1);
+      expect(blog.title, 'new title');
+      expect(blog.description, 'Best Orm');
+    });
+
     test('delete', () async {
       Blog blog = Blog();
       blog.title = 'dox query builder';
@@ -110,6 +127,18 @@ void main() {
 
       int total = await Blog().withTrash().count();
       expect(total, 1);
+    });
+
+    test('forced delete', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      await blog.forceDelete();
+
+      int total = await Blog().withTrash().count();
+      expect(total, 0);
     });
 
     test('find', () async {
@@ -238,6 +267,35 @@ void main() {
       expect(data['uid'], blog.uid);
       expect(data['title'], blog.title);
       expect(data['created_at'].toString().contains(':'), true);
+    });
+
+    test('hidden fields', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      blog.status = 'active';
+      await blog.save();
+
+      Map<String, dynamic> jsond = blog.toJson();
+      expect(jsond['status'], null);
+    });
+
+    test('normal delete function', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      await info.delete();
+
+      BlogInfo? findInfo = await BlogInfo().find('blog_id', blog.uid);
+
+      expect(findInfo, null);
     });
   });
 }

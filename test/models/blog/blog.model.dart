@@ -11,6 +11,9 @@ part 'blog.model.g.dart';
   softDelete: true,
 )
 class Blog extends BlogGenerator {
+  @override
+  List<String> get hidden => <String>['status'];
+
   @Column(beforeSave: slugTitle, beforeGet: beforeGet)
   String? title;
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// coverage:ignore-file
 class Logger {
   int logLength = 80;
 

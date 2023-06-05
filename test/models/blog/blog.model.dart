@@ -26,10 +26,10 @@ class Blog extends BlogGenerator {
   @Column(name: 'deleted_at')
   DateTime? deletedAt;
 
-  @HasOne(BlogInfo, eager: true)
+  @HasOne(BlogInfo, eager: true, onQuery: onQuery)
   BlogInfo? blogInfo;
 
-  @HasMany(BlogInfo, eager: true)
+  @HasMany(BlogInfo, eager: true, onQuery: onQuery)
   List<BlogInfo> blogInfos = <BlogInfo>[];
 
   static String? slugTitle(Map<String, dynamic> map) {
@@ -38,5 +38,9 @@ class Blog extends BlogGenerator {
 
   static String? beforeGet(Map<String, dynamic> map) {
     return map['title'];
+  }
+
+  static Model<BlogInfo> onQuery(BlogInfo q) {
+    return q.debug(false);
   }
 }

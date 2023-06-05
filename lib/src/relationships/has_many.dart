@@ -32,9 +32,7 @@ Future<Map<String, List<M>>> getHasMany<T, M>(
   dynamic q,
   List<Model<T>> list,
 ) async {
-  if (q == null) {
-    return <String, List<M>>{};
-  }
+  if (q == null) return <String, List<M>>{}; // coverage:ignore-line
   List<M> results = await q.get();
 
   Map<String, List<M>> ret = <String, List<M>>{};

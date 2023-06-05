@@ -120,5 +120,148 @@ void main() async {
       List<Blog> blogs2 = await Blog().orderBy('title', 'desc').get();
       expect(blogs2.first.title, 'b');
     });
+
+    test('query', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      List<Map<String, Map<String, dynamic>>> b =
+          await QueryBuilder.query('select * from blog');
+
+      expect(b.first['blog']?['uid'], 1);
+      expect(b.first['blog']?['title'], 'Awesome blog');
+      expect(b.first['blog']?['body'], 'Awesome blog body');
+    });
+
+    test('group by', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{'title': 'title 1', 'body': 'body'},
+        <String, dynamic>{'title': 'title 1', 'body': 'body2'},
+        <String, dynamic>{'title': 'title 2', 'body': 'body'},
+      ]);
+
+      int total = await Blog().groupBy('status').count();
+      expect(total, 3);
+
+      int total2 = await Blog().groupBy(<String>['status', 'title']).count();
+      expect(total2, 2);
+
+      List<Map<String, dynamic>> data2 = await Blog()
+          .select(<String>['title', 'count(*) as total'])
+          .groupBy('title')
+          .get();
+
+      expect(data2.first['title'], 'title 1');
+      expect(data2.first['total'], 2);
+
+      expect(data2.last['title'], 'title 2');
+      expect(data2.last['total'], 1);
+    });
+
+    test('rawQuery', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      Map<String, dynamic> b = await Blog().rawQuery(
+        "select * from blog where title = @title",
+        <String, dynamic>{'title': 'Awesome blog'},
+      ).getFirst();
+
+      expect(b['uid'], 1);
+      expect(b['title'], 'Awesome blog');
+      expect(b['body'], 'Awesome blog body');
+    });
+
+    test('where', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog? findBlog =
+          await Blog().where('title', 'dox query builder').getFirst();
+      expect(findBlog?.title, 'dox query builder');
+      expect(findBlog?.uid, blog.uid);
+    });
+
+    test('or where', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog()
+          .where('title', 'title 1')
+          .orWhere('title', 'title 2')
+          .get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('or where raw', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog().where('title', 'title 1').orWhereRaw(
+          'title = @title', <String, String>{'title': 'title 2'}).get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('where in', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog()
+          .where('status', '=', 'active')
+          .whereIn('uid', <int>[1, 2]).get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('where raw', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      Blog? findBlog = await Blog()
+          .where('status', '=', 'active')
+          .whereRaw('uid = @id', <String, String>{'id': '1'}).getFirst();
+
+      expect(findBlog?.uid, 1);
+      expect(findBlog?.title, 'title 1');
+    });
   });
 }

@@ -166,38 +166,6 @@ void main() {
       expect(findBlog?.uid, blog.uid);
     });
 
-    test('where', () async {
-      Blog blog = Blog();
-      blog.title = 'dox query builder';
-      blog.description = 'Best Orm';
-      await blog.save();
-
-      Blog? findBlog =
-          await Blog().where('title', 'dox query builder').getFirst();
-      expect(findBlog?.title, 'dox query builder');
-      expect(findBlog?.uid, blog.uid);
-    });
-
-    test('or where', () async {
-      Blog blog = Blog();
-      blog.title = 'title 1';
-      blog.description = 'Best Orm';
-      await blog.save();
-
-      Blog blog2 = Blog();
-      blog2.title = 'title 2';
-      blog2.description = 'Best Orm';
-      await blog2.save();
-
-      List<Blog> blogs = await Blog()
-          .where('title', 'title 1')
-          .orWhere('title', 'title 2')
-          .get();
-
-      expect(blogs.first.title, 'title 1');
-      expect(blogs.last.title, 'title 2');
-    });
-
     test('new query', () async {
       Blog blog = Blog();
       blog.title = "new blog";

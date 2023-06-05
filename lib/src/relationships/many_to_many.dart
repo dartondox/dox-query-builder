@@ -52,8 +52,10 @@ String _sortTableByAlphabet(String firstTable, String secondTable) {
 }
 
 Future<Map<String, List<M>>> getManyToMany<T, M>(
-    dynamic q, List<Model<T>> list) async {
-  if (q == null) return <String, List<M>>{};
+  dynamic q,
+  List<Model<T>> list,
+) async {
+  if (q == null) return <String, List<M>>{}; // coverage:ignore-line
   List<M> results = await q.get();
 
   Map<String, List<M>> ret = <String, List<M>>{};

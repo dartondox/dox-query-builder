@@ -15,10 +15,12 @@ class Model<T> extends QueryBuilder<T> {
   @override
   dynamic get self => this;
 
+  // coverage:ignore-start
   Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
+  // coverage:ignore-end
 
   @override
   Model<T> debug([bool? debug]) {
@@ -120,9 +122,7 @@ class Model<T> extends QueryBuilder<T> {
 
   /// start ********** preload
 
-  /// defined auto eager loading list
-  // coverage:ignore-line to ignore one line.
-  List<String> get preloadList => <String>[];
+  List<String> get preloadList => <String>[]; // coverage:ignore-line
   final List<String> _preloadList = <String>[];
 
   Map<String, Function> relationsResultMatcher = <String, Function>{};

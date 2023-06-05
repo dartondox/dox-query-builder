@@ -82,10 +82,11 @@ class Model<T> extends QueryBuilder<T> {
     await initPreload(<Model<T>>[this]);
   }
 
-  // Model to json string converter
+  /// support jsonEncode()
   ///
   /// ```
-  /// Map<String, dynamic> blog = Blog().find(1).toJson();
+  /// Blog? blog = Blog().find(1);
+  /// Map<String, dynamic> m = blog?.toJson();
   /// ```
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = toMap(removeHiddenField: true);
@@ -95,6 +96,14 @@ class Model<T> extends QueryBuilder<T> {
     return data;
   }
 
+  /// convert model to map
+  /// if you have custom select query, use original option with true value
+  ///
+  /// ```
+  /// Blog? blog = Blog().find(1);
+  /// Map<String, dynamic> m = blog?.toMap();
+  /// Map<String, dynamic> m = blog?.toMap(original: true);
+  /// ```
   Map<String, dynamic> toMap(
       {bool original = false, bool removeHiddenField = false}) {
     if (original == true && originalMap.isNotEmpty) {
@@ -111,6 +120,7 @@ class Model<T> extends QueryBuilder<T> {
 
   /// start ********** preload
 
+  /// defined auto eager loading list
   List<String> get preloadList => <String>[];
   final List<String> _preloadList = <String>[];
 
@@ -170,23 +180,64 @@ class Model<T> extends QueryBuilder<T> {
 
   /// end ********** preload
 
+  /// get result from the query
+  /// ```
+  /// List<Blog> blogs = await Blog().where('status', 'active').get();
+  /// ```
   @override
   Future<List<T>> get() async {
     return await super.get();
   }
 
+  /// get all records
+  /// ```
+  /// List<Blog> blogs = await Blog().all();
+  /// ```
   @override
   Future<List<T>> all() async {
     return await super.all();
   }
 
+  /// get the first value of query
+  /// ```
+  /// Blog? blogs = await Blog().where('status', 'active').getFirst();
+  /// ```
   @override
   Future<T?> getFirst() async {
     return await super.getFirst();
   }
 
+  /// find the record
+  /// ```
+  /// Blog? blog = await Blog().find(1);
+  /// Blog? blog = await Blog().find('name', 'John');
+  /// ```
   @override
   Future<T?> find(dynamic arg1, [dynamic arg2]) async {
     return await super.find(arg1, arg2);
+  }
+
+  /// create a record
+  /// ```
+  /// Blog blog = await Blog().create({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ````
+  @override
+  Future<T> create(Map<String, dynamic> data) async {
+    return await super.create(data);
+  }
+
+  /// create a record
+  /// ```
+  /// Blog blog = await Blog().insert({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ````
+  @override
+  Future<T> insert(Map<String, dynamic> data) async {
+    return await super.insert(data);
   }
 }

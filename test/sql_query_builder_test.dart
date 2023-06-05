@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 
 import 'connection.dart';
 import 'models/blog/blog.model.dart';
+import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
   SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
@@ -262,6 +263,108 @@ void main() async {
 
       expect(findBlog?.uid, 1);
       expect(findBlog?.title, 'title 1');
+    });
+
+    test('left join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .leftJoin('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog().leftJoinRaw(
+          'blog_info on blog_info.blog_id = blog.uid and blog.uid = @id',
+          <String, int>{'id': 1}).getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
+    });
+
+    test('right join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .rightJoin('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog()
+          .rightJoinRaw('blog_info on blog_info.blog_id = blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
+    });
+
+    test('join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .join('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog()
+          .joinRaw('blog_info on blog_info.blog_id = blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
     });
   });
 }

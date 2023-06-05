@@ -29,11 +29,11 @@ class Blog extends BlogGenerator {
   @HasMany(BlogInfo, eager: true)
   List<BlogInfo> blogInfos = <BlogInfo>[];
 
-  static String slugTitle(Map<String, dynamic> map) {
+  static String? slugTitle(Map<String, dynamic> map) {
     return map['title'];
   }
 
-  static String beforeGet(Map<String, dynamic> map) {
+  static String? beforeGet(Map<String, dynamic> map) {
     return map['title'];
   }
 }

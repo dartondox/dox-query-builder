@@ -97,7 +97,7 @@ class Model<T> extends QueryBuilder<T> {
 
   Map<String, dynamic> toMap(
       {bool original = false, bool removeHiddenField = false}) {
-    if (original == true) {
+    if (original == true && originalMap.isNotEmpty) {
       return originalMap;
     }
     Map<String, dynamic> data = convertToMap(this);

@@ -32,7 +32,9 @@ class QueryBuilderHelper<T> {
 
   // ignore: always_specify_types
   Future<List> formatResult(
-      List<Map<String, Map<String, dynamic>>> queryResult) async {
+    List<Map<String, Map<String, dynamic>>> queryResult, {
+    bool shouldMapWithModel = true,
+  }) async {
     List<Map<String, dynamic>> result = <Map<String, dynamic>>[];
     // setting key values format from query result
     for (Map<String, Map<String, dynamic>> row in queryResult) {
@@ -50,7 +52,8 @@ class QueryBuilderHelper<T> {
       result.add(ret);
     }
 
-    if (queryBuilder.self != null &&
+    if (shouldMapWithModel &&
+        queryBuilder.self != null &&
         queryBuilder.self.toString() != 'dynamic') {
       List<T> ret = <T>[];
       for (Map<String, dynamic> e in result) {

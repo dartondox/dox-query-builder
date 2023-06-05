@@ -6,14 +6,11 @@ import 'models/blog/blog.model.dart';
 import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
 
   group('Query Builder', () {
-    setUp(() {
-      Schema.drop('blog');
-      Schema.drop('blog_info');
-      Schema.drop('comment');
-      Schema.create('blog', (Table table) {
+    setUp(() async {
+      await Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');
         table.char('status').withDefault('active');
@@ -23,19 +20,25 @@ void main() async {
         table.timestamps();
       });
 
-      Schema.create('blog_info', (Table table) {
+      await Schema.create('blog_info', (Table table) {
         table.id('id');
         table.json('info');
         table.integer('blog_id');
         table.timestamps();
       });
 
-      Schema.create('comment', (Table table) {
+      await Schema.create('comment', (Table table) {
         table.id('id');
         table.string('comment').nullable();
         table.integer('blog_id');
         table.timestamps();
       });
+    });
+
+    tearDown(() async {
+      await Schema.drop('blog');
+      await Schema.drop('blog_info');
+      await Schema.drop('comment');
     });
 
     test('insert', () async {

@@ -1,7 +1,7 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin GroupBy implements SharedMixin {
+mixin GroupBy<T> implements SharedMixin<T> {
   String _groupBy = '';
 
   String getGroupByQuery() {
@@ -16,7 +16,7 @@ mixin GroupBy implements SharedMixin {
   ///   .groupBy('status')
   ///   .get();
   /// ```
-  QueryBuilder groupBy(dynamic column) {
+  QueryBuilder<T> groupBy(dynamic column) {
     if (column is String) {
       _groupBy = ' GROUP BY $column';
     }

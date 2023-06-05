@@ -4,8 +4,13 @@ import '../blog_info/blog_info.model.dart';
 
 part 'blog.model.g.dart';
 
-@DoxModel(primaryKey: 'uid', createdAt: 'created_at', updatedAt: 'updated_at')
-class Blog extends BlogGenerator with SoftDeletes {
+@DoxModel(
+  primaryKey: 'uid',
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
+  softDelete: true,
+)
+class Blog extends BlogGenerator {
   @Column(beforeSave: slugTitle, beforeGet: beforeGet)
   String? title;
 
@@ -22,13 +27,13 @@ class Blog extends BlogGenerator with SoftDeletes {
   BlogInfo? blogInfo;
 
   @HasMany(BlogInfo, eager: true)
-  List<BlogInfo> blogInfos = [];
+  List<BlogInfo> blogInfos = <BlogInfo>[];
 
-  static slugTitle(Map<String, dynamic> map) {
+  static String slugTitle(Map<String, dynamic> map) {
     return map['title'];
   }
 
-  static beforeGet(Map<String, dynamic> map) {
+  static String beforeGet(Map<String, dynamic> map) {
     return map['title'];
   }
 }

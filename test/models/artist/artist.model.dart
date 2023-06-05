@@ -17,5 +17,5 @@ class Artist extends ArtistGenerator {
     pivotRelatedForeignKey: 'song_id',
     pivotTable: 'artist_song',
   )
-  List<Song> songs = [];
+  List<Song> songs = <Song>[];
 }

@@ -1,7 +1,7 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin Select implements SharedMixin {
+mixin Select<T> implements SharedMixin<T> {
   String _select = '*';
 
   String getSelectQuery() {
@@ -17,7 +17,7 @@ mixin Select implements SharedMixin {
   /// await Blog().select(['title', 'body']).get();
   /// ```
   /// [selection] can be string or array
-  QueryBuilder select(dynamic selection) {
+  QueryBuilder<T> select(dynamic selection) {
     if (selection is List<String>) {
       _select = selection.join(',');
     }

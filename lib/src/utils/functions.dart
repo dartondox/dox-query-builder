@@ -2,7 +2,7 @@ DateTime now() {
   return DateTime.now().toUtc();
 }
 
-isEmpty(data) {
+bool isEmpty(dynamic data) {
   if (data is List) {
     return data.isEmpty;
   }

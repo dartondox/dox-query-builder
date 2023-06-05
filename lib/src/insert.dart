@@ -1,6 +1,6 @@
 import 'shared_mixin.dart';
 
-mixin Insert implements SharedMixin {
+mixin Insert<T> implements SharedMixin<T> {
   /// create/insert a record
   ///
   /// ```
@@ -9,8 +9,9 @@ mixin Insert implements SharedMixin {
   ///   "body" : "Lorem",
   /// });
   /// ```
+  // ignore: always_specify_types
   Future create(Map<String, dynamic> data) async {
-    await insert(data);
+    return await insert(data);
   }
 
   /// insert/create a record
@@ -21,11 +22,14 @@ mixin Insert implements SharedMixin {
   ///   "body" : "Lorem",
   /// });
   /// ```
+  // ignore: always_specify_types
   Future insert(Map<String, dynamic> data) async {
-    List result = await insertMultiple([data]);
+    // ignore: always_specify_types
+    List<Map<String, Map<String, dynamic>>> result =
+        await insertMultiple(<Map<String, dynamic>>[data]);
     if (result.isNotEmpty) {
-      Map insertedData = result.first;
-      int id = insertedData[tableName][primaryKey] ?? 0;
+      Map<String, Map<String, dynamic>> insertedData = result.first;
+      int id = insertedData[tableName]?[primaryKey] ?? 0;
       resetSubstitutionValues();
       return await queryBuilder.find(id);
     }
@@ -40,19 +44,20 @@ mixin Insert implements SharedMixin {
   ///   {"title" : "Another blog title"},
   /// ]);
   /// ```
-  Future insertMultiple(List<Map<String, dynamic>> list) async {
-    List columns = [];
-    List<String> values = [];
+  Future<List<Map<String, Map<String, dynamic>>>> insertMultiple(
+      List<Map<String, dynamic>> list) async {
+    List<String> columns = <String>[];
+    List<String> values = <String>[];
 
     // creating columns (col1, col2);
-    list.first.forEach((key, value) {
+    list.first.forEach((String key, dynamic value) {
       columns.add(key);
     });
 
     // creating values to insert (value1, val2);
-    for (var data in list) {
-      List ret = [];
-      data.forEach((key, value) {
+    for (Map<String, dynamic> data in list) {
+      List<String> ret = <String>[];
+      data.forEach((String key, dynamic value) {
         String columnKey = helper.parseColumnKey(key);
         ret.add("@$columnKey");
         addSubstitutionValues(columnKey, value);

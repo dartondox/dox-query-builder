@@ -6,47 +6,48 @@ part of 'artist.model.dart';
 // Generator: DoxModelBuilder
 // **************************************************************************
 
+// ignore_for_file: always_specify_types
+
 class ArtistGenerator extends Model<Artist> {
   @override
   String get primaryKey => 'id';
 
   @override
-  Map<String, dynamic> get timestampsColumn => {
+  Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
 
   int? get id => tempIdValue;
 
-  set id(val) => tempIdValue = val;
+  set id(dynamic val) => tempIdValue = val;
 
   Artist get newQuery => Artist();
 
   @override
-  List get preloadList => [];
+  List<String> get preloadList => <String>[];
 
   @override
-  Map<String, Function> get relationsResultMatcher => {
+  Map<String, Function> get relationsResultMatcher => <String, Function>{
         'songs': getSongs,
       };
 
   @override
-  Map<String, Function> get relationsQueryMatcher => {
+  Map<String, Function> get relationsQueryMatcher => <String, Function>{
         'songs': querySongs,
       };
 
-  static Future getSongs(List list) async {
-    var result = await getManyToMany<Song>(querySongs(list), list);
-    for (Artist i in list) {
-      i.songs = result[i.tempIdValue.toString()];
-      if (list.length == 1) {
-        return i.songs;
+  static Future<void> getSongs(List<Model<Artist>> list) async {
+    var result = await getManyToMany<Artist, Song>(querySongs(list), list);
+    for (dynamic i in list) {
+      if (result[i.tempIdValue.toString()] != null) {
+        i.songs = result[i.tempIdValue.toString()]!;
       }
     }
   }
 
-  static Song? querySongs(List list) {
-    return manyToMany<Song>(
+  static Song? querySongs(List<Model<Artist>> list) {
+    return manyToMany<Artist, Song>(
       list,
       () => Song(),
       localKey: 'id',
@@ -69,9 +70,9 @@ class ArtistGenerator extends Model<Artist> {
         : DateTime.parse(m['updated_at'] as String);
 
   @override
-  Map<String, dynamic> convertToMap(i) {
+  Map<String, dynamic> convertToMap(dynamic i) {
     Artist instance = i as Artist;
-    Map<String, dynamic> map = {
+    Map<String, dynamic> map = <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'created_at': instance.createdAt?.toIso8601String(),

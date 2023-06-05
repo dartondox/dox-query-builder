@@ -1,7 +1,7 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin SoftDeletes implements SharedMixin {
+mixin SoftDeletes<T> implements SharedMixin<T> {
   @override
   bool isSoftDeletes = true;
 
@@ -10,7 +10,7 @@ mixin SoftDeletes implements SharedMixin {
   /// ```
   /// List blogs = await Blog().withTrash().all();
   /// ```
-  QueryBuilder withTrash() {
+  QueryBuilder<T> withTrash() {
     isSoftDeletes = false;
     return queryBuilder;
   }

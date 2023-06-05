@@ -7,18 +7,20 @@ class PostgresDriver extends DBDriver {
   PostgresDriver({this.conn});
 
   @override
-  Future<List<Map<String, Map<String, dynamic>>>> mappedResultsQuery(query,
+  Future<List<Map<String, Map<String, dynamic>>>> mappedResultsQuery(
+      String query,
       {Map<String, dynamic>? substitutionValues}) async {
     if (conn == null) {
       throw 'PostgreSQLConnection or PgPool connection required';
     }
     if (conn is PostgreSQLConnection) {
-      return await (conn as PostgreSQLConnection).transaction((c) async {
+      return await (conn as PostgreSQLConnection)
+          .transaction((PostgreSQLExecutionContext c) async {
         return await c.mappedResultsQuery(query,
             substitutionValues: substitutionValues);
       });
     } else {
-      return await (conn as PgPool).run((c) async {
+      return await (conn as PgPool).run((PostgreSQLExecutionContext c) async {
         return await c.mappedResultsQuery(query,
             substitutionValues: substitutionValues);
       });
@@ -26,14 +28,18 @@ class PostgresDriver extends DBDriver {
   }
 
   @override
-  Future query(query, {Map<String, dynamic>? substitutionValues}) async {
+  Future<void> query(String query,
+      {Map<String, dynamic>? substitutionValues}) async {
     if (conn is PostgreSQLConnection) {
-      return await (conn as PostgreSQLConnection).transaction((c) async {
-        return await c.query(query, substitutionValues: substitutionValues);
+      return await (conn as PostgreSQLConnection)
+          .transaction((PostgreSQLExecutionContext c) async {
+        await c.query(query, substitutionValues: substitutionValues);
+        return;
       });
     } else {
-      return await (conn as PgPool).run((c) async {
-        return await c.query(query, substitutionValues: substitutionValues);
+      return await (conn as PgPool).run((PostgreSQLExecutionContext c) async {
+        await c.query(query, substitutionValues: substitutionValues);
+        return;
       });
     }
   }

@@ -9,7 +9,7 @@ mixin TableUpdate implements TableSharedMixin {
       } else if (col.renameTo != null) {
         await _handleRename(col);
       } else {
-        List existingColumns = await getTableColumns();
+        List<String> existingColumns = await getTableColumns();
         if (!existingColumns.contains(col.name)) {
           await _handleAdd(col);
         } else {
@@ -40,7 +40,7 @@ mixin TableUpdate implements TableSharedMixin {
   }
 
   Future<void> _handleAlter(TableColumn col) async {
-    List queries = [];
+    List<String> queries = <String>[];
 
     /// changing type
     if (col.type != null) {
@@ -66,24 +66,25 @@ mixin TableUpdate implements TableSharedMixin {
     return await _runQuery(query);
   }
 
-  Future<void> _runQuery(query) async {
+  Future<void> _runQuery(String query) async {
     if (debug) {
       logger.log(query);
     }
     await db.mappedResultsQuery(query);
   }
 
-  Future getTableColumns() async {
+  Future<List<String>> getTableColumns() async {
     String query =
         "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '$tableName'";
     List<Map<String, Map<String, dynamic>>> result =
         await db.mappedResultsQuery(query);
 
-    List columns = [];
-    for (Map<dynamic, Map> element in result) {
-      element.forEach((key, value) {
-        value.forEach((key2, value2) {
-          columns.add(value2);
+    List<String> columns = <String>[];
+
+    for (Map<String, Map<String, dynamic>> element in result) {
+      element.forEach((String key, Map<String, dynamic> value) {
+        value.forEach((String key2, dynamic value2) {
+          columns.add(value2.toString());
         });
       });
     }

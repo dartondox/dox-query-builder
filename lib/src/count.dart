@@ -1,18 +1,19 @@
 import 'shared_mixin.dart';
 
-mixin Count implements SharedMixin {
+mixin Count<T> implements SharedMixin<T> {
   /// Count record
   ///
   /// ```
   /// await Blog().count();
   /// ```
-  count() async {
+  // ignore: always_specify_types
+  Future count() async {
     String select = selectQueryString == '*'
         ? 'count(*) as total'
         : 'count(*) as total, $selectQueryString';
     String q = "SELECT $select FROM $tableName";
     q += helper.getCommonQuery();
-    List result = await helper.formatResult(await helper.runQuery(q));
+    List<dynamic> result = await helper.formatResult(await helper.runQuery(q));
     return result.length == 1 ? result.first : result;
   }
 }

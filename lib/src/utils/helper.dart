@@ -1,17 +1,15 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-Type typeOf<T>() => T;
-
 class QueryBuilderHelper<T> {
-  final QueryBuilder queryBuilder;
+  final QueryBuilder<T> queryBuilder;
   QueryBuilderHelper(this.queryBuilder);
 
-  String parseColumnKey(column) {
-    var timestamp = DateTime.now().microsecondsSinceEpoch.toString();
+  String parseColumnKey(String column) {
+    String timestamp = DateTime.now().microsecondsSinceEpoch.toString();
     return "$column$timestamp".replaceAll(RegExp(r'[^\w]'), "");
   }
 
-  getCommonQuery() {
+  String getCommonQuery() {
     if (queryBuilder.isSoftDeletes) {
       queryBuilder.whereRaw('deleted_at IS NULL');
     }
@@ -24,20 +22,23 @@ class QueryBuilderHelper<T> {
     return query;
   }
 
-  Future<List> runQuery(query) async {
+  Future<List<Map<String, Map<String, dynamic>>>> runQuery(String query) async {
     Map<String, dynamic> values = queryBuilder.substitutionValues;
     if (queryBuilder.shouldDebug) queryBuilder.logger.log(query, values);
-    var db = queryBuilder.db;
+    DBDriver db = queryBuilder.db;
     query = query.replaceAll(RegExp(' +'), ' ');
     return await db.mappedResultsQuery(query, substitutionValues: values);
   }
 
-  Future<List> formatResult(List queryResult) async {
-    List<Map<String, dynamic>> result = [];
-    for (final row in queryResult) {
-      Map<String, dynamic> ret = {};
-      (row as Map<String, dynamic>).forEach((mainKey, data) {
-        (data as Map<String, dynamic>).forEach((key, value) {
+  // ignore: always_specify_types
+  Future<List> formatResult(
+      List<Map<String, Map<String, dynamic>>> queryResult) async {
+    List<Map<String, dynamic>> result = <Map<String, dynamic>>[];
+    // setting key values format from query result
+    for (Map<String, Map<String, dynamic>> row in queryResult) {
+      Map<String, dynamic> ret = <String, dynamic>{};
+      (row).forEach((String mainKey, Map<String, dynamic> data) {
+        (data).forEach((String key, dynamic value) {
           if (ret[key] == null) {
             ret[key] = value is DateTime ? value.toIso8601String() : value;
           } else {
@@ -48,23 +49,24 @@ class QueryBuilderHelper<T> {
       });
       result.add(ret);
     }
+
     if (queryBuilder.self != null &&
         queryBuilder.self.toString() != 'dynamic') {
-      List<T> ret = [];
-      for (var e in result) {
-        var res = queryBuilder.self.fromMap(e);
+      List<T> ret = <T>[];
+      for (Map<String, dynamic> e in result) {
+        dynamic res = queryBuilder.self.fromMap(e);
         res.originalMap = e;
         ret.add(res as T);
       }
-      await queryBuilder.initPreload(ret as List<Model>);
+      await queryBuilder.initPreload(ret as List<Model<T>>);
       return ret;
     }
     return result;
   }
 
   String pascalToSnake(String input) {
-    final result = StringBuffer();
-    for (final letter in input.codeUnits) {
+    StringBuffer result = StringBuffer();
+    for (int letter in input.codeUnits) {
       if (letter >= 65 && letter <= 90) {
         // Check if uppercase ASCII
         if (result.isNotEmpty) {
@@ -80,7 +82,7 @@ class QueryBuilderHelper<T> {
     return finalString;
   }
 
-  lcFirst(String? str) {
+  String lcFirst(String? str) {
     if (str == null) {
       return '';
     }

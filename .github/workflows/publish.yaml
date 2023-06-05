@@ -1,11 +1,11 @@
-name: Test
+name: Publish
 
 on:
   release:
     types: [created]
 
 jobs:
-  Test-Package:
+  Publish:
     runs-on: ubuntu-latest
 
     services:

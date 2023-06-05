@@ -13,7 +13,7 @@ class Schema {
   ///   table.timestamps();
   /// });
   /// ```
-  static Future<void> create(tableName, callback) async {
+  static Future<void> create(String tableName, Function(Table) callback) async {
     Table table = Table().table(tableName);
     callback(table);
     await table.create();
@@ -31,7 +31,7 @@ class Schema {
   ///   table.timestamps();
   /// });
   /// ```
-  static Future<void> table(tableName, callback) async {
+  static Future<void> table(String tableName, Function(Table) callback) async {
     Table table = Table().table(tableName);
     callback(table);
     await table.update();
@@ -42,7 +42,7 @@ class Schema {
   /// ```
   /// await Schema.drop('table');
   /// ```
-  static Future<void> drop(tableName) async {
+  static Future<void> drop(String tableName) async {
     await SqlQueryBuilder()
         .db
         .query("DROP TABLE IF EXISTS $tableName RESTRICT");

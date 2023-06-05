@@ -1,9 +1,12 @@
-name: Test
+name: Coverage
 
-on: push
+on:
+  pull_request:
+
+permissions: write-all
 
 jobs:
-  Test:
+  Coverage:
     runs-on: ubuntu-latest
 
     services:
@@ -27,5 +30,11 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - run: dart pub get
-      - run: dart test
-      - run: dart analyze
+      - run: dart pub global activate coverage
+      - run: dart run test --coverage=./coverage
+      - run: dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
+  
+      - uses: vebr/jest-lcov-reporter@v0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./coverage/lcov.info

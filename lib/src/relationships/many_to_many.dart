@@ -1,8 +1,8 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-T? manyToMany<T>(
-  List list,
-  Model Function() model, {
+M? manyToMany<T, M>(
+  List<Model<T>> list,
+  Model<M> Function() model, {
   dynamic onQuery,
   String? localKey,
   String? relatedKey,
@@ -12,8 +12,8 @@ T? manyToMany<T>(
 }) {
   if (list.isEmpty) return null;
 
-  Model local = list.first;
-  Model related = model();
+  Model<T> local = list.first;
+  Model<M> related = model();
 
   localKey = localKey ?? local.primaryKey;
   relatedKey = relatedKey ?? related.primaryKey;
@@ -27,12 +27,12 @@ T? manyToMany<T>(
   pivotForeignKey = pivotForeignKey ?? '${localTable}_id';
   pivotRelatedForeignKey = pivotRelatedForeignKey ?? '${relatedTable}_id';
 
-  List<String> ids = list.map((i) {
-    var map = i.toMap();
+  List<String> ids = list.map((Model<T> i) {
+    Map<String, dynamic> map = i.toMap();
     return map[localKey].toString();
   }).toList();
 
-  var q = related
+  QueryBuilder<M> q = related
       .debug(local.shouldDebug)
       .select('$relatedTable.*, $pivotTable.$pivotForeignKey as _owner_id')
       .leftJoin(pivotTable, '$pivotTable.$pivotRelatedForeignKey',
@@ -42,35 +42,35 @@ T? manyToMany<T>(
   if (onQuery != null) {
     q = onQuery(q);
   }
-  return q as T;
+  return q as M;
 }
 
 String _sortTableByAlphabet(String firstTable, String secondTable) {
-  List<String> tables = [firstTable, secondTable];
+  List<String> tables = <String>[firstTable, secondTable];
   tables.sort();
   return '${tables[0]}_${tables[1]}';
 }
 
-getManyToMany<T>(q, List list) async {
-  if (q == null) return [];
-  List results = await q.get();
+Future<Map<String, List<M>>> getManyToMany<T, M>(
+    dynamic q, List<Model<T>> list) async {
+  if (q == null) return <String, List<M>>{};
+  List<M> results = await q.get();
 
-  Map<String, List<T>> ret = {};
+  Map<String, List<M>> ret = <String, List<M>>{};
 
   /// filter matched values with local id value
-  for (var r in results) {
-    r = r as Model;
-    var map = r.toMap(original: true);
+  for (M r in results) {
+    Map<String, dynamic> map = (r as Model<M>).toMap(original: true);
     String ownerId = map['_owner_id'].toString();
     if (ret[ownerId] == null) {
-      ret[ownerId] = [];
+      ret[ownerId] = <M>[];
     }
-    ret[ownerId]?.add(r as T);
+    ret[ownerId]?.add(r);
   }
 
   /// to prevent result null instead return empty list
-  for (var i in list) {
-    ret[i.tempIdValue.toString()] = ret[i.tempIdValue.toString()] ?? [];
+  for (Model<T> i in list) {
+    ret[i.tempIdValue.toString()] = ret[i.tempIdValue.toString()] ?? <M>[];
   }
 
   return ret;

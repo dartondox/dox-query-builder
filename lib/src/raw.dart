@@ -1,7 +1,7 @@
 import 'query_builder.dart';
 import 'shared_mixin.dart';
 
-mixin Raw implements SharedMixin {
+mixin Raw<T> implements SharedMixin<T> {
   String _rawQuery = '';
 
   String getRawQuery() {
@@ -13,10 +13,10 @@ mixin Raw implements SharedMixin {
   /// ```
   /// await QueryBuilder.rawQuery('select * from blog').get();
   /// ```
-  QueryBuilder rawQuery(String query, [dynamic substitutionValues]) {
+  QueryBuilder<T> rawQuery(String query, [dynamic substitutionValues]) {
     _rawQuery = query;
     if (substitutionValues is Map<String, dynamic>) {
-      substitutionValues.forEach((key, value) {
+      substitutionValues.forEach((String key, dynamic value) {
         addSubstitutionValues(key, value);
       });
     }

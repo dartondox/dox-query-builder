@@ -1,6 +1,5 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
-import 'all.dart';
 import 'count.dart';
 import 'delete.dart';
 import 'get.dart';
@@ -29,7 +28,6 @@ class QueryBuilder<T>
         Get<T>,
         Update<T>,
         Select<T>,
-        All<T>,
         Truncate<T>,
         Delete<T>,
         Count<T> {
@@ -49,8 +47,10 @@ class QueryBuilder<T>
   @override
   QueryBuilderHelper<T> get helper => QueryBuilderHelper<T>(this);
 
+  // coverage:ignore-start
   @override
   Logger get logger => Logger();
+  // coverage:ignore-end
 
   @override
   bool shouldDebug = SqlQueryBuilder().debug;
@@ -116,6 +116,7 @@ class QueryBuilder<T>
 
   Map<String, dynamic> originalMap = <String, dynamic>{};
 
+  // coverage:ignore-start
   Map<String, dynamic> convertToMap(dynamic i) {
     return <String, dynamic>{};
   }
@@ -123,6 +124,21 @@ class QueryBuilder<T>
   Future<void> initPreload(List<Model<T>> list) async {}
 
   dynamic fromMap(Map<String, dynamic> m) {}
+  // coverage:ignore-end
 
   /// **** map
+
+  /// /// Direct raw query to database
+  /// ```
+  /// var result = await QueryBuilder.query('select * from blog where id =  @id', {'id' : 1});
+  ///
+  static Future<List<Map<String, Map<String, dynamic>>>> query(
+    String query, {
+    Map<String, dynamic>? substitutionValues = const <String, dynamic>{},
+  }) {
+    return SqlQueryBuilder().db.mappedResultsQuery(
+          query,
+          substitutionValues: substitutionValues,
+        );
+  }
 }

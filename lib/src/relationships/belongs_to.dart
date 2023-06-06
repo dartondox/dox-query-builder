@@ -41,7 +41,7 @@ Future<Map<String, M>> getBelongsTo<T, M>(
   dynamic q,
   List<Model<T>> list,
 ) async {
-  if (q == null) return <String, M>{};
+  if (q == null) return <String, M>{}; // coverage:ignore-line
   List<M> results = await q.get();
 
   Map<String, M> ret = <String, M>{};

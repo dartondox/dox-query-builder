@@ -55,6 +55,7 @@ class ArtistGenerator extends Model<Artist> {
       pivotForeignKey: 'artist_id',
       pivotRelatedForeignKey: 'song_id',
       pivotTable: 'artist_song',
+      onQuery: Artist.onQuery,
     );
   }
 

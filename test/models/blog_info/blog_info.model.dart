@@ -12,6 +12,10 @@ class BlogInfo extends BlogInfoGenerator {
   @Column(name: 'blog_id')
   int? blogId;
 
-  @BelongsTo(Blog)
+  @BelongsTo(Blog, onQuery: onQuery)
   Blog? blog;
+
+  static Model<Blog> onQuery(Blog q) {
+    return q.debug(false);
+  }
 }

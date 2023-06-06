@@ -50,6 +50,7 @@ class BlogInfoGenerator extends Model<BlogInfo> {
     return belongsTo<BlogInfo, Blog>(
       list,
       () => Blog(),
+      onQuery: BlogInfo.onQuery,
     );
   }
 

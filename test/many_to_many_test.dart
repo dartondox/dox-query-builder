@@ -9,24 +9,24 @@ import 'models/song/song.model.dart';
 void main() async {
   SqlQueryBuilder.initialize(database: await connection(), debug: false);
 
-  group('Model', () {
-    setUp(() {
-      Schema.drop('artist');
-      Schema.drop('song');
-      Schema.drop('artist_song');
-      Schema.create('artist', (Table table) {
+  group('Many To Many |', () {
+    setUp(() async {
+      await Schema.drop('artist');
+      await Schema.drop('song');
+      await Schema.drop('artist_song');
+      await Schema.create('artist', (Table table) {
         table.id();
         table.string('name');
         table.timestamps();
       });
 
-      Schema.create('song', (Table table) {
+      await Schema.create('song', (Table table) {
         table.id();
         table.string('title');
         table.timestamps();
       });
 
-      Schema.create('artist_song', (Table table) {
+      await Schema.create('artist_song', (Table table) {
         table.id('id');
         table.integer('song_id');
         table.integer('artist_id');
@@ -56,15 +56,15 @@ void main() async {
         <String, String>{'song_id': '1', 'artist_id': '3'},
       ]);
 
-      Artist artist = await Artist().preload('songs').find(1);
+      Artist? artist = await Artist().preload('songs').find(1);
 
-      expect(artist.songs.length, 2);
-      expect(artist.songs.map((Song e) => e.id).toList(), <int>[1, 2]);
+      expect(artist?.songs.length, 2);
+      expect(artist?.songs.map((Song e) => e.id).toList(), <int>[1, 2]);
 
-      Song song = await Song().preload('artists').find(2);
+      Song? song = await Song().preload('artists').find(2);
 
-      expect(song.artists.length, 3);
-      expect(song.artists.map((Artist e) => e.id).toList(), <int>[1, 2, 3]);
+      expect(song?.artists.length, 3);
+      expect(song?.artists.map((Artist e) => e.id).toList(), <int>[1, 2, 3]);
     });
   });
 }

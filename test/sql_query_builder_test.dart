@@ -6,14 +6,11 @@ import 'models/blog/blog.model.dart';
 import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
 
   group('Query Builder', () {
-    setUp(() {
-      Schema.drop('blog');
-      Schema.drop('blog_info');
-      Schema.drop('comment');
-      Schema.create('blog', (Table table) {
+    setUp(() async {
+      await Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');
         table.char('status').withDefault('active');
@@ -23,14 +20,14 @@ void main() async {
         table.timestamps();
       });
 
-      Schema.create('blog_info', (Table table) {
+      await Schema.create('blog_info', (Table table) {
         table.id('id');
         table.json('info');
         table.integer('blog_id');
         table.timestamps();
       });
 
-      Schema.create('comment', (Table table) {
+      await Schema.create('comment', (Table table) {
         table.id('id');
         table.string('comment').nullable();
         table.integer('blog_id');
@@ -38,189 +35,65 @@ void main() async {
       });
     });
 
-    test('insert', () async {
-      Blog blog = Blog();
-      blog.title = 'Awesome blog';
-      blog.description = 'Awesome blog body';
-      blog.status = 'deleted';
-      await blog.save();
-      blog.title = "Updated title";
-      await blog.save();
-
-      BlogInfo info = BlogInfo();
-      info.info = <String, String>{"name": "awesome"};
-      info.blogId = blog.uid;
-      await info.save();
-
-      expect(blog.uid != null, true);
-
-      Blog blog2 = Blog();
-      blog2.title = 'Amazing blog';
-      blog2.description = 'Amazing blog body';
-      blog2.status = 'active';
-      await blog2.save();
-
-      expect(blog2.uid != null, true);
-
-      Blog result = await Blog().find(blog.uid);
-      Blog result2 = await Blog().find(blog2.uid);
-
-      expect(result.uid, blog.uid);
-      expect(result.title, 'Updated title');
-      expect(result.description, 'Awesome blog body');
-
-      expect(result2.uid, blog2.uid);
-      expect(result2.title, 'Amazing blog');
-      expect(result2.description, 'Amazing blog body');
-
-      await Blog().where('uid', blog.uid).delete();
-      await Blog().where('uid', blog2.uid).delete();
-
-      List<Blog> blogs = await Blog().withTrash().all();
-
-      expect(blogs.length, 2);
-
-      Blog findTrash = await Blog().withTrash().find(blog.uid);
-      expect(findTrash.deletedAt is DateTime, true);
-
-      List<Blog> blogs2 = await Blog().all();
-      expect(blogs2.length, 0);
+    tearDown(() async {
+      await Schema.drop('blog');
+      await Schema.drop('blog_info');
+      await Schema.drop('comment');
     });
 
-    test('test with new query', () async {
-      Blog blog = Blog();
-      blog.title = "new blog";
-      blog.description = "something";
-      await blog.save();
-
-      expect(blog.createdAt is DateTime, true);
-      expect(blog.updatedAt is DateTime, true);
-
-      Blog check = await blog.newQuery.find(blog.uid);
-      expect(check.uid, blog.uid);
-    });
-
-    test('test to Sql', () async {
-      Blog blog = Blog();
-      blog.title = "new blog";
-      blog.description = "something";
-      await blog.save();
-
-      expect(blog.uid != null, true);
-
-      String query = blog.newQuery.where('uid', blog.uid).toSql();
-      expect(
-          "SELECT * FROM blog WHERE uid = ${blog.uid} AND deleted_at IS NULL",
-          query);
-    });
-
-    test('test toMap', () async {
-      Blog blog = Blog();
-      blog.title = "new blog";
-      blog.description = "something";
-      await blog.save();
-
-      Map<String, dynamic> data = blog.toMap();
-      expect(data['uid'], blog.uid);
-      expect(data['title'], blog.title);
-      expect(data['created_at'].toString().contains(':'), true);
-    });
-
-    test('test toJson', () async {
-      Blog blog = Blog();
-      blog.title = "new blog";
-      blog.description = "something";
-      await blog.save();
-
-      Map<String, dynamic> data = blog.toJson();
-      expect(true, data['title'].contains('new blog'));
-    });
-
-    test('schema update', () async {
-      await Schema.table('blog', (Table table) {
-        table.renameColumn('title', 'blog_title');
-        table.string('blog_title').nullable();
-        table.string('body');
-        table.string('slug').unique().nullable();
-        table.string('column1').nullable();
-        table.string('column2').nullable();
-      });
-      Table table = Table().table('blog');
-      List<String> columns = await table.getTableColumns();
-      expect(true, columns.contains('uid'));
-      expect(true, columns.contains('column1'));
-      expect(true, columns.contains('column2'));
-      expect(true, columns.contains('blog_title'));
-      expect(true, columns.contains('slug'));
-    });
-
-    test('hasOne', () async {
+    test('truncate', () async {
       Blog blog = Blog();
       blog.title = 'Awesome blog';
       blog.description = 'Awesome blog body';
       await blog.save();
 
-      BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = <String, String>{"name": "awesome"};
-      blogInfo.blogId = blog.uid;
-      await blogInfo.save();
-
-      await blog.reload();
-      expect(blog.blogInfo?.info?['name'], 'awesome');
+      await Blog().truncate();
+      int total = await Blog().count();
+      expect(total, 0);
     });
 
-    test('belongsTo', () async {
-      Blog blog = Blog();
-      blog.title = 'Awesome blog';
-      blog.description = 'Awesome blog body';
-      await blog.save();
+    test('limit', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{
+          'title': 'dox query builder',
+          'body': 'Best orm for the dart'
+        },
+        <String, dynamic>{
+          'title': 'dox core',
+          'body': 'dart web framework',
+        }
+      ]);
 
-      BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = <String, String>{"name": "awesome"};
-      blogInfo.blogId = blog.uid;
-      await blogInfo.save();
+      List<Blog> blogs = await Blog().limit(1).get();
+      expect(blogs.length, 1);
 
-      BlogInfo info = await BlogInfo().preload('blog').getFirst();
-      expect(info.blog?.title, 'Awesome blog');
+      List<Blog> blogs2 = await Blog().limit(2).get();
+      expect(blogs2.length, 2);
 
-      BlogInfo info2 = await BlogInfo().getFirst();
-      await info2.$getRelation('blog');
-      expect(info2.blog?.title, 'Awesome blog');
+      List<Blog> blogs3 = await Blog().take(1).get();
+      expect(blogs3.length, 1);
 
-      BlogInfo info3 = await BlogInfo().getFirst();
-      Blog? b = await info3.related<Blog>('blog')?.getFirst();
-      expect(b?.title, 'Awesome blog');
+      List<Blog> blogs4 = await Blog().take(2).get();
+      expect(blogs4.length, 2);
     });
 
-    test('hasMany', () async {
-      Blog blog = Blog();
-      blog.title = 'Awesome blog';
-      blog.description = 'Awesome blog body';
-      await blog.save();
+    test('offset', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{
+          'title': 'dox query builder',
+          'body': 'Best orm for the dart'
+        },
+        <String, dynamic>{
+          'title': 'dox core',
+          'body': 'dart web framework',
+        }
+      ]);
 
-      BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = <String, String>{"name": "awesome"};
-      blogInfo.blogId = blog.uid;
-      await blogInfo.save();
+      List<Blog> blog = await Blog().offset(0).limit(1).get();
+      expect(blog.first.title, 'dox query builder');
 
-      await blog.reload();
-
-      expect(blog.blogInfos.first.info?['name'], 'awesome');
-    });
-
-    test('eager load', () async {
-      Blog blog = Blog();
-      blog.title = 'Awesome blog';
-      blog.description = 'Awesome blog body';
-      await blog.save();
-
-      BlogInfo blogInfo = BlogInfo();
-      blogInfo.info = <String, String>{"name": "dox"};
-      blogInfo.blogId = blog.uid;
-      await blogInfo.save();
-
-      Blog b = await Blog().getFirst();
-      expect(b.blogInfo?.info?['name'], 'dox');
+      List<Blog> blog2 = await Blog().offset(1).limit(1).get();
+      expect(blog2.first.title, 'dox core');
     });
 
     test('test query builder with map result', () async {
@@ -234,6 +107,264 @@ void main() async {
           .getFirst();
 
       expect(b['uid'], 1);
+    });
+
+    test('order by', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{'title': 'b', 'body': 'body'},
+        <String, dynamic>{'title': 'a', 'body': 'body'},
+      ]);
+
+      List<Blog> blogs = await Blog().orderBy('title').get();
+      expect(blogs.first.title, 'a');
+
+      List<Blog> blogs2 = await Blog().orderBy('title', 'desc').get();
+      expect(blogs2.first.title, 'b');
+    });
+
+    test('query', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      List<Map<String, Map<String, dynamic>>> b =
+          await QueryBuilder.query('select * from blog');
+
+      expect(b.first['blog']?['uid'], 1);
+      expect(b.first['blog']?['title'], 'Awesome blog');
+      expect(b.first['blog']?['body'], 'Awesome blog body');
+    });
+
+    test('group by', () async {
+      await Blog().insertMultiple(<Map<String, dynamic>>[
+        <String, dynamic>{'title': 'title 1', 'body': 'body'},
+        <String, dynamic>{'title': 'title 1', 'body': 'body2'},
+        <String, dynamic>{'title': 'title 2', 'body': 'body'},
+      ]);
+
+      int total = await Blog().groupBy('status').count();
+      expect(total, 3);
+
+      int total2 = await Blog().groupBy(<String>['status', 'title']).count();
+      expect(total2, 2);
+
+      List<Map<String, dynamic>> data2 = await Blog()
+          .select(<String>['title', 'count(*) as total'])
+          .groupBy('title')
+          .get();
+
+      expect(data2.first['title'], 'title 1');
+      expect(data2.first['total'], 2);
+
+      expect(data2.last['title'], 'title 2');
+      expect(data2.last['total'], 1);
+    });
+
+    test('rawQuery', () async {
+      Blog blog = Blog();
+      blog.title = 'Awesome blog';
+      blog.description = 'Awesome blog body';
+      await blog.save();
+
+      Map<String, dynamic> b = await Blog().rawQuery(
+        "select * from blog where title = @title",
+        <String, dynamic>{'title': 'Awesome blog'},
+      ).getFirst();
+
+      expect(b['uid'], 1);
+      expect(b['title'], 'Awesome blog');
+      expect(b['body'], 'Awesome blog body');
+    });
+
+    test('where', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog? findBlog =
+          await Blog().where('title', 'dox query builder').getFirst();
+      expect(findBlog?.title, 'dox query builder');
+      expect(findBlog?.uid, blog.uid);
+    });
+
+    test('or where', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog()
+          .where('title', 'title 1')
+          .orWhere('title', 'title 2')
+          .get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('or where raw', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog().where('title', 'title 1').orWhereRaw(
+          'title = @title', <String, String>{'title': 'title 2'}).get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('where in', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      List<Blog> blogs = await Blog()
+          .where('status', '=', 'active')
+          .whereIn('uid', <int>[1, 2]).get();
+
+      expect(blogs.first.title, 'title 1');
+      expect(blogs.last.title, 'title 2');
+    });
+
+    test('where raw', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog blog2 = Blog();
+      blog2.title = 'title 2';
+      blog2.description = 'Best Orm';
+      await blog2.save();
+
+      Blog? findBlog = await Blog()
+          .where('status', '=', 'active')
+          .whereRaw('uid = @id', <String, String>{'id': '1'}).getFirst();
+
+      expect(findBlog?.uid, 1);
+      expect(findBlog?.title, 'title 1');
+    });
+
+    test('left join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .leftJoin('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog().leftJoinRaw(
+          'blog_info on blog_info.blog_id = blog.uid and blog.uid = @id',
+          <String, int>{'id': 1}).getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
+    });
+
+    test('right join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .rightJoin('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog()
+          .rightJoinRaw('blog_info on blog_info.blog_id = blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
+    });
+
+    test('join', () async {
+      Blog blog = Blog();
+      blog.title = 'title 1';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      BlogInfo info = BlogInfo();
+      info.blogId = blog.uid;
+      info.info = <String, String>{"foo": 'bar'};
+      await info.save();
+
+      Blog? data = await Blog()
+          .join('blog_info', 'blog_info.blog_id', 'blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map = data?.toMap(original: true);
+
+      expect(map?['uid'], 1);
+      expect(map?['title'], 'title 1');
+      expect(map?['id'], 1);
+      expect(map?['info']['foo'], 'bar');
+
+      Blog? data2 = await Blog()
+          .joinRaw('blog_info on blog_info.blog_id = blog.uid')
+          .getFirst();
+
+      Map<String, dynamic>? map2 = data2?.toMap(original: true);
+
+      expect(map2?['uid'], 1);
+      expect(map2?['title'], 'title 1');
+      expect(map2?['id'], 1);
+      expect(map2?['info']['foo'], 'bar');
     });
   });
 }

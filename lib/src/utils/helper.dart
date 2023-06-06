@@ -30,9 +30,9 @@ class QueryBuilderHelper<T> {
     return await db.mappedResultsQuery(query, substitutionValues: values);
   }
 
-  // ignore: always_specify_types
-  Future<List> formatResult(
-      List<Map<String, Map<String, dynamic>>> queryResult) async {
+  List<Map<String, dynamic>> getMapResult(
+    List<Map<String, Map<String, dynamic>>> queryResult,
+  ) {
     List<Map<String, dynamic>> result = <Map<String, dynamic>>[];
     // setting key values format from query result
     for (Map<String, Map<String, dynamic>> row in queryResult) {
@@ -48,6 +48,22 @@ class QueryBuilderHelper<T> {
         });
       });
       result.add(ret);
+    }
+    return result;
+  }
+
+  // ignore: always_specify_types
+  Future<List> formatResult(
+    List<Map<String, Map<String, dynamic>>> queryResult,
+  ) async {
+    List<Map<String, dynamic>> result = getMapResult(queryResult);
+
+    if (queryBuilder.getRawQuery().isNotEmpty) {
+      return result;
+    }
+
+    if (queryBuilder.getGroupByQuery().isNotEmpty) {
+      return result;
     }
 
     if (queryBuilder.self != null &&
@@ -80,12 +96,5 @@ class QueryBuilderHelper<T> {
     }
     String finalString = result.toString().replaceAll(RegExp('_+'), '_');
     return finalString;
-  }
-
-  String lcFirst(String? str) {
-    if (str == null) {
-      return '';
-    }
-    return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 }

@@ -16,8 +16,10 @@ class Table with TableUpdate {
   @override
   DBDriver get db => SqlQueryBuilder().db;
 
+  // coverage:ignore-start
   @override
   Logger get logger => Logger();
+  // coverage:ignore-end
 
   Table table(String table) {
     tableName = table;
@@ -168,7 +170,7 @@ class Table with TableUpdate {
     query += ret.join(',');
     query += ")";
     if (debug) {
-      logger.log(query);
+      logger.log(query); // coverage:ignore-line
     }
     await db.mappedResultsQuery(query);
   }

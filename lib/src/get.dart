@@ -1,9 +1,10 @@
-import 'package:dox_query_builder/dox_query_builder.dart';
-
 import 'shared_mixin.dart';
 
 mixin Get<T> implements SharedMixin<T> {
   String _buildQuery() {
+    if (queryBuilder.getRawQuery().isNotEmpty) {
+      return queryBuilder.getRawQuery();
+    }
     String q = "SELECT $selectQueryString FROM $tableName";
     q += helper.getCommonQuery();
     q = q.replaceAll(RegExp(' +'), ' ');
@@ -66,16 +67,17 @@ mixin Get<T> implements SharedMixin<T> {
     return query;
   }
 
-  /// Direct raw query to database
+  /// Get all record from table
   ///
   /// ```
-  /// var result = await QueryBuilder.query('select * from blog where id =  @id', {'id' : 1});
-  ///
-  Future<List<Map<String, Map<String, dynamic>>>> query(String query,
-      {Map<String, dynamic>? substitutionValues = const <String, dynamic>{}}) {
-    return SqlQueryBuilder().db.mappedResultsQuery(
-          query,
-          substitutionValues: substitutionValues,
-        );
+  /// await Blog().all();
+  /// ```
+  // ignore: always_specify_types
+  Future all() async {
+    String query = "SELECT $selectQueryString FROM $tableName";
+    if (isSoftDeletes) {
+      query += ' WHERE deleted_at IS NULL';
+    }
+    return helper.formatResult(await helper.runQuery(query));
   }
 }

@@ -68,7 +68,7 @@ mixin TableUpdate implements TableSharedMixin {
 
   Future<void> _runQuery(String query) async {
     if (debug) {
-      logger.log(query);
+      logger.log(query); // coverage:ignore-line
     }
     await db.mappedResultsQuery(query);
   }

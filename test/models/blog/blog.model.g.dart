@@ -55,6 +55,7 @@ class BlogGenerator extends Model<Blog> with SoftDeletes<Blog> {
     return hasOne<Blog, BlogInfo>(
       list,
       () => BlogInfo(),
+      onQuery: Blog.onQuery,
     );
   }
 
@@ -71,6 +72,7 @@ class BlogGenerator extends Model<Blog> with SoftDeletes<Blog> {
     return hasMany<Blog, BlogInfo>(
       list,
       () => BlogInfo(),
+      onQuery: Blog.onQuery,
     );
   }
 

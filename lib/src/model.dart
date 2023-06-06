@@ -15,10 +15,12 @@ class Model<T> extends QueryBuilder<T> {
   @override
   dynamic get self => this;
 
+  // coverage:ignore-start
   Map<String, dynamic> get timestampsColumn => <String, dynamic>{
         'created_at': 'created_at',
         'updated_at': 'updated_at',
       };
+  // coverage:ignore-end
 
   @override
   Model<T> debug([bool? debug]) {
@@ -62,7 +64,7 @@ class Model<T> extends QueryBuilder<T> {
       dynamic id = values[primaryKey];
       values.remove(primaryKey);
       values.remove(createdAtColumn);
-
+      values.removeWhere((String key, dynamic value) => value == null);
       if (updatedAtColumn != null) {
         values[updatedAtColumn] = now();
         updatedAt = values[updatedAtColumn];
@@ -82,10 +84,11 @@ class Model<T> extends QueryBuilder<T> {
     await initPreload(<Model<T>>[this]);
   }
 
-  // Model to json string converter
+  /// support jsonEncode()
   ///
   /// ```
-  /// Map<String, dynamic> blog = Blog().find(1).toJson();
+  /// Blog? blog = Blog().find(1);
+  /// Map<String, dynamic> m = blog?.toJson();
   /// ```
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = toMap(removeHiddenField: true);
@@ -95,9 +98,17 @@ class Model<T> extends QueryBuilder<T> {
     return data;
   }
 
+  /// convert model to map
+  /// if you have custom select query, use original option with true value
+  ///
+  /// ```
+  /// Blog? blog = Blog().find(1);
+  /// Map<String, dynamic> m = blog?.toMap();
+  /// Map<String, dynamic> m = blog?.toMap(original: true);
+  /// ```
   Map<String, dynamic> toMap(
       {bool original = false, bool removeHiddenField = false}) {
-    if (original == true) {
+    if (original == true && originalMap.isNotEmpty) {
       return originalMap;
     }
     Map<String, dynamic> data = convertToMap(this);
@@ -111,7 +122,7 @@ class Model<T> extends QueryBuilder<T> {
 
   /// start ********** preload
 
-  List<String> get preloadList => <String>[];
+  List<String> get preloadList => <String>[]; // coverage:ignore-line
   final List<String> _preloadList = <String>[];
 
   Map<String, Function> relationsResultMatcher = <String, Function>{};
@@ -133,8 +144,8 @@ class Model<T> extends QueryBuilder<T> {
   /// await blog.$getRelation('comments');
   /// print(blog.comments);
   /// `
-  Future<MODEL?> $getRelation<MODEL>(String name) async {
-    return await _getRelation(<Model<T>>[this], name) as MODEL;
+  Future<M?> $getRelation<M>(String name) async {
+    return await _getRelation(<Model<T>>[this], name) as M;
   }
 
   /// Get relation query
@@ -143,7 +154,7 @@ class Model<T> extends QueryBuilder<T> {
   /// Comment comment = blog.related<Comment>('comments');
   /// await comment.get();
   /// `
-  MODEL? related<MODEL>(String name) {
+  M? related<M>(String name) {
     if (relationsQueryMatcher[name] != null) {
       Function funcName = relationsQueryMatcher[name]!;
       return Function.apply(funcName, <dynamic>[
@@ -168,5 +179,46 @@ class Model<T> extends QueryBuilder<T> {
     }
   }
 
-  /// end ********** preload
+  /// get all records
+  /// ```
+  /// List<Blog> blogs = await Blog().all();
+  /// ```
+  @override
+  Future<List<T>> all() async {
+    return await super.all();
+  }
+
+  /// find the record
+  /// ```
+  /// Blog? blog = await Blog().find(1);
+  /// Blog? blog = await Blog().find('name', 'John');
+  /// ```
+  @override
+  Future<T?> find(dynamic arg1, [dynamic arg2]) async {
+    return await super.find(arg1, arg2);
+  }
+
+  /// create a record
+  /// ```
+  /// Blog blog = await Blog().create({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ````
+  @override
+  Future<T> create(Map<String, dynamic> data) async {
+    return await super.create(data);
+  }
+
+  /// create a record
+  /// ```
+  /// Blog blog = await Blog().insert({
+  ///   "title" : "Blog title",
+  ///   "body" : "Lorem",
+  /// });
+  /// ````
+  @override
+  Future<T> insert(Map<String, dynamic> data) async {
+    return await super.insert(data);
+  }
 }

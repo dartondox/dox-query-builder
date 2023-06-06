@@ -9,53 +9,52 @@ void main() async {
   group('Schema |', () {
     setUp(() async {
       SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
-      await Schema.create('blog', (Table table) {
-        table.id('uid');
+      await Schema.create('schema_test_table', (Table table) {
+        table.id();
+        table.uuid('uuid');
+        table.bigInteger('user_id');
+        table.money('price');
+        table.jsonb('tags');
+        table.decimal('views');
+        table.float4('shares');
+        table.float8('likes');
+        table.timestamp('approved_at');
+        table.date('published_date');
+        table.time('published_time');
+        table.timestampTz('expired_at');
         table.string('title');
         table.char('status').withDefault('active');
         table.text('body');
+        table.text('column_to_drop');
         table.string('slug').nullable();
         table.softDeletes();
-        table.timestamps();
-      });
-
-      await Schema.create('blog_info', (Table table) {
-        table.id('id');
-        table.json('info');
-        table.integer('blog_id');
-        table.timestamps();
-      });
-
-      await Schema.create('comment', (Table table) {
-        table.id('id');
-        table.string('comment').nullable();
-        table.integer('blog_id');
         table.timestamps();
       });
     });
 
     tearDown(() async {
-      await Schema.drop('blog');
-      await Schema.drop('blog_info');
-      await Schema.drop('comment');
+      await Schema.drop('schema_test_table');
     });
 
     test('schema update', () async {
-      await Schema.table('blog', (Table table) {
-        table.renameColumn('title', 'blog_title');
+      await Schema.table('schema_test_table', (Table table) {
+        table.renameColumn('title', 'new_title_column');
         table.string('blog_title').nullable();
+        table.char('status').withDefault('pending');
         table.string('body');
         table.string('slug').unique().nullable();
         table.string('column1').nullable();
         table.string('column2').nullable();
+        table.dropColumn('column_to_drop');
       });
-      Table table = Table().table('blog');
+      Table table = Table().table('schema_test_table');
       List<String> columns = await table.getTableColumns();
-      expect(true, columns.contains('uid'));
+      expect(true, columns.contains('id'));
       expect(true, columns.contains('column1'));
       expect(true, columns.contains('column2'));
-      expect(true, columns.contains('blog_title'));
+      expect(true, columns.contains('new_title_column'));
       expect(true, columns.contains('slug'));
+      expect(false, columns.contains('column_to_drop'));
     });
   });
 }

@@ -1,3 +1,8 @@
+## 1.1.11
+
+- Add missing types on function and arguments
+- Bug fixed on count, custom query
+
 ## 1.1.10
 
 - Remove hidden fields on toJson

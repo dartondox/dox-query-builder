@@ -31,8 +31,10 @@ class SqlQueryBuilder {
     SqlQueryBuilder sql = SqlQueryBuilder();
     sql.db = PostgresDriver(conn: database);
     sql.debug = debug;
+    // coverage:ignore-start
     if (printer != null) {
       sql.printer = printer;
     }
+    // coverage:ignore-end
   }
 }

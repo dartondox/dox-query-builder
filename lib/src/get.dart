@@ -1,3 +1,5 @@
+import 'package:dox_query_builder/src/types/pagination_result.dart';
+
 import 'shared_mixin.dart';
 
 mixin Get<T> implements SharedMixin<T> {
@@ -36,6 +38,32 @@ mixin Get<T> implements SharedMixin<T> {
   // ignore: always_specify_types
   Future get() async {
     return await helper.formatResult(await helper.runQuery(_buildQuery()));
+  }
+
+  /// paginate
+  ///
+  /// ```
+  /// List blogs = await Blog().where('status', 'active').get();
+  /// ```
+  // ignore: always_specify_types
+  Future<Pagination> paginate({
+    required int currentPage,
+    required int perPage,
+  }) async {
+    int offset = (currentPage - 1) * perPage;
+
+    int total = await queryBuilder.count();
+
+    // ignore: always_specify_types
+    List data = await queryBuilder.limit(perPage).offset(offset).get();
+
+    return Pagination(
+      total: total,
+      perPage: perPage,
+      lastPage: (total / perPage).ceil(),
+      currentPage: currentPage,
+      data: data,
+    );
   }
 
   /// Get records

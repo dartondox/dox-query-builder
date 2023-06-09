@@ -1,4 +1,5 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
+import 'package:dox_query_builder/src/types/pagination_result.dart';
 import 'package:test/test.dart';
 
 import 'connection.dart';
@@ -365,6 +366,43 @@ void main() async {
       expect(map2?['title'], 'title 1');
       expect(map2?['id'], 1);
       expect(map2?['info']['foo'], 'bar');
+    });
+
+    test('paginate', () async {
+      List<Map<String, dynamic>> data = <Map<String, dynamic>>[];
+      for (int i = 0; i < 43; i++) {
+        data.add(<String, dynamic>{
+          'title': 'dox query builder',
+          'body': 'Best orm for the dart'
+        });
+      }
+
+      await Blog().insertMultiple(data);
+
+      Pagination pagination = await Blog().paginate(
+        currentPage: 1,
+        perPage: 10,
+      );
+
+      expect(pagination.total, 43);
+      expect(pagination.lastPage, 5);
+      expect(pagination.perPage, 10);
+      expect(pagination.currentPage, 1);
+      expect(pagination.data.length, 10);
+
+      Pagination pagination2 = await Blog().paginate(
+        currentPage: 5,
+        perPage: 10,
+      );
+
+      expect(pagination2.total, 43);
+      expect(pagination2.lastPage, 5);
+      expect(pagination2.perPage, 10);
+      expect(pagination2.currentPage, 5);
+      expect(pagination2.data.length, 3);
+
+      List<Blog> blogs = pagination2.getData<Blog>();
+      expect(blogs.length, 3);
     });
   });
 }

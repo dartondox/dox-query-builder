@@ -221,4 +221,20 @@ class Model<T> extends QueryBuilder<T> {
   Future<T> insert(Map<String, dynamic> data) async {
     return await super.insert(data);
   }
+
+  /// create a record
+  /// ```
+  /// Blog blog = await Blog().find(1);
+  /// await blog.delete();
+  /// ````
+  @override
+  Future<void> delete() async {
+    if (tempIdValue != null) {
+      await QueryBuilder.table(tableName)
+          .setPrimaryKey(primaryKey)
+          .debug(_debug)
+          .where(primaryKey, tempIdValue)
+          .delete();
+    }
+  }
 }

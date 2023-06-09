@@ -120,6 +120,19 @@ void main() {
       expect(total, 0);
     });
 
+    test('delete with find', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      Blog? findBlog = await Blog().find(blog.uid);
+      await findBlog?.delete();
+
+      int total = await Blog().count();
+      expect(total, 0);
+    });
+
     test('with trashed', () async {
       Blog blog = Blog();
       blog.title = 'dox query builder';

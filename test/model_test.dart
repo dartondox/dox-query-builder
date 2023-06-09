@@ -132,6 +132,30 @@ void main() {
       expect(total, 1);
     });
 
+    test('with trashed with param true', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      await blog.delete();
+
+      int total = await Blog().withTrash(true).count();
+      expect(total, 1);
+    });
+
+    test('with trashed with param false', () async {
+      Blog blog = Blog();
+      blog.title = 'dox query builder';
+      blog.description = 'Best Orm';
+      await blog.save();
+
+      await blog.delete();
+
+      int total = await Blog().withTrash(false).count();
+      expect(total, 0);
+    });
+
     test('forced delete', () async {
       Blog blog = Blog();
       blog.title = 'dox query builder';

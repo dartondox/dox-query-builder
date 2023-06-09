@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:dox_query_builder/src/types/pagination_result.dart';
 import 'package:test/test.dart';
@@ -403,6 +405,9 @@ void main() async {
 
       List<Blog> blogs = pagination2.getData<Blog>();
       expect(blogs.length, 3);
+
+      String json = jsonEncode(pagination2);
+      expect(json.contains('total'), true);
     });
   });
 }

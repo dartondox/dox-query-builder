@@ -1,3 +1,8 @@
+## 1.1.12
+
+- Add support for paginate() function
+- Add support for query printer, file printer, consoler printer and pretty printer.
+
 ## 1.1.11
 
 - Add missing types on function and arguments

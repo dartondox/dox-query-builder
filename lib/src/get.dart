@@ -3,6 +3,7 @@ import 'package:dox_query_builder/src/types/pagination_result.dart';
 import 'shared_mixin.dart';
 
 mixin Get<T> implements SharedMixin<T> {
+  /// build query to run
   String _buildQuery() {
     if (queryBuilder.getRawQuery().isNotEmpty) {
       return queryBuilder.getRawQuery();

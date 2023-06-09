@@ -1,5 +1,6 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
+/// belongs to relationship query
 M? belongsTo<T, M>(
   List<Model<T>> list,
   Model<M> Function() model, {
@@ -37,6 +38,7 @@ M? belongsTo<T, M>(
   return owner as M;
 }
 
+/// get result from belongs to relationship query
 Future<Map<String, M>> getBelongsTo<T, M>(
   dynamic q,
   List<Model<T>> list,

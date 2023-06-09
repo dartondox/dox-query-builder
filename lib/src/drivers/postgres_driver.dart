@@ -1,11 +1,15 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 import 'package:postgres_pool/postgres_pool.dart';
 
+/// driver for postgres SQL
+/// support PostgreSQLConnection and PgPool
 class PostgresDriver extends DBDriver {
   final dynamic conn;
 
+  /// constructor
   PostgresDriver({this.conn});
 
+  /// run query and return map result
   @override
   Future<List<Map<String, Map<String, dynamic>>>> mappedResultsQuery(
       String query,
@@ -27,6 +31,7 @@ class PostgresDriver extends DBDriver {
     }
   }
 
+  /// only run query
   @override
   Future<void> query(String query,
       {Map<String, dynamic>? substitutionValues}) async {

@@ -1,5 +1,6 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
+/// has many relationships query
 M? hasMany<T, M>(
   List<Model<T>> list,
   Model<M> Function() model, {
@@ -28,6 +29,7 @@ M? hasMany<T, M>(
   return m as M;
 }
 
+/// get has many relationships result
 Future<Map<String, List<M>>> getHasMany<T, M>(
   dynamic q,
   List<Model<T>> list,

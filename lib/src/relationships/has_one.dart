@@ -1,5 +1,6 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
+/// one to one relationship query
 M? hasOne<T, M>(
   List<Model<T>> list,
   Model<M> Function() model, {
@@ -28,6 +29,7 @@ M? hasOne<T, M>(
   return m as M;
 }
 
+/// get result of one to one relationship query
 Future<Map<String, M>> getHasOne<T, M>(dynamic q, List<Model<T>> list) async {
   if (q == null) return <String, M>{}; // coverage:ignore-line
   List<M> results = await q.get();

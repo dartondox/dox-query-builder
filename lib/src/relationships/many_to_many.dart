@@ -1,5 +1,6 @@
 import 'package:dox_query_builder/dox_query_builder.dart';
 
+/// many to many relationship query
 M? manyToMany<T, M>(
   List<Model<T>> list,
   Model<M> Function() model, {
@@ -45,12 +46,16 @@ M? manyToMany<T, M>(
   return q as M;
 }
 
+/// sort two table alphabetically
+/// blog and category , blog_category
+/// song and artist, artist_song
 String _sortTableByAlphabet(String firstTable, String secondTable) {
   List<String> tables = <String>[firstTable, secondTable];
   tables.sort();
   return '${tables[0]}_${tables[1]}';
 }
 
+/// get result of many to many relationship query
 Future<Map<String, List<M>>> getManyToMany<T, M>(
   dynamic q,
   List<Model<T>> list,

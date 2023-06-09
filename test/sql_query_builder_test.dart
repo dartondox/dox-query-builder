@@ -9,7 +9,7 @@ import 'models/blog/blog.model.dart';
 import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+  SqlQueryBuilder.initialize(database: poolConnection());
 
   group('Query Builder', () {
     setUp(() async {

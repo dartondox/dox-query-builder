@@ -13,9 +13,26 @@ class SqlQueryBuilder {
 
   bool debug = true;
 
-  static void initialize({required dynamic database, bool? debug}) {
+  QueryPrinter printer = PrettyQueryPrinter();
+
+  /// initialize query builder
+  /// ```
+  ///  SqlQueryBuilder.initialize(
+  ///   database: db,
+  ///   debug: true,
+  ///   prettyPrint: true
+  /// );
+  /// ```
+  static void initialize({
+    required dynamic database,
+    bool debug = false,
+    QueryPrinter? printer,
+  }) {
     SqlQueryBuilder sql = SqlQueryBuilder();
     sql.db = PostgresDriver(conn: database);
-    sql.debug = debug ?? false;
+    sql.debug = debug;
+    if (printer != null) {
+      sql.printer = printer;
+    }
   }
 }

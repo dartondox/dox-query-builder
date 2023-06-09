@@ -10,8 +10,8 @@ mixin SoftDeletes<T> implements SharedMixin<T> {
   /// ```
   /// List blogs = await Blog().withTrash().all();
   /// ```
-  QueryBuilder<T> withTrash() {
-    isSoftDeletes = false;
+  QueryBuilder<T> withTrash([bool withTrashed = true]) {
+    isSoftDeletes = !withTrashed;
     return queryBuilder;
   }
 }

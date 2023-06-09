@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dox_query_builder/dox_query_builder.dart';
-import 'package:dox_query_builder/src/types/pagination_result.dart';
 import 'package:test/test.dart';
 
 import 'connection.dart';

@@ -1,3 +1,8 @@
+## 1.1.13
+
+- Update readme
+- bug fixed on count() with order by
+
 ## 1.1.12
 
 - Add support for paginate() function

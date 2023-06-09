@@ -23,7 +23,8 @@ PgPool dbPool = PgPool(
 /// Initialize Sql QueryBuilder
 SqlQueryBuilder.initialize(
     database: dbPool,
-    debug: config.enableQueryLog,
+    debug: true,
+    printer: ConsoleQueryPrinter(),
 );
 ```
 
@@ -42,7 +43,7 @@ var result = await QueryBuilder.table('blog')
 
 ```yaml
 dev_dependencies:
-  dox_builder: ^0.0.5
+  dox_builder: latest
   build_runner: ^2.3.3
 ```
 

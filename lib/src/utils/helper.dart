@@ -9,14 +9,16 @@ class QueryBuilderHelper<T> {
     return "$column$timestamp".replaceAll(RegExp(r'[^\w]'), "");
   }
 
-  String getCommonQuery() {
+  String getCommonQuery({bool isCountQuery = false}) {
     if (queryBuilder.isSoftDeletes) {
       queryBuilder.whereRaw('deleted_at IS NULL');
     }
     String query = "";
     query += queryBuilder.getJoinQuery();
     query += queryBuilder.getWhereQuery();
-    query += queryBuilder.getOrderByQuery();
+    if (!isCountQuery) {
+      query += queryBuilder.getOrderByQuery();
+    }
     query += queryBuilder.getGroupByQuery();
     query += queryBuilder.getLimitQuery();
     return query;

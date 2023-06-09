@@ -43,7 +43,10 @@ mixin Get<T> implements SharedMixin<T> {
   /// paginate
   ///
   /// ```
-  /// List blogs = await Blog().where('status', 'active').get();
+  /// Pagination pagination = await Blog().paginate(
+  ///  currentPage: 1,
+  ///  perPage: 10,
+  /// );
   /// ```
   // ignore: always_specify_types
   Future<Pagination> paginate({

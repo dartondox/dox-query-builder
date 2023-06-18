@@ -6,11 +6,11 @@ import 'models/blog/blog.model.dart';
 import 'models/blog_info/blog_info.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection());
 
   group('Belongs To |', () {
     setUp(() async {
-      SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+      SqlQueryBuilder.initialize(database: poolConnection());
       await Schema.create('blog', (Table table) {
         table.id('uid');
         table.string('title');

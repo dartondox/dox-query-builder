@@ -4,11 +4,11 @@ import 'package:test/test.dart';
 import 'connection.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection());
 
   group('Schema |', () {
     setUp(() async {
-      SqlQueryBuilder.initialize(database: poolConnection(), debug: false);
+      SqlQueryBuilder.initialize(database: poolConnection());
       await Schema.create('schema_test_table', (Table table) {
         table.id();
         table.uuid('uuid');

@@ -7,7 +7,7 @@ import 'models/artist_song/artist_song.model.dart';
 import 'models/song/song.model.dart';
 
 void main() async {
-  SqlQueryBuilder.initialize(database: await connection(), debug: false);
+  SqlQueryBuilder.initialize(database: await connection());
 
   group('Many To Many |', () {
     setUp(() async {

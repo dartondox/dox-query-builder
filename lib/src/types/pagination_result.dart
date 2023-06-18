@@ -13,10 +13,10 @@ class Pagination {
   final int currentPage;
 
   // ignore: always_specify_types
-  final List data;
+  List data;
 
   /// constructor
-  const Pagination({
+  Pagination({
     required this.total,
     required this.perPage,
     required this.lastPage,
